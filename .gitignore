@@ -6,4 +6,6 @@ PC-NIS_Viewer_4.20_b972a.zip
 /data/
 /build*/
 
+# ignore user files
+*.user
 
