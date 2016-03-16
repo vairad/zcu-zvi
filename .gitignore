@@ -1,0 +1,9 @@
+ImageJ-ND-Viewer-Plugin-64bit.msi
+NIS_Viewer_4.20_b972.exe
+PC-NIS_Viewer_4.20_b972a.zip
+
+# slozky k ignorovnani
+/data/
+/build*/
+
+
