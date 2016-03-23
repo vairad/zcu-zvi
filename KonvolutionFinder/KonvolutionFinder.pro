@@ -11,13 +11,21 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = KonvolutionFinder
 TEMPLATE = app
 
+unix {
 LIBS += -lopencv_core -lopencv_flann -lopencv_highgui
+}
+
+win32{
+
+}
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    core/cleaner.cpp
+    core/cleaner.cpp \
+    core/filename_factory.cpp
 
 HEADERS  += mainwindow.h \
-    core/cleaner.h
+    core/cleaner.h \
+    core/filename_factory.h
 
 FORMS    += mainwindow.ui
