@@ -33,9 +33,10 @@ int main(int argc, char *argv[])
 
    //  cout << "Frame per seconds : " << fps << endl;
 
-   namedWindow("MyVideo",CV_WINDOW_AUTOSIZE); //create a window called "MyVideo"
+    namedWindow("MyVideo",CV_WINDOW_AUTOSIZE); //create a window called "MyVideo"
 
     int i = 0;
+    namedWindow("MyVideo", CV_WINDOW_KEEPRATIO);
     while(i < 500)
     {
         Mat frame;
