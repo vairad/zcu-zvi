@@ -22,11 +22,11 @@ INCLUDEPATH += D:\Programy\OpenCV\opencv\build\include
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    core/cleaner.cpp \
-    core/filename_factory.cpp
+        core/cleaner.cpp \
+        core/filename_factory.cpp
 
 HEADERS  += mainwindow.h \
-    core/cleaner.h \
-    core/filename_factory.h
+            core/cleaner.h \
+            core/filename_factory.h
 
 FORMS    += mainwindow.ui
