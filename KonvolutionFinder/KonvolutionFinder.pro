@@ -11,13 +11,13 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = KonvolutionFinder
 TEMPLATE = app
 
-INCLUDEPATH += D:\Programy\OpenCV\opencv\build\include
+
 unix {
 LIBS += -lopencv_core -lopencv_flann -lopencv_highgui
 }
 
 win32{
-
+INCLUDEPATH += D:\Programy\OpenCV\opencv\build\include
 }
 
 SOURCES += main.cpp\
