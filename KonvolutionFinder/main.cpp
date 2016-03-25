@@ -6,8 +6,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 
-#include "core/cleaner.h"
-#include "core/filename_factory.h"
+//#include "core/cleaner.h"
+//#include "core/filename_factory.h"
 
 using namespace cv;
 using namespace std;
@@ -61,16 +61,16 @@ int kamera(){
 }
 
 int main(int argc, char *argv[])
-{ /*
+{
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
 
-    return a.exec();*/
+    return a.exec();
 
 //    kamera();
 
-    FilenameFactory *name_factory = new FilenameFactory("../data/Z Serier S57H19/Zvetseni 5x/");
+//    FilenameFactory *name_factory = new FilenameFactory("../data/Z Serier S57H19/Zvetseni 5x/");
 
 //    QString name;
 //    name = name_factory->getNextImageName();
@@ -79,6 +79,6 @@ int main(int argc, char *argv[])
         name = name_factory->getNextImagePath();
     }*/
 
-    Cleaner cleaner(name_factory);
+ //   Cleaner cleaner(w.filename_factory);
 
 }
