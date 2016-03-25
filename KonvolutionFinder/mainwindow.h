@@ -22,7 +22,7 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    void MainWindow::createMenuBar();
+    void createMenuBar();
 
     //void MainWindow::closeEvent(QCloseEvent *event);
 
