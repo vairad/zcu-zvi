@@ -26,11 +26,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
         core/cleaner.cpp \
         core/filename_factory.cpp \
-        core/exception.cpp
+        core/exception.cpp \
+        test/testclass.cpp
+
 
 HEADERS  += mainwindow.h \
             core/cleaner.h \
             core/filename_factory.h \
-            core/exception.h
+            core/exception.h \
+            test/testclass.h
 
 FORMS    += mainwindow.ui
