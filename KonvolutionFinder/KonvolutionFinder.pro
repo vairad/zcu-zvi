@@ -25,10 +25,12 @@ LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d
 SOURCES += main.cpp\
         mainwindow.cpp \
         core/cleaner.cpp \
-        core/filename_factory.cpp
+        core/filename_factory.cpp \
+        core/exception.cpp
 
 HEADERS  += mainwindow.h \
             core/cleaner.h \
-            core/filename_factory.h
+            core/filename_factory.h \
+            core/exception.h
 
 FORMS    += mainwindow.ui
