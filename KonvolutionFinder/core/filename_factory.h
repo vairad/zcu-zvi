@@ -17,9 +17,9 @@ class FilenameFactory
 
     //dynamic objects
     /** Qt objekt slozky */
-    QDir *folder = NULL;
+    QDir *folder;
     /** iterator seznamem jmen */
-    QStringListIterator *name_iterator = NULL;
+    QStringListIterator *name_iterator;
 
 public:
     FilenameFactory(QString folder_path);
