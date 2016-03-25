@@ -1,6 +1,7 @@
 #include "core/cleaner.h"
 #include <iostream>
-#include <exception>
+
+#include "core/exception.h"
 
 Cleaner::Cleaner(FilenameFactory *names)
 {
@@ -14,7 +15,7 @@ Cleaner::Cleaner(FilenameFactory *names)
         image.convertTo(double_image, CV_64FC1, 1/255.0);
 
         if(!image.data){  // kontrola dat
-          //  throw std::exception;
+            throw EmptyImageException(name.toStdString().c_str());
         }
 
         average_image = double_image;

@@ -4,7 +4,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "core/cleaner.h"
-//#include "core/filename_factory.h"
+#include "test/testclass.h"
+#include "core/exception.h"
+
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -84,7 +87,15 @@ void MainWindow::openFileChooser() {
     }
 
     filename_factory = new FilenameFactory(folder);
-    Cleaner cleaner(filename_factory);
+//    TestConsole::testFilenameFactory(filename_factory);
+    try{
+        Cleaner cleaner(filename_factory);
+    }catch(EmptyImageException &e){
+        std::cout << e.what() << std::endl;
+    }catch(std::exception &e){
+        std::cout << "unnamed exception" << "\n";
+        std::cout << e.what() << "\n";
+    }
 }
 
 /**
