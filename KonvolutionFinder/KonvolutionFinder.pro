@@ -18,7 +18,7 @@ LIBS += -lopencv_core -lopencv_flann -lopencv_highgui
 
 win32{
 INCLUDEPATH += D:\Programy\OpenCV\opencv\build\include
-LIBS += -LD:\Programy\OpenCV\opencv\build\x86\vc11\lib
+LIBS += -LD:\Programy\OpenCV\opencv\build\x64\vc12\lib
 LIBS += -lopencv_core2412 -lopencv_flann2412 -lopencv_highgui2412
 }
 
