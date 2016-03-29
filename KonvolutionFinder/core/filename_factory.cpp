@@ -81,6 +81,20 @@ QString FilenameFactory::getNextImagePath() {
     }
 }
 
+/**
+ * Vrati relativni nazev vuci programovemu souboru nasledujiciho souboru a posune iterator
+ * @brief FilenameFactory::getNextImageName
+ * @return nextName of NULL
+ */
+QString FilenameFactory::getNextImageRelativePath() {
+    if (name_iterator->hasNext()) {
+        QDir exeFolder(QDir::currentPath());
+        return (exeFolder.relativeFilePath(folder->absolutePath())+"/"+name_iterator->next());
+    } else {
+        return NULL;
+    }
+}
+
 
 /**
  * Factroy destructor
