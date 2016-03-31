@@ -1,24 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
-  </property>
-  <property name="windowTitle" >
-   <string>MainWindow</string>
-  </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
- </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
- <resources/>
- <connections/>
+     <class>MainWindow</class>
+         <widget class="QMainWindow" name="MainWindow">
+              <property name="geometry">
+                   <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>500</width>
+                        <height>500</height>
+                   </rect>
+              </property>
+              <property name="windowTitle">
+                    <string>Konvolution Finder</string>
+              </property>
+          <widget class="QWidget" name="centralWidget">
+            <layout class="QHBoxLayout" name="verticalLayout">
+                <item>
+                        <widget class="QLabel" name="label">
+                                <property name="enabled">
+                                        <bool>true</bool>
+                                </property>
+                                <property name="sizePolicy">
+                                        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                        </sizepolicy>
+                                </property>
+                                <property name="minimumSize">
+                                        <size>
+                                                <width>300</width>
+                                                <height>300</height>
+                                        </size>
+                                </property>
+                        </widget>
+                </item>
+
+            </layout>
+           </widget>
+          </widget>
+     <layoutdefault spacing="6" margin="11"/>
+     <resources/>
+     <connections/>
 </ui>

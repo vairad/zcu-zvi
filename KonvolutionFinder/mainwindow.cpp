@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->setWindowTitle("Konvolution Finder");
 
     createMenuBar();
+    createImage();
 }
 
 /**
@@ -71,6 +72,8 @@ void MainWindow::createMenuBar() {
 }
 
 
+void MainWindow::createImage(){
+}
 
 
 /**
@@ -89,7 +92,12 @@ void MainWindow::openFileChooser() {
     filename_factory = new FilenameFactory(folder);
 //    TestConsole::testFilenameFactory(filename_factory);
     try{
-        Cleaner cleaner(filename_factory);
+        Cleaner *cleaner = new Cleaner();
+        cleaner->setFactory(filename_factory);
+        connect(cleaner, SIGNAL(showImage(QImage *)), this, SLOT(writeImage(QImage *)));
+        cleaner->start();
+
+
     }catch(EmptyImageException &e){
         std::cout << e.what() << std::endl;
     }catch(std::exception &e){
@@ -113,6 +121,17 @@ void MainWindow::openFileChooser() {
     }
 }*/
 
+
+void MainWindow::writeImage(QImage *image){
+    int width = this->ui->label->width();
+    int height = this->ui->label->height();
+
+    QImage showed = (*image).rgbSwapped().scaled(width,height, Qt::KeepAspectRatio);
+
+    std::cout << "Kresli do W: " << width << " H: " << height << "\n";
+
+    this->ui->label->setPixmap(QPixmap::fromImage(showed));
+}
 
 MainWindow::~MainWindow()
 {
