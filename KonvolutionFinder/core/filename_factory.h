@@ -31,6 +31,7 @@ public:
     void initializeFactory();
 
     QString getNextImageName();
+    QString getNextImageRelativePath();
     QString getNextImagePath();
 };
 
