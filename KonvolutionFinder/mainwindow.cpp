@@ -95,6 +95,7 @@ void MainWindow::openFileChooser() {
         Cleaner *cleaner = new Cleaner();
         cleaner->setFactory(filename_factory);
         connect(cleaner, SIGNAL(showImage(QImage *)), this, SLOT(writeImage(QImage *)));
+       // connect(cleaner, SIGNAL(finished()), cleaner, SLOT(deleteLater()));
         cleaner->start();
 
 
