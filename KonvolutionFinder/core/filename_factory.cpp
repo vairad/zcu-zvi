@@ -75,7 +75,7 @@ QString FilenameFactory::getNextImageName() {
  */
 QString FilenameFactory::getNextImagePath() {
     if (name_iterator->hasNext()) {
-       return folder->absolutePath()+folder->separator()+name_iterator->next();
+       return folder->absolutePath()+"/"+name_iterator->next();
     } else {
         return NULL;
     }

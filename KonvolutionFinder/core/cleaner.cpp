@@ -9,7 +9,7 @@ void Cleaner::setFactory(FilenameFactory *names){
 }
 
 void Cleaner::run(){
-    QString name = names->getNextImagePath();
+    QString name = names->getNextImageRelativePath();
     while(name != NULL){
 
         std::cout << "Read: " << name.toStdString() <<"\n";
@@ -28,7 +28,8 @@ void Cleaner::run(){
         msleep(1000);
         cvMatToQImage(&image);
 
-        name = names->getNextImagePath();
+       // name = names->getNextImagePath();
+        name = names->getNextImageRelativePath();
     }
 }
 
