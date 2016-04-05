@@ -13,12 +13,13 @@
 class Cleaner : public QThread {
     Q_OBJECT
     FilenameFactory *names;
+
     virtual void run();
 
     void cvMatToQImage(cv::Mat *input);
 public:
     void setFactory(FilenameFactory *names);
-    void run2();
+
 signals:
     void showImage(QImage *image);
 };

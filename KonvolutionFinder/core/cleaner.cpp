@@ -33,8 +33,6 @@ void Cleaner::run(){
     }
 }
 
-void Cleaner::run2(){
-}
 
 void Cleaner::cvMatToQImage(cv::Mat *input) {
 
