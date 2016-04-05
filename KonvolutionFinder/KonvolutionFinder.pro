@@ -13,13 +13,13 @@ TEMPLATE = app
 
 
 unix {
-LIBS += -lopencv_core -lopencv_flann -lopencv_highgui
+LIBS += -lopencv_core -lopencv_flann -lopencv_highgui -lopencv_imgproc
 }
 
 win32{
 INCLUDEPATH += D:\Programy\OpenCV\opencv\build\include
 LIBS += -LD:\Programy\OpenCV\opencv\build\x64\vc12\lib
-LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d
+LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d -lopencv_imgproc2412d
 }
 
 SOURCES += main.cpp\
@@ -27,13 +27,15 @@ SOURCES += main.cpp\
         core/cleaner.cpp \
         core/filename_factory.cpp \
         core/exception.cpp \
-        test/testclass.cpp
+        test/testclass.cpp \
+        core/histogrammodifier.cpp
 
 
 HEADERS  += mainwindow.h \
             core/cleaner.h \
             core/filename_factory.h \
             core/exception.h \
-            test/testclass.h
+            test/testclass.h \
+            core/histogrammodifier.h
 
 FORMS    += mainwindow.ui
