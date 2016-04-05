@@ -12,6 +12,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     this->setWindowTitle("Konvolution Finder");
+    this->showMaximized();
 
     createMenuBar();
     createImage();
@@ -90,14 +91,14 @@ void MainWindow::openFileChooser() {
     }
 
     filename_factory = new FilenameFactory(folder);
+//      filename_factory = new FilenameFactory("../data/test");
+
 //    TestConsole::testFilenameFactory(filename_factory);
     try{
         Cleaner *cleaner = new Cleaner();
         cleaner->setFactory(filename_factory);
-        connect(cleaner, SIGNAL(showImage(QImage *)), this, SLOT(writeImage(QImage *)));
-       // connect(cleaner, SIGNAL(finished()), cleaner, SLOT(deleteLater()));
+        connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
         cleaner->start();
-
 
     }catch(EmptyImageException &e){
         std::cout << e.what() << std::endl;
@@ -122,18 +123,78 @@ void MainWindow::openFileChooser() {
     }
 }*/
 
-
-void MainWindow::writeImage(QImage *image){
-    int width = this->ui->label->width();
-    int height = this->ui->label->height();
-
-    QImage showed = (*image).rgbSwapped().scaled(width,height, Qt::KeepAspectRatio);
-
-    std::cout << "Kresli do W: " << width << " H: " << height << "\n";
-
-    this->ui->label->setPixmap(QPixmap::fromImage(showed));
+/**
+ * Zpracuj signál přinášející obrázek k vykreslení
+ * @brief MainWindow::writeImage
+ * @param image pointer na obrázek
+ * @param destination id umístění
+ */
+void MainWindow::writeImage(QImage *image, int destination){
+    switch(destination){
+        case 1:
+            writeOriginalImage(image); break;
+        case 2:
+            writeNewImage(image); break;
+        default:
+            std::cout << "Uknown option writeImage()" << std::endl;
+    }
 }
 
+
+/**
+ * Vykresli QImage do labelu imageOriginal (levy)
+ * @brief MainWindow::writeNewImage
+ * @param image pointer na QImage
+ */
+void MainWindow::writeOriginalImage(QImage *image){
+    //zjisti rozmery labelu pro vykresleni
+    int width = this->ui->imageOriginal->width();
+    int height = this->ui->imageOriginal->height();
+
+    if(lastImageOriginal != NULL){ //uvolni předchozí obrázek
+        delete lastImageOriginal;
+    }
+
+    lastImageOriginal = image;
+
+//    std::cout << "Kresli do original W: " << width << " H: " << height << "\n";
+
+    //priprav obrazek spravnych rozmeru a barevne skladby (BGR -> RGB)
+    QImage tmp = lastImageOriginal->rgbSwapped().scaled(width, height, Qt::KeepAspectRatio);
+    //vykresli obrazek do labelu
+    this->ui->imageOriginal->setPixmap(QPixmap::fromImage(tmp));
+}
+
+
+/**
+ * Vykresli QImage do labelu imageProcessed (pravy)
+ * @brief MainWindow::writeNewImage
+ * @param image pointer na QImage
+ */
+void MainWindow::writeNewImage(QImage *image){
+    //zjisti rozmery labelu pro vykresleni
+    int width = this->ui->imageProcessed->width();
+    int height = this->ui->imageProcessed->height();
+
+    if(lastImageProcessed != NULL){ //uvolni předchozí obrázek
+        delete lastImageProcessed;
+    }
+
+    lastImageProcessed = image;
+
+//    std::cout << "Kresli do processed W: " << width << " H: " << height << "\n";
+
+    //priprav obrazek spravnych rozmeru a barevne skladby (BGR -> RGB)
+    QImage tmp = lastImageProcessed->rgbSwapped().scaled(width, height, Qt::KeepAspectRatio);
+    //vykresli obrazek do labelu
+    this->ui->imageProcessed->setPixmap(QPixmap::fromImage(tmp));
+}
+
+
+/**
+ * Destruktor hlavního okna
+ * @brief MainWindow::~MainWindow
+ */
 MainWindow::~MainWindow()
 {
     delete ui;

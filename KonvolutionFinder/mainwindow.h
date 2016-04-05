@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPixmap>
+#include <QImage>
 #include "core/filename_factory.h"
 
 namespace Ui {
@@ -12,6 +13,9 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+    QImage *lastImageOriginal = NULL;
+    QImage *lastImageProcessed = NULL;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -27,9 +31,12 @@ private:
 
     //void MainWindow::closeEvent(QCloseEvent *event);
 
+    void writeOriginalImage(QImage *image);
+    void writeNewImage(QImage *image);
+
 private slots:
     void openFileChooser();
-    void writeImage(QImage *image);
+    void writeImage(QImage *image, int destination);
 
 };
 
