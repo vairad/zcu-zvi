@@ -7,6 +7,22 @@
 
 void Cleaner::setFactory(FilenameFactory *names){
     this->names = names;
+    this->counter = 0;
+    this->lowThreshold = 1;
+    this->ratio = 1;
+    this->kernelSize = 3;
+}
+
+void Cleaner::setLowThresh(int value){
+    this->lowThreshold = value;
+}
+
+void Cleaner::setRatio(int value){
+    this->ratio = value;
+}
+
+void Cleaner::setKenelSize(int value){
+    this->kernelSize = value;
 }
 
 void Cleaner::run(){
@@ -39,11 +55,27 @@ void Cleaner::run(){
 
         c.stretchHistogram(&preprocessedImage, &preprocessedImage, 150, 255);
 
-//        imwrite( "../data/stretched.tif", preprocessedImage);
+
+  //       imwrite( "../data/stretched3.tif", preprocessedImage);
 //        std::cout << "Histogram stretched" << std::endl;
 
 //        cv::adaptiveThreshold(preprocessedImage,preprocessedImage,255,CV_ADAPTIVE_THRESH_GAUSSIAN_C, CV_THRESH_BINARY,27,2);
-        cv::threshold(preprocessedImage,preprocessedImage, 170, 255, CV_THRESH_BINARY);
+
+  //      cv::Sobel(preprocessedImage, preprocessedImage, preprocessedImage.depth(), 1, 1, 5, 2);
+
+        //cv::threshold(preprocessedImage,preprocessedImage, 110, 255, CV_THRESH_BINARY);
+
+
+
+        //morphologyClose(preprocessedImage, preprocessedImage);
+        cannyEdges(preprocessedImage, preprocessedImage);
+
+
+
+        std::vector< std::vector<cv::Point> > hulls;
+        //convexHull(preprocessedImage, hulls);
+
+        imwrite( "../data/processed.tif", preprocessedImage);
 
         cv::Mat imageToShowOld, imageToShowNew;
         cv::cvtColor(image, imageToShowOld, CV_GRAY2BGR);
@@ -57,6 +89,51 @@ void Cleaner::run(){
     }
 }
 
+/**
+ * @function CannyThreshold
+ * @brief Trackbar callback - Canny thresholds input with a ratio 1:3
+ */
+void Cleaner::cannyEdges(cv::Mat src, cv::Mat out){
+    GaussianBlur(src, out, cv::Size(5,5), 0 );
+    Canny( src, out, lowThreshold, lowThreshold*ratio, kernelSize);
+}
+
+void Cleaner::morphologyClose(cv::Mat src, cv::Mat out){
+    int size = 3;
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
+                                                  cv::Size(2*size+1, 2*size+1),
+                                                  cv::Point(size, size) );
+
+    cv::morphologyEx( src, out, CV_MOP_CLOSE, element);
+}
+
+
+/// This method finds convex hulls of all objects in the picture
+///
+/// @param input frame to find objects
+/// @param out reference to vector of convex hulls
+///
+void Cleaner::convexHull(cv::Mat input,
+                            std::vector< std::vector<cv::Point> > &out)
+{
+  std::vector< std::vector<cv::Point> > contours;
+  std::vector<cv::Vec4i> hierarchy;
+
+  // find contours
+  cv::findContours( input, contours, hierarchy,
+                      CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE,
+                      cv::Point(0, 0) );
+
+  // create convex hull
+  std::vector< std::vector< cv::Point > > hull ( contours.size() );
+
+  for( int i = 0; i < contours.size(); i++ )
+  {
+    cv::convexHull( cv::Mat(contours[i]), hull[i], false );
+  }
+
+  out = hull;
+}
 
 void Cleaner::cvMatToQImage(cv::Mat *input, int destination) {
 
