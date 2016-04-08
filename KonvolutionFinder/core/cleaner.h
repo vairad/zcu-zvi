@@ -40,7 +40,7 @@ signals:
 public slots:
     void setLowThresh(int value);
     void setRatio(int value);
-    void setKenelSize(int value);
+    void setKernelSize(int value);
 };
 
 #endif // CLEANER_H

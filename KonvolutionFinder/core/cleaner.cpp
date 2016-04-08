@@ -21,7 +21,7 @@ void Cleaner::setRatio(int value){
     this->ratio = value;
 }
 
-void Cleaner::setKenelSize(int value){
+void Cleaner::setKernelSize(int value){
     this->kernelSize = value;
 }
 
