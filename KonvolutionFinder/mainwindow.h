@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QPixmap>
 #include <QImage>
+#include <QSlider>
+#include <QLabel>
 #include "core/filename_factory.h"
 
 namespace Ui {
@@ -25,8 +27,18 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QWidget *centralWidget;
+    QWidget *sliderBar;
+    QLabel *thresholdSliderLabel;
+    QLabel *ratioSliderLabel;
+    QLabel *kernelSliderLabel;
+    QSlider *sliderThreshold;
+    QSlider *sliderKernel;
+    QSlider *sliderRatio;
+
 
     void createMenuBar();
+    void createSliderBar();
     void createImage();
 
     //void MainWindow::closeEvent(QCloseEvent *event);
@@ -37,7 +49,9 @@ private:
 private slots:
     void openFileChooser();
     void writeImage(QImage *image, int destination);
-
+    void setThresholdLabelValue(int value);
+    void setKernelLabelValue(int value);
+    void setRatioLabelValue(int value);
 };
 
 #endif // MAINWINDOW_H
