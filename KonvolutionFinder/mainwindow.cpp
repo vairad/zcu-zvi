@@ -23,8 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     centralWidget->setLayout(layout);
   /*  this->setCentralWidget(centralWidget);*/
 
-
-    createImage();
+    createSliderBar();
 }
 
 /**
@@ -121,6 +120,8 @@ void MainWindow::createSliderBar() {
     layout->addWidget(threshWidget);
     layout->addWidget(ratioWidget);
     layout->addWidget(kernelWidget);
+
+    this->ui->verticalLayout->addWidget(sliderBar);
 }
 
 void MainWindow::setThresholdLabelValue(int value) {
@@ -131,9 +132,6 @@ void MainWindow::setRatioLabelValue(int value) {
 }
 void MainWindow::setKernelLabelValue(int value) {
     kernelSliderLabel->setText("Kernel Size: " + QString::number(value));
-}
-
-void MainWindow::createImage(){
 }
 
 
@@ -159,12 +157,6 @@ void MainWindow::openFileChooser() {
         cleaner->setFactory(filename_factory);
         connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
 
-        /*createSliderBar();
-        QVBoxLayout *layout = new QVBoxLayout;
-        layout->addWidget(sliderBar);
-        centralWidget->setLayout(layout);*/
-
-       /* this->setCentralWidget(central_widget);*/
 
         //connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresholdLabelValue(int)));
         //connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelLabelValue(int)));

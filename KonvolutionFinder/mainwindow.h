@@ -39,7 +39,7 @@ private:
 
     void createMenuBar();
     void createSliderBar();
-    void createImage();
+    void createSliders();
 
     //void MainWindow::closeEvent(QCloseEvent *event);
 
