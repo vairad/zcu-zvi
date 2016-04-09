@@ -87,19 +87,22 @@ void MainWindow::createSliderBar() {
     sliderThreshold = new QSlider();
     sliderThreshold->setOrientation(Qt::Horizontal);
     sliderThreshold->setRange(0, 255);
-    thresholdSliderLabel = new QLabel("Low Threshold: 0");
+    sliderThreshold->setValue(100);
+    thresholdSliderLabel = new QLabel("Low Threshold: 100");
     connect(sliderThreshold, SIGNAL(valueChanged(int)), this, SLOT(setThresholdLabelValue(int)));
 
     sliderRatio = new QSlider();
     sliderRatio->setOrientation(Qt::Horizontal);
-    sliderRatio->setRange(0, 255);
-    ratioSliderLabel = new QLabel("Ratio: 0");
+    sliderRatio->setRange(1, 10);
+    sliderRatio->setValue(1);
+    ratioSliderLabel = new QLabel("Ratio: 1");
     connect(sliderRatio, SIGNAL(valueChanged(int)), this, SLOT(setRatioLabelValue(int)));
 
     sliderKernel = new QSlider();
     sliderKernel->setOrientation(Qt::Horizontal);
-    sliderKernel->setRange(0, 255);
-    kernelSliderLabel = new QLabel("Kernel Size: 0");
+    sliderKernel->setRange(3, 50);
+    sliderKernel->setValue(3);
+    kernelSliderLabel = new QLabel("Kernel Size: 3");
     connect(sliderKernel, SIGNAL(valueChanged(int)), this, SLOT(setKernelLabelValue(int)));
 
     QWidget *threshWidget = new QWidget();
@@ -155,12 +158,11 @@ void MainWindow::openFileChooser() {
     try{
         Cleaner *cleaner = new Cleaner();
         cleaner->setFactory(filename_factory);
+
         connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
-
-
-        //connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresholdLabelValue(int)));
-        //connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelLabelValue(int)));
-        //connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatioLabelValue(int)));
+        connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setLowThresh(int)));
+        connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
+        connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
 
         cleaner->start();
 
