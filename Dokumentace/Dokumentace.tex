@@ -1,0 +1,85 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[IL2]{fontenc}
+\usepackage[czech]{babel}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{url}
+
+\begin{document}
+	\begin{titlepage}
+	\includegraphics[width=5cm,natwidth=601,natheight=314]{logo.png}
+		
+	\vspace{4cm}
+		\begin {center}
+		{\Huge SEMESTRÁLNÍ PRÁCE\\ Z PŘEDMĚTU KIV/ZVI\\}
+		{\huge Analýza sekvence mikroskopických snímků, segmentace, detekce objektů\\}
+		\end {center}
+	\vspace{7cm}
+			
+	\noindent vypracovali: Denisa Tarantíková, Radek Vais \\
+				studijní čísla: A13B0445P, A13B0457P\\
+				email:	denitara@students.zcu.cz, vaisr@students.zcu.cz\\
+				datum:	10. 6. 2016
+	\end{titlepage}
+
+\tableofcontents
+\chapter{Úvod}
+	
+\chapter{Zadání}
+Obecné pokyny a pravidla pro vypracování semestrální práce
+1. Semestrální práce bude vypracována na téma podle zadání.
+2. Součástí semestrální práce je teoretické řešení zadaného úkolu a programová realizace, která
+může být napsána v libovolném vhodném programovacím jazyku (Matlab nedoporučujeme).
+3. Programová realizace by měla obsahovat základní funkce:
+- výběr souboru vstupního snímku [ formát *.BMP, *.JPG, … ] a jeho zobrazení,
+- zobrazování dílčích snímků jako výstupů jednotlivých fází zpracování úlohy včetně výsledku
+konečného,
+- volba pořadí jednotlivých metod předzpracování ( pokud bude typ zadané úlohy vyžadovat
+předzpracování ) a vlastního zpracování úlohy dle zadání,
+- navržené algoritmy budou optimalizovány podle časového kritéria,
+- funkce "Krok zpět", minimálně o 1 krok ( podle charakteru úlohy ),
+- uložení výsledného snímku do výstupního obrazového souboru, formát viz vstupní snímek,
+- uložení výsledných hodnot do výstupních souborů v předepsaném a komentovaném formátu,
+např. tabulky hodnot, příznakové vektory, …
+4. Pokud to zadané téma vyžaduje, bude součástí programové realizace také soubor metod pro
+zobrazení globálních charakteristik a předzpracování snímků, tj. metody typu:
+- histogram - min. 256 úrovní jasu pro šedotónové snímky
+- histogramy pro jednotlivé barevné složky RGB
+- jasové korekce
+- jasové transformace - volba a nastavení transformační funkce
+- ekvalizace histogramu
+- prahování - ruční prahování zadáním jednoho nebo více prahů
+- automatické vyhledávání prahu
+- filtrace obrazu
+- přebarvování - např. maticí sousednosti
+- detekce hran
+- morfologické operace.
+5. Součástí odevzdané práce bude vypracovaný referát, použité testovací snímky ( zadané nebo
+vlastní ), programová realizace úlohy ve spustitelné verzi, tj. *.EXE, včetně všech potřebných
+knihoven a zdrojových souborů programu + prezentace v PowerPointu.
+6. Semestrální práce bude obsahovat rozbor dosažených výsledků, tzn. zhodnocení jednotlivých
+aplikovaných metod, popis jejich pozitivních a negativních vlastností, porovnání výsledků podle
+vlastností použitých snímků, srovnání funkce jednotlivých algoritmů, resp. výsledků
+a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools, ….
+7. Upřesnění požadavků na semestrální práci podle zadání bude provedeno na přednáškách
+a cvičeních ZVI.
+
+\chapter{Analýza úlohy}
+	\section{Předzpracování}
+	\section{Segmentace}
+	\section{Detekce konvolucí}
+
+
+\chapter{Popis implementace}
+
+\chapter{Uživatelská dokumentace}
+	\section{SW požadavky}
+	
+	\section{Adresářová struktura odevzdávaného souboru}	
+	
+	\section{Spuštění a ovládání aplikace}	
+
+\chapter{Závěr}
+
+\end{document} 
