@@ -70,7 +70,7 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\caption{Konvoluce}
 	\end{figure}	
 
-	Dle histogramu původního snímku na obrázku 3.3 si lze povšimnout, že většina obrazových bodů na stupnici jasu od 0 do 255 nabývá hodnot v intervalu od 150 do 200.
+	Dle histogramu původního snímku na obrázku 3.3 si lze povšimnout, že většina obrazových bodů na stupnici jasu od 0 do 255 nabývá hodnot v~intervalu přibližně od 100 do 200. Budeme uvažovat, že v~ostatních snímcích v~sekvenci je přibližně stejné rozložení hodnot jasu. Vzhledem k tomu, že konvoluce se jeví tmavé oproti ostatním obrazovým bodům snímku, zvýrazněním tmavých odstínů bychom docílili \uv{vystoupení} konvolucí. Naším cílem bude \uv{sjednotit} hodnoty vysokých jasů, tj. jasy vyšší než zvolená hodnota nabudou nejvyššího jasu (255), čímž potlačíme šum, jehož jas nabývá vysokých hodnot (např. vlny). Zbylé hodnoty \uv{roztáhneme} po celém intervalu 0 až 255, abychom... Hodnotu, kterou zvolíme jako mezní, určíme na intervalu od 100 do 150 (150 je \uv{vrchol} histogramu) tak, aby ve snímku zůstaly objekty \uv{podezřelé} z~konvolucí a zároveň bylo potlačeno co nejvíce šumu. Na obrázcích 3.4 až 3.6 vidíme výsledné snímky s~mezními hodnotami 100, 150 a 125. Při mezní hodnotě 100 je na snímku stále hodně viditelných vln, při hodnotě 150 je naopak možné, že některé konvoluce \uv{zmizely}. Mezní hodnota 125 se jeví jako dobrý kompromis.
 	
 	\begin{figure}[!htb]
 	\centering
@@ -79,10 +79,32 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\caption{Histogram původního snímku}
 	\end{figure}
 	
+	\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.1]{obrazky/roztazeni_jasu_0_100.png}
+	\label{fig:jas_0_100}
+	\caption{Sjednocení vysokých jasů s~mezní hodnotou 100 a roztažení}
+	\end{figure}	
+	
+	\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.1]{obrazky/roztazeni_jasu_0_150.png}
+	\label{fig:jas_0_150}
+	\caption{Sjednocení vysokých jasů s~mezní hodnotou 150 a roztažení}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.1]{obrazky/roztazeni_jasu_0_125.png}
+	\label{fig:jas_0_125}
+	\caption{Sjednocení vysokých jasů s~mezní hodnotou 125 a roztažení}
+	\end{figure}				
+	
 	Zvýraznění tmavých odstínů (včetně konvolucí) 
 		a) Lineární transformace - posunutí histogramu: "sjednocení" vysokých jasů, eliminace "šumu"; roztažení histogramu: zvýšení kontrastu, došlo ke "zvýraznění" konvolucí, ale i nečistot na vzorku 
 		b) Normování histogramu - složité hledání normovací funkce
-	\section{Segmentace}
+		
+	Prahování
 	\section{Detekce konvolucí}
 
 
