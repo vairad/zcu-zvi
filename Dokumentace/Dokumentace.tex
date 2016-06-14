@@ -54,9 +54,32 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 \end{enumerate}
 \chapter{Analýza úlohy}
 	\section{Předzpracování}
-	1. Obrázek 1 (původní). Převod na šedotón kvůli barevnému měřítku, popis snímku, označení objektu podezřelého z konvoluce, bude třeba odstranit/odfiltrovat šum: "vlny" dané materiálem, prach, otisk prstu, škrábance apod.
-	2. Histogram - hodně "slepený", většina obrazových bodů nabývá hodnot jasu v intervalu od 150 do 200 (standardní stupnice je od 0 do 255)
-	3.	Zvýraznění tmavých odstínů (včetně konvolucí) 
+	Původní snímek (na obrázku 3.1) bude nutné nejdříve převést na šedotón kvůli barevnému měřítku v~pravé dolní části. Nejtmavší objekty hvězdicovitého až kulatého tvaru jsou potenciálními konvolucemi (na obrázku 3.2 lze vidět snímek konvoluce ve 20násobném zvětšení). Dále lze na snímku pozorovat různé typy šumu: vlny způsobené strukturou materiálu, prach, škrábance, otisky prstů apod. Tyto šumy bude třeba co nejvíce potlačit, aby bylo možné konvoluce lépe detekovat.
+		
+	\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.4]{obrazky/puvodni.png}
+	\label{fig:puvodni}
+	\caption{Původní snímek}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.12]{obrazky/konvoluce.png}
+	\label{fig:konvoluce}
+	\caption{Konvoluce}
+	\end{figure}	
+
+	Dle histogramu původního snímku na obrázku 3.3 si lze povšimnout, že většina obrazových bodů na stupnici jasu od 0 do 255 nabývá hodnot v intervalu od 150 do 200.
+	
+	\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.65]{obrazky/puvodni_histogram.png}
+	\label{fig:puvodni_histogram}
+	\caption{Histogram původního snímku}
+	\end{figure}
+	
+	Zvýraznění tmavých odstínů (včetně konvolucí) 
 		a) Lineární transformace - posunutí histogramu: "sjednocení" vysokých jasů, eliminace "šumu"; roztažení histogramu: zvýšení kontrastu, došlo ke "zvýraznění" konvolucí, ale i nečistot na vzorku 
 		b) Normování histogramu - složité hledání normovací funkce
 	\section{Segmentace}
