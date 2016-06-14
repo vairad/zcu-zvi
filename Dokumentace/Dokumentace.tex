@@ -20,58 +20,70 @@
 	\noindent vypracovali: Denisa Tarantíková, Radek Vais \\
 				studijní čísla: A13B0445P, A13B0457P\\
 				email:	denitara@students.zcu.cz, vaisr@students.zcu.cz\\
-				datum:	10. 6. 2016
+				datum:	14. 6. 2016
 	\end{titlepage}
 
 \tableofcontents
 \chapter{Úvod}
-	
+	Cílem této semestrální práce bude analyzovat sekvenci mikroskopických snímků a detekovat v~nich jevy zvané konvoluce. Materiál, velikost řezu, zvětšení apod. Popis konvoluce, je i v jiných materiálech (s jiným tvarem). Výstupem práce bude kromě aplikace pro detekci konvolucí napsané v~jazyce C++ i soubor ve formátu *.xml, ve kterém budou uvedeny souřadnice konvolucí a snímky, na kterých se vyskytují.
 \chapter{Zadání}
-Obecné pokyny a pravidla pro vypracování semestrální práce
-1. Semestrální práce bude vypracována na téma podle zadání.
-2. Součástí semestrální práce je teoretické řešení zadaného úkolu a programová realizace, která
-může být napsána v libovolném vhodném programovacím jazyku (Matlab nedoporučujeme).
-3. Programová realizace by měla obsahovat základní funkce:
-- výběr souboru vstupního snímku [ formát *.BMP, *.JPG, … ] a jeho zobrazení,
-- zobrazování dílčích snímků jako výstupů jednotlivých fází zpracování úlohy včetně výsledku
-konečného,
-- volba pořadí jednotlivých metod předzpracování ( pokud bude typ zadané úlohy vyžadovat
-předzpracování ) a vlastního zpracování úlohy dle zadání,
-- navržené algoritmy budou optimalizovány podle časového kritéria,
-- funkce "Krok zpět", minimálně o 1 krok ( podle charakteru úlohy ),
-- uložení výsledného snímku do výstupního obrazového souboru, formát viz vstupní snímek,
-- uložení výsledných hodnot do výstupních souborů v předepsaném a komentovaném formátu,
-např. tabulky hodnot, příznakové vektory, …
-4. Pokud to zadané téma vyžaduje, bude součástí programové realizace také soubor metod pro
+Obecné pokyny a pravidla pro vypracování semestrální práce:
+\begin{enumerate}
+	\item{Semestrální práce bude vypracována na téma podle zadání.}
+	\item{Součástí semestrální práce je teoretické řešení zadaného úkolu a programová realizace, která
+může být napsána v libovolném vhodném programovacím jazyku (Matlab nedoporučujeme).}
+	\item Programová realizace by měla obsahovat základní funkce:
+	\begin{itemize}
+		\item{výběr souboru vstupního snímku [formát *.BMP, *.JPG,…] a jeho zobrazení}
+		\item{zobrazování dílčích snímků jako výstupů jednotlivých fází zpracování úlohy včetně výsledku
+konečného}
+		\item{volba pořadí jednotlivých metod předzpracování (pokud bude typ zadané úlohy vyžadovat
+předzpracování) a vlastního zpracování úlohy dle zadání}
+		\item{navržené algoritmy budou optimalizovány podle časového kritéria}
+		\item{funkce "Krok zpět", minimálně o 1 krok (podle charakteru úlohy)}
+		\item{uložení výsledného snímku do výstupního obrazového souboru, formát viz vstupní snímek}
+		\item{uložení výsledných hodnot do výstupních souborů v předepsaném a komentovaném formátu,
+např. tabulky hodnot, příznakové vektory,…}
+	\end{itemize}
+
+	\item Pokud to zadané téma vyžaduje, bude součástí programové realizace také soubor metod pro
 zobrazení globálních charakteristik a předzpracování snímků, tj. metody typu:
-- histogram - min. 256 úrovní jasu pro šedotónové snímky
-- histogramy pro jednotlivé barevné složky RGB
-- jasové korekce
-- jasové transformace - volba a nastavení transformační funkce
-- ekvalizace histogramu
-- prahování - ruční prahování zadáním jednoho nebo více prahů
-- automatické vyhledávání prahu
-- filtrace obrazu
-- přebarvování - např. maticí sousednosti
-- detekce hran
-- morfologické operace.
-5. Součástí odevzdané práce bude vypracovaný referát, použité testovací snímky ( zadané nebo
-vlastní ), programová realizace úlohy ve spustitelné verzi, tj. *.EXE, včetně všech potřebných
-knihoven a zdrojových souborů programu + prezentace v PowerPointu.
-6. Semestrální práce bude obsahovat rozbor dosažených výsledků, tzn. zhodnocení jednotlivých
+	\begin{itemize}
+		\item histogram - min. 256 úrovní jasu pro šedotónové snímky
+		\item histogramy pro jednotlivé barevné složky RGB
+		\item jasové korekce
+		\item jasové transformace - volba a nastavení transformační funkce
+		\item ekvalizace histogramu
+		\item prahování - ruční prahování zadáním jednoho nebo více prahů
+		\item automatické vyhledávání prahu
+		\item filtrace obrazu
+		\item přebarvování - např. maticí sousednosti
+		\item detekce hran
+		\item morfologické operace.
+	\end{itemize}		
+\item{Součástí odevzdané práce bude vypracovaný referát, použité testovací snímky (zadané nebo
+vlastní), programová realizace úlohy ve spustitelné verzi, tj. *.EXE, včetně všech potřebných
+knihoven a zdrojových souborů programu + prezentace v PowerPointu.}
+\item{Semestrální práce bude obsahovat rozbor dosažených výsledků, tzn. zhodnocení jednotlivých
 aplikovaných metod, popis jejich pozitivních a negativních vlastností, porovnání výsledků podle
 vlastností použitých snímků, srovnání funkce jednotlivých algoritmů, resp. výsledků
-a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools, ….
-7. Upřesnění požadavků na semestrální práci podle zadání bude provedeno na přednáškách
-a cvičeních ZVI.
-
+a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
+\item{Upřesnění požadavků na semestrální práci podle zadání bude provedeno na přednáškách
+a cvičeních ZVI.}
+\end{enumerate}
 \chapter{Analýza úlohy}
 	\section{Předzpracování}
+	1. Obrázek 1 (původní). Převod na šedotón kvůli barevnému měřítku, popis snímku, označení objektu podezřelého z konvoluce, bude třeba odstranit/odfiltrovat šum: "vlny" dané materiálem, prach, otisk prstu, škrábance apod.
+	2. Histogram - hodně "slepený", většina obrazových bodů nabývá hodnot jasu v intervalu od 100 do 200 (standardní stupnice je od 0 do 255)
+	3.	Zvýraznění tmavých odstínů (včetně konvolucí) 
+		a) Lineární transformace - posunutí histogramu: "sjednocení" vysokých jasů, eliminace "šumu"; roztažení histogramu: zvýšení kontrastu, došlo ke "zvýraznění" konvolucí, ale i nečistot na vzorku 
+		b) Normování histogramu - složité hledání normovací funkce
 	\section{Segmentace}
 	\section{Detekce konvolucí}
 
 
 \chapter{Popis implementace}
+	Cleaner - vtvoří šedotón, 
 
 \chapter{Uživatelská dokumentace}
 	\section{SW požadavky}
