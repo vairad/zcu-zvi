@@ -12,10 +12,11 @@
 		
 	\vspace{4cm}
 		\begin {center}
-		{\Huge SEMESTRÁLNÍ PRÁCE\\ Z PŘEDMĚTU KIV/ZVI\\}
+		{\Huge SEMESTRÁLNÍ PRÁCE\\ Z~PŘEDMĚTU KIV/ZVI\\}
+		\vspace{1cm}
 		{\huge Analýza sekvence mikroskopických snímků, segmentace, detekce objektů\\}
 		\end {center}
-	\vspace{7cm}
+	\vspace{6cm}
 			
 	\noindent vypracovali: Denisa Tarantíková, Radek Vais \\
 				studijní čísla: A13B0445P, A13B0457P\\
@@ -25,18 +26,14 @@
 
 \tableofcontents
 \chapter{Úvod}
-	Cílem této semestrální práce bude analyzovat sekvenci mikroskopických snímků a detekovat v~nich jevy zvané konvoluce. Materiál, velikost řezu, zvětšení apod. Popis konvoluce, je i v jiných materiálech (s jiným tvarem). Výstupem práce bude kromě aplikace pro detekci konvolucí napsané v~jazyce C++ i soubor ve formátu *.xml, ve kterém budou uvedeny souřadnice konvolucí a snímky, na kterých se vyskytují.
+	Cílem této semestrální práce bude analyzovat sekvenci mikroskopických snímků a detekovat v~nich jevy zvané konvoluce. Data, která budou použita pro vývoj aplikace, byla snímána mikroskopem se zvětšením xy a velikostí řezu abc, snímaným materiálem bylo xyz. Popis konvoluce. Tento jev se vyskytuje i v~jiných materiálech a může nabývat i jiných tvarů. Výstupem práce bude kromě aplikace pro detekci konvolucí napsané v~jazyce C++ i soubor ve formátu *.xml, ve kterém budou uvedeny souřadnice konvolucí ve snímku a názvy snímků, na kterých se vyskytují.
 \chapter{Zadání}
 Obecné pokyny a pravidla pro vypracování semestrální práce:
 \begin{enumerate}
-	\item{Semestrální práce bude vypracována na téma podle zadání.}
-	\item{Součástí semestrální práce je teoretické řešení zadaného úkolu a programová realizace, která
-může být napsána v libovolném vhodném programovacím jazyku (Matlab nedoporučujeme).}
-	\item Programová realizace by měla obsahovat základní funkce:
+	\item Součástí semestrální práce je teoretické řešení zadaného úkolu a programová realizace, která může být napsána v libovolném vhodném programovacím jazyku. Programová realizace by měla obsahovat základní funkce:
 	\begin{itemize}
 		\item{výběr souboru vstupního snímku [formát *.BMP, *.JPG,…] a jeho zobrazení}
-		\item{zobrazování dílčích snímků jako výstupů jednotlivých fází zpracování úlohy včetně výsledku
-konečného}
+		\item{zobrazování dílčích snímků jako výstupů jednotlivých fází zpracování úlohy včetně výsledku konečného}
 		\item{volba pořadí jednotlivých metod předzpracování (pokud bude typ zadané úlohy vyžadovat
 předzpracování) a vlastního zpracování úlohy dle zadání}
 		\item{navržené algoritmy budou optimalizovány podle časového kritéria}
@@ -45,36 +42,20 @@ předzpracování) a vlastního zpracování úlohy dle zadání}
 		\item{uložení výsledných hodnot do výstupních souborů v předepsaném a komentovaném formátu,
 např. tabulky hodnot, příznakové vektory,…}
 	\end{itemize}
-
-	\item Pokud to zadané téma vyžaduje, bude součástí programové realizace také soubor metod pro
-zobrazení globálních charakteristik a předzpracování snímků, tj. metody typu:
-	\begin{itemize}
-		\item histogram - min. 256 úrovní jasu pro šedotónové snímky
-		\item histogramy pro jednotlivé barevné složky RGB
-		\item jasové korekce
-		\item jasové transformace - volba a nastavení transformační funkce
-		\item ekvalizace histogramu
-		\item prahování - ruční prahování zadáním jednoho nebo více prahů
-		\item automatické vyhledávání prahu
-		\item filtrace obrazu
-		\item přebarvování - např. maticí sousednosti
-		\item detekce hran
-		\item morfologické operace.
-	\end{itemize}		
+\item{Pokud to zadané téma vyžaduje, bude součástí programové realizace také soubor metod pro
+zobrazení globálních charakteristik a předzpracování snímků.}		
 \item{Součástí odevzdané práce bude vypracovaný referát, použité testovací snímky (zadané nebo
-vlastní), programová realizace úlohy ve spustitelné verzi, tj. *.EXE, včetně všech potřebných
+vlastní), programová realizace úlohy ve spustitelné verzi, tj. *.exe, včetně všech potřebných
 knihoven a zdrojových souborů programu + prezentace v PowerPointu.}
 \item{Semestrální práce bude obsahovat rozbor dosažených výsledků, tzn. zhodnocení jednotlivých
 aplikovaných metod, popis jejich pozitivních a negativních vlastností, porovnání výsledků podle
 vlastností použitých snímků, srovnání funkce jednotlivých algoritmů, resp. výsledků
 a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
-\item{Upřesnění požadavků na semestrální práci podle zadání bude provedeno na přednáškách
-a cvičeních ZVI.}
 \end{enumerate}
 \chapter{Analýza úlohy}
 	\section{Předzpracování}
 	1. Obrázek 1 (původní). Převod na šedotón kvůli barevnému měřítku, popis snímku, označení objektu podezřelého z konvoluce, bude třeba odstranit/odfiltrovat šum: "vlny" dané materiálem, prach, otisk prstu, škrábance apod.
-	2. Histogram - hodně "slepený", většina obrazových bodů nabývá hodnot jasu v intervalu od 100 do 200 (standardní stupnice je od 0 do 255)
+	2. Histogram - hodně "slepený", většina obrazových bodů nabývá hodnot jasu v intervalu od 150 do 200 (standardní stupnice je od 0 do 255)
 	3.	Zvýraznění tmavých odstínů (včetně konvolucí) 
 		a) Lineární transformace - posunutí histogramu: "sjednocení" vysokých jasů, eliminace "šumu"; roztažení histogramu: zvýšení kontrastu, došlo ke "zvýraznění" konvolucí, ale i nečistot na vzorku 
 		b) Normování histogramu - složité hledání normovací funkce
@@ -83,6 +64,7 @@ a cvičeních ZVI.}
 
 
 \chapter{Popis implementace}
+Volba programových prostředků: OpenCV verze 2.4 (hlavní verze, snadno dostupná na všech platformách, doporučení???)
 	Cleaner - vtvoří šedotón, 
 
 \chapter{Uživatelská dokumentace}
@@ -93,5 +75,6 @@ a cvičeních ZVI.}
 	\section{Spuštění a ovládání aplikace}	
 
 \chapter{Závěr}
+Cílem této semestrální práce bylo vytvořit aplikaci pro detekci konvolucí.
 
 \end{document} 
