@@ -1,5 +1,8 @@
-#include <QtWidgets>
+#include <QApplication>
+#include <QWidget>
 #include <QDir>
+#include <QFileDialog>
+#include <QMenuBar>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -27,25 +30,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 /**
- * Vytvori menu aplikace
- * @brief MainWindow::createMenuBar
+ * @brief MainWindow::createMenuFile
+ * @return
  */
-void MainWindow::createMenuBar() {
-    QMenuBar *menuBar;
-    menuBar = new QMenuBar(this);
-    menuBar->setGeometry(QRect(0, 0, 756, 21));
-
+QMenu *MainWindow::createMenuFile(QMenuBar *menuBar){
     // polozka Soubor
     QMenu *menuFile;
     menuFile = new QMenu(menuBar);
     menuFile->setTitle("Soubor");
-    menuBar->addAction(menuFile->menuAction());
-
-    // polozka Napoveda
-    QMenu *menuHelp;
-    menuHelp = new QMenu(menuBar);
-    menuHelp->setTitle("Nápověda");
-    menuBar->addAction(menuHelp->menuAction());
 
     // akce nacist slozku
     QAction *actionOpen;
@@ -63,19 +55,72 @@ void MainWindow::createMenuBar() {
     connect(actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     menuFile->addAction(actionQuit);
 
+    return menuFile;
+}
 
- /*   QAction *actionHelp;
-    actionHelp = new QAction(this);
-    actionHelp->setText("Nápověda k aplikaci");
-    actionHelp->setShortcut(Qt::Key_F1);
-    connect(actionHelp, SIGNAL(triggered()), this, SLOT(openHelp()));
-    menuHelp->addAction(actionHelp);
+/**
+ * @brief MainWindow::createMenuAnalyze
+ * @return
+ */
+QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
+    //    polozka Analyza
+    QMenu *menuAnalyze;
+    menuAnalyze = new QMenu(menuBar);
+    menuAnalyze->setTitle("Analýza");
 
-    QAction *actionAboutApp;
-    actionAboutApp = new QAction(this);
-    actionAboutApp->setText("O aplikaci");
-    connect(actionAboutApp, SIGNAL(triggered()), this, SLOT(aboutApplication()));
-    menuHelp->addAction(actionAboutApp);*/
+
+    // akce spust analyzu
+    QAction *actionStartAnalyze;
+    actionStartAnalyze = new QAction(this);
+    actionStartAnalyze->setText("Spusť analýzu");
+    actionStartAnalyze->setShortcut(Qt::Key_S | Qt::CTRL);
+    connect(actionStartAnalyze, SIGNAL(triggered()), this, SLOT(startAnalyze()));
+    menuAnalyze->addAction(actionStartAnalyze);
+
+    return menuAnalyze;
+}
+
+/**
+ * @brief MainWindow::createMenuHelp
+ * @return
+ */
+QMenu *MainWindow::createMenuHelp(QMenuBar *menuBar){
+    // polozka Napoveda
+    QMenu *menuHelp;
+    menuHelp = new QMenu(menuBar);
+    menuHelp->setTitle("Nápověda");
+
+
+    /*   QAction *actionHelp;
+       actionHelp = new QAction(this);
+       actionHelp->setText("Nápověda k aplikaci");
+       actionHelp->setShortcut(Qt::Key_F1);
+       connect(actionHelp, SIGNAL(triggered()), this, SLOT(openHelp()));
+       menuHelp->addAction(actionHelp);
+
+       QAction *actionAboutApp;
+       actionAboutApp = new QAction(this);
+       actionAboutApp->setText("O aplikaci");
+       connect(actionAboutApp, SIGNAL(triggered()), this, SLOT(aboutApplication()));
+       menuHelp->addAction(actionAboutApp);*/
+
+    return menuHelp;
+}
+
+
+
+/**
+ * Vytvori menu aplikace
+ * @brief MainWindow::createMenuBar
+ */
+void MainWindow::createMenuBar() {
+    QMenuBar *menuBar;
+    menuBar = new QMenuBar(this);
+    menuBar->setGeometry(QRect(0, 0, 756, 21));
+
+    menuBar->addAction(createMenuFile(menuBar)->menuAction());
+    menuBar->addAction(createMenuAnalyze(menuBar)->menuAction());
+    menuBar->addAction(createMenuHelp(menuBar)->menuAction());
 
     this->setMenuBar(menuBar);
 }
@@ -138,6 +183,30 @@ void MainWindow::setKernelLabelValue(int value) {
 }
 
 
+void MainWindow::startAnalyze(){
+    if(filename_factory == NULL){
+          filename_factory = new FilenameFactory("../data/test");
+    }
+    //    TestConsole::testFilenameFactory(filename_factory);
+        try{
+            Cleaner *cleaner = new Cleaner();
+            cleaner->setFactory(filename_factory);
+
+            connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
+            connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setLowThresh(int)));
+            connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
+            connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
+
+            cleaner->start();
+
+        }catch(EmptyImageException &e){
+            std::cout << e.what() << std::endl;
+        }catch(std::exception &e){
+            std::cout << "unnamed exception" << "\n";
+            std::cout << e.what() << "\n";
+        }
+}
+
 /**
  * Otevre dialog pro vyber souboru
  * @brief MainWindow::openFileChooser
@@ -152,26 +221,6 @@ void MainWindow::openFileChooser() {
     }
 
     filename_factory = new FilenameFactory(folder);
-//      filename_factory = new FilenameFactory("../data/test");
-
-//    TestConsole::testFilenameFactory(filename_factory);
-    try{
-        Cleaner *cleaner = new Cleaner();
-        cleaner->setFactory(filename_factory);
-
-        connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
-        connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setLowThresh(int)));
-        connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
-        connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
-
-        cleaner->start();
-
-    }catch(EmptyImageException &e){
-        std::cout << e.what() << std::endl;
-    }catch(std::exception &e){
-        std::cout << "unnamed exception" << "\n";
-        std::cout << e.what() << "\n";
-    }
 }
 
 /**

@@ -6,6 +6,8 @@
 #include <QImage>
 #include <QSlider>
 #include <QLabel>
+
+
 #include "core/filename_factory.h"
 
 namespace Ui {
@@ -23,7 +25,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    FilenameFactory *filename_factory;
+    FilenameFactory *filename_factory = NULL;
 
 private:
     Ui::MainWindow *ui;
@@ -46,12 +48,16 @@ private:
     void writeOriginalImage(QImage *image);
     void writeNewImage(QImage *image);
 
+    QMenu *createMenuFile(QMenuBar *menuBar);
+    QMenu *createMenuAnalyze(QMenuBar *menuBar);
+    QMenu *createMenuHelp(QMenuBar *menuBar);
 private slots:
     void openFileChooser();
     void writeImage(QImage *image, int destination);
     void setThresholdLabelValue(int value);
     void setKernelLabelValue(int value);
     void setRatioLabelValue(int value);
+    void startAnalyze();
 };
 
 #endif // MAINWINDOW_H
