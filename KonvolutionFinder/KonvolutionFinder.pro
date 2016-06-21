@@ -4,19 +4,21 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = KonvolutionFinder
 TEMPLATE = app
 
+CONFIG += c++11
 
 unix {
 LIBS += -lopencv_core -lopencv_flann -lopencv_highgui -lopencv_imgproc
 }
 
 win32{
+# replace with your paths to opencv
 INCLUDEPATH += D:\Programy\OpenCV\opencv\build\include
 LIBS += -LD:\Programy\OpenCV\opencv\build\x64\vc12\lib
 LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d -lopencv_imgproc2412d
@@ -28,7 +30,8 @@ SOURCES += main.cpp\
         core/filename_factory.cpp \
         core/exception.cpp \
         test/testclass.cpp \
-        core/histogrammodifier.cpp
+        core/histogrammodifier.cpp \
+    core/convolutiondescriptor.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -36,6 +39,7 @@ HEADERS  += mainwindow.h \
             core/filename_factory.h \
             core/exception.h \
             test/testclass.h \
-            core/histogrammodifier.h
+            core/histogrammodifier.h \
+    core/convolutiondescriptor.h
 
 FORMS    += mainwindow.ui
