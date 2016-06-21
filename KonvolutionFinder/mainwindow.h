@@ -11,6 +11,8 @@
 #include "core/filename_factory.h"
 #include "core/convolutiondescriptor.h"
 
+#include "gui/descriptordialog.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -21,6 +23,8 @@ class MainWindow : public QMainWindow
 
     QImage *lastImageOriginal = NULL;
     QImage *lastImageProcessed = NULL;
+
+    DescriptionDialog *description_dialog = NULL;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -63,6 +67,7 @@ private slots:
     void startAnalyze();
     void saveXmlConvolution();
     void loadXmlConvolution();
+    void showSetUp();
 };
 
 #endif // MAINWINDOW_H

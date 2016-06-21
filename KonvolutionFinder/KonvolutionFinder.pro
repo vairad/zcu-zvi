@@ -31,7 +31,8 @@ SOURCES += main.cpp\
         core/exception.cpp \
         test/testclass.cpp \
         core/histogrammodifier.cpp \
-    core/convolutiondescriptor.cpp
+    core/convolutiondescriptor.cpp \
+    gui/descriptordialog.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -40,6 +41,7 @@ HEADERS  += mainwindow.h \
             core/exception.h \
             test/testclass.h \
             core/histogrammodifier.h \
-    core/convolutiondescriptor.h
+    core/convolutiondescriptor.h \
+    gui/descriptordialog.h
 
 FORMS    += mainwindow.ui

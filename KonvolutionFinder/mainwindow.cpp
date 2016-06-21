@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     createMenuBar();
 
+    convolution_descriptor = new ConvolutionDescriptor();
     centralWidget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
     createSliderBar();
@@ -77,6 +78,14 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     actionStartAnalyze->setShortcut(Qt::Key_A | Qt::CTRL);
     connect(actionStartAnalyze, SIGNAL(triggered()), this, SLOT(startAnalyze()));
     menuAnalyze->addAction(actionStartAnalyze);
+
+    // akce nastavení
+    QAction *actionOpenSetup;
+    actionOpenSetup = new QAction(this);
+    actionOpenSetup->setText(tr("Nastavení"));
+//    actionOpenSetup->setShortcut(Qt::Key_O | Qt::CTRL);
+    connect(actionOpenSetup, SIGNAL(triggered()), this, SLOT(showSetUp()));
+    menuAnalyze->addAction(actionOpenSetup);
 
     // akce nacti popis konvoluce
     QAction *actionLoadDescriprion;
@@ -324,11 +333,42 @@ void MainWindow::writeNewImage(QImage *image){
     this->ui->imageProcessed->setPixmap(QPixmap::fromImage(tmp));
 }
 
+/**
+ * Zprostředkuje uložení xml popisu vlastností konvoluce
+ * @brief MainWindow::saveXmlConvolution
+ */
 void MainWindow::saveXmlConvolution(){
-    //todo file save dialog
-    convolution_descriptor->save("../xml.xml");
+    if(convolution_descriptor == NULL){
+        QMessageBox messageBox;
+        messageBox.information(0,"","Není připravený popis k uložení.");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+    QString path;
+
+    if(!QString::compare(convolution_descriptor->getFILE_NAME(), "")){
+        path = QFileDialog::getSaveFileName(this, tr("Uložení popisu koncoluce"),
+                         QDir::currentPath(), tr("XML Files (*.xml)"));
+        convolution_descriptor->setFILE_NAME(path);
+        description_dialog->mainTab->updatePath();
+    }else{
+        path = convolution_descriptor->getFILE_NAME();
+    }
+
+    try{
+        convolution_descriptor->save(path);
+    }catch(FileNotWriteableException &e){
+        QMessageBox messageBox;
+        messageBox.critical(0,path,"Do souboru: "+path+" nelze zapisovat");
+        messageBox.setFixedSize(500,200);
+    }
 }
 
+
+/**
+ * Zprostředkuje načtení xml popisu vlastností konvoluce
+ * @brief MainWindow::loadXmlConvolution
+ */
 void MainWindow::loadXmlConvolution(){
     QString folder = QFileDialog::getOpenFileName(this, tr("Open Convolution description"),
                                                   QDir::currentPath(), tr("XML Files (*.xml)"));
@@ -354,6 +394,17 @@ void MainWindow::loadXmlConvolution(){
     }
 
     return;
+}
+
+/**
+ * Zobrazí dialog nastavení analýzy.
+ * @brief MainWindow::showSetUp
+ */
+void MainWindow::showSetUp(){
+    if(description_dialog == NULL){
+        description_dialog = new DescriptionDialog(convolution_descriptor);
+    }
+    description_dialog->show();
 }
 
 /**
