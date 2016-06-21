@@ -9,6 +9,7 @@
 
 
 #include "core/filename_factory.h"
+#include "core/convolutiondescriptor.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,7 @@ public:
     ~MainWindow();
 
     FilenameFactory *filename_factory = NULL;
+    ConvolutionDescriptor *convolution_descriptor = NULL;
 
 private:
     Ui::MainWindow *ui;
@@ -38,6 +40,7 @@ private:
     QSlider *sliderKernel;
     QSlider *sliderRatio;
 
+    QString threshName = "Hodnota prahu: ";
 
     void createMenuBar();
     void createSliderBar();
@@ -58,6 +61,8 @@ private slots:
     void setKernelLabelValue(int value);
     void setRatioLabelValue(int value);
     void startAnalyze();
+    void saveXmlConvolution();
+    void loadXmlConvolution();
 };
 
 #endif // MAINWINDOW_H

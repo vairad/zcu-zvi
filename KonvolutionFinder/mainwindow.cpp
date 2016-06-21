@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QMenuBar>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -73,9 +74,25 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     QAction *actionStartAnalyze;
     actionStartAnalyze = new QAction(this);
     actionStartAnalyze->setText("Spusť analýzu");
-    actionStartAnalyze->setShortcut(Qt::Key_S | Qt::CTRL);
+    actionStartAnalyze->setShortcut(Qt::Key_A | Qt::CTRL);
     connect(actionStartAnalyze, SIGNAL(triggered()), this, SLOT(startAnalyze()));
     menuAnalyze->addAction(actionStartAnalyze);
+
+    // akce nacti popis konvoluce
+    QAction *actionLoadDescriprion;
+    actionLoadDescriprion = new QAction(this);
+    actionLoadDescriprion->setText("Načti popis konvoluce");
+    actionLoadDescriprion->setShortcut(Qt::Key_O | Qt::CTRL);
+    connect(actionLoadDescriprion, SIGNAL(triggered()), this, SLOT(loadXmlConvolution()));
+    menuAnalyze->addAction(actionLoadDescriprion);
+
+    // akce uloz popis konvoluce
+    QAction *actionSaveDescriprion;
+    actionSaveDescriprion = new QAction(this);
+    actionSaveDescriprion->setText("Ulož popis konvoluce");
+    actionSaveDescriprion->setShortcut(Qt::Key_S | Qt::CTRL);
+    connect(actionSaveDescriprion, SIGNAL(triggered()), this, SLOT(saveXmlConvolution()));
+    menuAnalyze->addAction(actionSaveDescriprion);
 
     return menuAnalyze;
 }
@@ -132,8 +149,8 @@ void MainWindow::createSliderBar() {
     sliderThreshold = new QSlider();
     sliderThreshold->setOrientation(Qt::Horizontal);
     sliderThreshold->setRange(0, 255);
-    sliderThreshold->setValue(100);
-    thresholdSliderLabel = new QLabel("Low Threshold: 100");
+    sliderThreshold->setValue(Cleaner::defaultThreshold);
+    thresholdSliderLabel = new QLabel(threshName + QString::number(Cleaner::defaultThreshold));
     connect(sliderThreshold, SIGNAL(valueChanged(int)), this, SLOT(setThresholdLabelValue(int)));
 
     sliderRatio = new QSlider();
@@ -142,6 +159,7 @@ void MainWindow::createSliderBar() {
     sliderRatio->setValue(1);
     ratioSliderLabel = new QLabel("Ratio: 1");
     connect(sliderRatio, SIGNAL(valueChanged(int)), this, SLOT(setRatioLabelValue(int)));
+    sliderRatio->setDisabled(true);
 
     sliderKernel = new QSlider();
     sliderKernel->setOrientation(Qt::Horizontal);
@@ -149,6 +167,7 @@ void MainWindow::createSliderBar() {
     sliderKernel->setValue(3);
     kernelSliderLabel = new QLabel("Kernel Size: 3");
     connect(sliderKernel, SIGNAL(valueChanged(int)), this, SLOT(setKernelLabelValue(int)));
+    sliderKernel->setDisabled(true);
 
     QWidget *threshWidget = new QWidget();
     QVBoxLayout *threshLayout = new QVBoxLayout(threshWidget);
@@ -173,7 +192,7 @@ void MainWindow::createSliderBar() {
 }
 
 void MainWindow::setThresholdLabelValue(int value) {
-    thresholdSliderLabel->setText("Threshold Value: " + QString::number(value));
+    thresholdSliderLabel->setText(threshName + QString::number(value));
 }
 void MainWindow::setRatioLabelValue(int value) {
     ratioSliderLabel->setText("Ratio: " + QString::number(value));
@@ -189,11 +208,10 @@ void MainWindow::startAnalyze(){
     }
     //    TestConsole::testFilenameFactory(filename_factory);
         try{
-            Cleaner *cleaner = new Cleaner();
-            cleaner->setFactory(filename_factory);
+            Cleaner *cleaner = new Cleaner(filename_factory);
 
             connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
-            connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setLowThresh(int)));
+            connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
             connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
             connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
 
@@ -206,6 +224,7 @@ void MainWindow::startAnalyze(){
             std::cout << e.what() << "\n";
         }
 }
+
 
 /**
  * Otevre dialog pro vyber souboru
@@ -305,6 +324,37 @@ void MainWindow::writeNewImage(QImage *image){
     this->ui->imageProcessed->setPixmap(QPixmap::fromImage(tmp));
 }
 
+void MainWindow::saveXmlConvolution(){
+    //todo file save dialog
+    convolution_descriptor->save("../xml.xml");
+}
+
+void MainWindow::loadXmlConvolution(){
+    QString folder = QFileDialog::getOpenFileName(this, tr("Open Convolution description"),
+                                                  QDir::currentPath(), tr("XML Files (*.xml)"));
+
+    if (!QString::compare(folder, "")) {
+        QMessageBox messageBox;
+        messageBox.information(0,"","Nebyl zvolen soubor");
+        messageBox.setFixedSize(500,200);
+        return;
+    }
+
+    // todo kontrola, zda nebezi analyza
+    convolution_descriptor = new ConvolutionDescriptor(folder);
+
+    if(!convolution_descriptor->isOk()){
+        if (!QString::compare(folder, "")) {
+            QMessageBox messageBox;
+            messageBox.critical(0,"","Soubor není načtený");
+            messageBox.setFixedSize(500,200);
+        }
+        delete convolution_descriptor;
+        convolution_descriptor = NULL;
+    }
+
+    return;
+}
 
 /**
  * Destruktor hlavního okna
