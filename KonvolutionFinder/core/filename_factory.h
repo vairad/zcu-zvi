@@ -33,6 +33,7 @@ public:
     QString getNextImageName();
     QString getNextImageRelativePath();
     QString getNextImagePath();
+    bool atEnd();
 };
 
 #endif // FILENAME_FACTORY_H

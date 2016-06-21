@@ -95,6 +95,16 @@ QString FilenameFactory::getNextImageRelativePath() {
     }
 }
 
+/**
+ * Vrati bool, zda jsou v tovarne dalsi soubory ke zpracovani.
+ * @brief FilenameFactory::atEnd
+ * @return true/false
+ */
+bool FilenameFactory::atEnd() {
+    return !name_iterator->hasNext();
+}
+
+
 
 /**
  * Factroy destructor
