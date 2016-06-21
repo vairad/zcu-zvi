@@ -14,3 +14,19 @@ const char* EmptyImageException::what() const throw()
 {
   return msg.c_str();
 }
+
+
+FileNotWriteableException::FileNotWriteableException(const char *msg){
+    this->msg = "KonvolutionFinder: Can't write to file! \n" ;
+    this->msg += "path: " ;
+    this->msg += msg ;
+    this->msg += "\n" ;
+}
+
+FileNotWriteableException::~FileNotWriteableException() throw(){
+}
+
+const char* FileNotWriteableException::what() const throw()
+{
+  return msg.c_str();
+}
