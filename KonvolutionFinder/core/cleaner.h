@@ -18,7 +18,10 @@ class Cleaner : public QThread {
 
     int counter;
 
+    const cv::Scalar CONTOUR_COLOR = cv::Scalar(20, 20, 255);
+    const cv::Scalar CONTOUR_COLOR_II = cv::Scalar(255, 0, 0);
 
+    int threshold;
     int lowThreshold;
     int ratio;
     int kernelSize;
@@ -30,14 +33,18 @@ class Cleaner : public QThread {
 
     void cvMatToQImage(cv::Mat *input, int destination);
     void convexHull(cv::Mat input, std::vector<std::vector<cv::Point> > &out);
+    void fillAllContours(cv::Mat input, const std::vector<std::vector<cv::Point> > &contours);
 
-
+    bool checkContour(std::vector<cv::Point> contour);
 
 public:
-    void setFactory(FilenameFactory *names);
+    static int defaultThreshold;
+
+    Cleaner(FilenameFactory *names);
 signals:
     void showImage(QImage *image, int destination);
 public slots:
+    void setThresh(int value);
     void setLowThresh(int value);
     void setRatio(int value);
     void setKernelSize(int value);
