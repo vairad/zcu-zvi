@@ -70,14 +70,16 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\caption{Konvoluce}
 	\end{figure}	
 
-	Dle histogramu původního snímku na obrázku 3.3 si lze povšimnout, že většina obrazových bodů na stupnici jasu od 0 do 255 nabývá hodnot v~intervalu přibližně od 100 do 200. Budeme uvažovat, že v~ostatních snímcích v~zadané sekvenci je přibližně stejné rozložení hodnot jasu. Vzhledem k~tomu, že konvoluce se jeví tmavé v~porovnání s~ostatními obrazovými body snímku, zvýrazněním tmavých odstínů oproti světlým bychom docílili \uv{vystoupení} konvolucí. Pro dosažení tohoto výsledku přebarvíme hodnoty vysokých jasů tak, že jasy vyšší než zvolená mezní hodnota $M$ (včetně) nabudou nejvyššího jasu (255). Tím potlačíme šum, jehož jas nabývá vysokých hodnot (např. vlny). Zbylé hodnoty \uv{roztáhneme} po celém intervalu 0 až 255 vynásobením koeficientem $\frac{256}{M}$, kde v~čitateli je počet hodnot v~celém intervalu a ve jmenovateli počet zbylých (\uv{nesjednocovaných}) hodnot. Touto operací zvýšíme kontrast, a tak usnadníme kontrolu výskytu konvolucí lidským okem. Hodnotu, kterou zvolíme jako mezní, určíme na intervalu od 100 do 150 (150 je vrchol histogramu na obrázku 3.3) tak, aby ve snímku zůstaly objekty \uv{podezřelé} z~konvolucí a zároveň bylo potlačeno co nejvíce šumu. Na obrázcích 3.4 až 3.6 vidíme výsledné snímky s~mezními hodnotami 100, 150 a 125. Při mezní hodnotě 100 je na snímku stále mnoho viditelných vln, při hodnotě 150 je naopak možné, že některé konvoluce \uv{zmizely}. Mezní hodnota 125 se jeví jako dobrý kompromis. Pokud by však byl zvolen jiný materiál, hodnoty jasů by se mohly výrazně lišit. Proto bude vhodné umožnit také ruční nastavení mezní hodnoty.
+	Dle histogramu původního snímku na obrázku 3.3 si lze povšimnout, že většina obrazových bodů na stupnici jasu od 0 do 255 nabývá hodnot v~intervalu přibližně od 100 do 200. Budeme uvažovat, že v~ostatních snímcích v~zadané sekvenci je přibližně stejné rozložení hodnot jasu. Vzhledem k~tomu, že konvoluce se jeví tmavé v~porovnání s~ostatními obrazovými body snímku, zvýrazněním tmavých odstínů oproti světlým bychom docílili \uv{vystoupení} konvolucí. Pro dosažení tohoto výsledku přebarvíme hodnoty vysokých jasů tak, že jasy vyšší než zvolená mezní hodnota $M$ (včetně) nabudou nejvyššího jasu (255). Tím potlačíme šum, jehož jas nabývá vysokých hodnot (např. vlny). Zbylé hodnoty \uv{roztáhneme} po celém intervalu 0 až 255 vynásobením koeficientem $\frac{256}{M}$, kde v~čitateli je počet hodnot v~celém intervalu a ve jmenovateli počet zbylých (\uv{nesjednocovaných}) hodnot. Touto operací zvýšíme kontrast, a tak usnadníme kontrolu výskytu konvolucí lidským okem. 
 	
 	\begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.65]{obrazky/puvodni_histogram.png}
 	\label{fig:puvodni_histogram}
 	\caption{Histogram původního snímku}
-	\end{figure}
+	\end{figure}	
+	
+	Hodnotu, kterou zvolíme jako mezní, určíme na intervalu od 100 do 150 (150 je vrchol histogramu na obrázku 3.3) tak, aby ve snímku zůstaly objekty \uv{podezřelé} z~konvolucí a zároveň bylo potlačeno co nejvíce šumu. Na obrázcích 3.4 až 3.6 vidíme výsledné snímky s~mezními hodnotami 100, 150 a 125. Při mezní hodnotě 100 je na snímku stále mnoho viditelných vln, při hodnotě 150 je naopak možné, že některé konvoluce \uv{zmizely}. Mezní hodnota 125 se jeví jako dobrý kompromis. Pokud by však byl zvolen jiný materiál, hodnoty jasů by se mohly výrazně lišit. Proto bude vhodné umožnit také ruční nastavení mezní hodnoty.
 	
 	\begin{figure}[!htb]
 	\centering
@@ -100,9 +102,24 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\caption{Přebarvení vysokých jasů s~mezní hodnotou 125 a roztažení}
 	\end{figure}				
 		
-	Segmentace snímku bude vzhledem k~množství dat řešena prahováním, které je výpočetně nejméně náročné. Metoda rozplavu je sice výpočetně srovnatelná, ale pro náš případ, kdy potřebujeme zvýraznit krajní hodnoty (0 až mez), \uv{degraduje} na metodu prahování. Hodnotu prahu nastaví uživatel z~důvodu možného rozdílného rozložení hodnot jasu. V~testovací sekvenci snímků se jako vhodný práh jeví hodnota jasu mezi 160 a 190.
+	Segmentace snímku bude vzhledem k~množství dat řešena prahováním, které je výpočetně nejméně náročné. Metoda rozplavu je sice výpočetně srovnatelná, ale pro náš případ, kdy potřebujeme zvýraznit krajní hodnoty (0 až mez), \uv{degraduje} na metodu prahování. Hodnota prahu bude nastavena ručně uživatelem z~důvodu možného rozdílného rozložení hodnot jasu v~různých snímcích. V~testovací sekvenci snímků se jako vhodný práh jeví hodnota jasu mezi 160 a 190 (viz obrázky 3.7 a 3.8).
+	
+	\begin{figure}[!htb]
+	\centering
+	\fbox{\includegraphics[scale=0.25]{obrazky/prahovani160_vyrez.png}}
+	\label{fig:prahovani_160}
+	\caption{Prahování s hodnotou prahu 160}
+	\end{figure}
+	
+	\begin{figure}[!htb]
+	\centering
+	\fbox{\includegraphics[scale=0.25]{obrazky/prahovani190_vyrez.png}}
+	\label{fig:prahovani_190}
+	\caption{Prahování s hodnotou prahu 190}
+	\end{figure}
+	
 	\section{Detekce konvolucí}
-
+V další fázi se budou detekovat konvoluce.
 
 \chapter{Popis implementace}
 Volba programových prostředků: OpenCV verze 2.4 (hlavní verze, snadno dostupná na všech platformách, doporučení???)
