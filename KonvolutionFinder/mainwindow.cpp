@@ -13,14 +13,19 @@
 
 #include <iostream>
 
+/** **********************************************************************************
+ * @brief MainWindow::MainWindow
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    this->setWindowTitle("Konvolution Finder");
+    this->setWindowTitle(tr("Konvolution Finder"));
     this->showMaximized();
 
     createMenuBar();
 
     convolution_descriptor = new ConvolutionDescriptor();
+    description_dialog = new DescriptionDialog(convolution_descriptor);
     centralWidget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
     createSliderBar();
@@ -31,20 +36,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     createSliderBar();
 }
 
-/**
+/** **********************************************************************************
  * @brief MainWindow::createMenuFile
- * @return
+ *
+ * Metoda připraví svislé menu obsahující ovládání zdrojových dat.
+ *
+ * @return připravené menu
  */
 QMenu *MainWindow::createMenuFile(QMenuBar *menuBar){
     // polozka Soubor
     QMenu *menuFile;
     menuFile = new QMenu(menuBar);
-    menuFile->setTitle("Soubor");
+    menuFile->setTitle(tr("Soubor"));
 
     // akce nacist slozku
     QAction *actionOpen;
     actionOpen = new QAction(this);
-    actionOpen->setText("Načíst složku...");
+    actionOpen->setText(tr("Načíst složku..."));
     actionOpen->setShortcut(Qt::Key_O | Qt::CTRL);
     connect(actionOpen, SIGNAL(triggered()), this, SLOT(openFileChooser()));
     menuFile->addAction(actionOpen);
@@ -52,7 +60,7 @@ QMenu *MainWindow::createMenuFile(QMenuBar *menuBar){
     // akce ukoncit aplikaci
     QAction *actionQuit;
     actionQuit = new QAction(this);
-    actionQuit->setText("Ukončit aplikaci");
+    actionQuit->setText(tr("Ukončit aplikaci"));
     actionQuit->setShortcut(Qt::Key_Q | Qt::CTRL);
     connect(actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     menuFile->addAction(actionQuit);
@@ -60,24 +68,27 @@ QMenu *MainWindow::createMenuFile(QMenuBar *menuBar){
     return menuFile;
 }
 
-/**
+/** **********************************************************************************
  * @brief MainWindow::createMenuAnalyze
- * @return
+ * Metoda připraví menu s ovládacími prvky nastavení analýzy
+ * @return menu analyze
  */
 QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     //    polozka Analyza
     QMenu *menuAnalyze;
     menuAnalyze = new QMenu(menuBar);
-    menuAnalyze->setTitle("Analýza");
+    menuAnalyze->setTitle(tr("Analýza"));
 
 
     // akce spust analyzu
     QAction *actionStartAnalyze;
     actionStartAnalyze = new QAction(this);
-    actionStartAnalyze->setText("Spusť analýzu");
+    actionStartAnalyze->setText(tr("Spusť analýzu"));
     actionStartAnalyze->setShortcut(Qt::Key_A | Qt::CTRL);
     connect(actionStartAnalyze, SIGNAL(triggered()), this, SLOT(startAnalyze()));
     menuAnalyze->addAction(actionStartAnalyze);
+
+    menuAnalyze->addSeparator();
 
     // akce nastavení
     QAction *actionOpenSetup;
@@ -87,10 +98,12 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     connect(actionOpenSetup, SIGNAL(triggered()), this, SLOT(showSetUp()));
     menuAnalyze->addAction(actionOpenSetup);
 
+    menuAnalyze->addSeparator();
+
     // akce nacti popis konvoluce
     QAction *actionLoadDescriprion;
     actionLoadDescriprion = new QAction(this);
-    actionLoadDescriprion->setText("Načti popis konvoluce");
+    actionLoadDescriprion->setText(tr("Načti popis konvoluce"));
     actionLoadDescriprion->setShortcut(Qt::Key_O | Qt::CTRL);
     connect(actionLoadDescriprion, SIGNAL(triggered()), this, SLOT(loadXmlConvolution()));
     menuAnalyze->addAction(actionLoadDescriprion);
@@ -98,17 +111,26 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     // akce uloz popis konvoluce
     QAction *actionSaveDescriprion;
     actionSaveDescriprion = new QAction(this);
-    actionSaveDescriprion->setText("Ulož popis konvoluce");
+    actionSaveDescriprion->setText(tr("Ulož popis konvoluce"));
     actionSaveDescriprion->setShortcut(Qt::Key_S | Qt::CTRL);
     connect(actionSaveDescriprion, SIGNAL(triggered()), this, SLOT(saveXmlConvolution()));
     menuAnalyze->addAction(actionSaveDescriprion);
 
+    // akce novy popis konvoluce
+    QAction *actionNewDescriprion;
+    actionNewDescriprion = new QAction(this);
+    actionNewDescriprion->setText(tr("Nový popis konvoluce"));
+    actionNewDescriprion->setShortcut(Qt::Key_N | Qt::CTRL);
+    connect(actionNewDescriprion, SIGNAL(triggered()), this, SLOT(newXmlConvolution()));
+    menuAnalyze->addAction(actionNewDescriprion);
+
     return menuAnalyze;
 }
 
-/**
+/** **********************************************************************************
  * @brief MainWindow::createMenuHelp
- * @return
+ * Metoda připraví menu nápovědy k ovládání programu.
+ * @return menu help
  */
 QMenu *MainWindow::createMenuHelp(QMenuBar *menuBar){
     // polozka Napoveda
@@ -116,7 +138,7 @@ QMenu *MainWindow::createMenuHelp(QMenuBar *menuBar){
     menuHelp = new QMenu(menuBar);
     menuHelp->setTitle("Nápověda");
 
-
+//todo připravit nápovědu
     /*   QAction *actionHelp;
        actionHelp = new QAction(this);
        actionHelp->setText("Nápověda k aplikaci");
@@ -135,8 +157,8 @@ QMenu *MainWindow::createMenuHelp(QMenuBar *menuBar){
 
 
 
-/**
- * Vytvori menu aplikace
+/** **********************************************************************************
+ * Metoda zkombinuje jednotlivá svislá menu a vytvoří hlavní vodorovnou lištu aplikace
  * @brief MainWindow::createMenuBar
  */
 void MainWindow::createMenuBar() {
@@ -151,6 +173,10 @@ void MainWindow::createMenuBar() {
     this->setMenuBar(menuBar);
 }
 
+/** **********************************************************************************
+ * Metoda připraví posuvníky pro nastavení prahů za běhu aplikace
+ * @brief MainWindow::createSliderBar
+ */
 void MainWindow::createSliderBar() {
     sliderBar = new QWidget();
     QHBoxLayout *layout = new QHBoxLayout(sliderBar);
@@ -166,7 +192,7 @@ void MainWindow::createSliderBar() {
     sliderRatio->setOrientation(Qt::Horizontal);
     sliderRatio->setRange(1, 10);
     sliderRatio->setValue(1);
-    ratioSliderLabel = new QLabel("Ratio: 1");
+    ratioSliderLabel = new QLabel(tr("Ratio: 1"));
     connect(sliderRatio, SIGNAL(valueChanged(int)), this, SLOT(setRatioLabelValue(int)));
     sliderRatio->setDisabled(true);
 
@@ -174,7 +200,7 @@ void MainWindow::createSliderBar() {
     sliderKernel->setOrientation(Qt::Horizontal);
     sliderKernel->setRange(3, 50);
     sliderKernel->setValue(3);
-    kernelSliderLabel = new QLabel("Kernel Size: 3");
+    kernelSliderLabel = new QLabel(tr("Kernel Size: 3"));
     connect(sliderKernel, SIGNAL(valueChanged(int)), this, SLOT(setKernelLabelValue(int)));
     sliderKernel->setDisabled(true);
 
@@ -210,32 +236,34 @@ void MainWindow::setKernelLabelValue(int value) {
     kernelSliderLabel->setText("Kernel Size: " + QString::number(value));
 }
 
-
+/** **********************************************************************************
+ * Metoda spustí analýzu s požaovaným počtem vláken
+ * @brief MainWindow::startAnalyze
+ */
 void MainWindow::startAnalyze(){
     if(filename_factory == NULL){
-          filename_factory = new FilenameFactory("../data/test");
+          filename_factory = new FilenameFactory("../data/test"); //todo delete
     }
-    //    TestConsole::testFilenameFactory(filename_factory);
-        try{
-            Cleaner *cleaner = new Cleaner(filename_factory, convolution_descriptor);
+    try{
+        Cleaner *cleaner = new Cleaner(filename_factory, convolution_descriptor);
 
-            connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
-            connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
-            connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
-            connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
+        connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
+        connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
+        connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
+        connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
 
-            cleaner->start();
+        cleaner->start();
 
-        }catch(EmptyImageException &e){
-            std::cout << e.what() << std::endl;
-        }catch(std::exception &e){
-            std::cout << "unnamed exception" << "\n";
-            std::cout << e.what() << "\n";
-        }
+    }catch(EmptyImageException &e){
+        std::cout << e.what() << std::endl;
+    }catch(std::exception &e){
+        std::cout << "unnamed exception" << "\n";
+        std::cout << e.what() << "\n";
+    }
 }
 
 
-/**
+/** **********************************************************************************
  * Otevre dialog pro vyber souboru
  * @brief MainWindow::openFileChooser
  * @return jmeno vybrane slozky
@@ -251,11 +279,11 @@ void MainWindow::openFileChooser() {
     filename_factory = new FilenameFactory(folder);
 }
 
-/**
+/** **********************************************************************************
  * Dotaz pred zavrenim aplikace
  * @brief MainWindow::closeEvent
  * @param event
- */
+ */ //todo odkomentovat
 /*void MainWindow::closeEvent(QCloseEvent *event) {
     int reply = QMessageBox::question(this, "Ukončit aplikaci", "Opravdu chcete ukončit aplikaci?", "Ano", "Ne");
     if (reply == 0) {
@@ -266,7 +294,7 @@ void MainWindow::openFileChooser() {
     }
 }*/
 
-/**
+/** **********************************************************************************
  * Zpracuj signál přinášející obrázek k vykreslení
  * @brief MainWindow::writeImage
  * @param image pointer na obrázek
@@ -284,7 +312,7 @@ void MainWindow::writeImage(QImage *image, int destination){
 }
 
 
-/**
+/** **********************************************************************************
  * Vykresli QImage do labelu imageOriginal (levy)
  * @brief MainWindow::writeNewImage
  * @param image pointer na QImage
@@ -309,7 +337,7 @@ void MainWindow::writeOriginalImage(QImage *image){
 }
 
 
-/**
+/** **********************************************************************************
  * Vykresli QImage do labelu imageProcessed (pravy)
  * @brief MainWindow::writeNewImage
  * @param image pointer na QImage
@@ -333,14 +361,14 @@ void MainWindow::writeNewImage(QImage *image){
     this->ui->imageProcessed->setPixmap(QPixmap::fromImage(tmp));
 }
 
-/**
+/** **********************************************************************************
  * Zprostředkuje uložení xml popisu vlastností konvoluce
  * @brief MainWindow::saveXmlConvolution
  */
 void MainWindow::saveXmlConvolution(){
     if(convolution_descriptor == NULL){
         QMessageBox messageBox;
-        messageBox.information(0,"","Není připravený popis k uložení.");
+        messageBox.information(0,"",tr("Není připravený popis k uložení."));
         messageBox.setFixedSize(500,200);
         return;
     }
@@ -369,7 +397,7 @@ void MainWindow::saveXmlConvolution(){
 }
 
 
-/**
+/** **********************************************************************************
  * Zprostředkuje načtení xml popisu vlastností konvoluce
  * @brief MainWindow::loadXmlConvolution
  */
@@ -379,39 +407,60 @@ void MainWindow::loadXmlConvolution(){
 
     if (!QString::compare(folder, "")) {
         QMessageBox messageBox;
-        messageBox.information(0,"","Nebyl zvolen soubor");
+        messageBox.information(0,"",tr("Nebyl zvolen soubor"));
         messageBox.setFixedSize(500,200);
         return;
     }
 
     // todo kontrola, zda nebezi analyza
-    convolution_descriptor = new ConvolutionDescriptor(folder);
+    bool opened = convolution_descriptor->open(folder);
 
-    if(!convolution_descriptor->isOk()){
+
+    if(!opened){
         if (!QString::compare(folder, "")) {
             QMessageBox messageBox;
-            messageBox.critical(0,"","Soubor není načtený");
+            messageBox.critical(0,"","Soubor "+folder+" není čitelný");
             messageBox.setFixedSize(500,200);
         }
-        delete convolution_descriptor;
-        convolution_descriptor = NULL;
+    }else{
+        description_dialog->mainTab->updateContent();
+        description_dialog->show();
+        QMessageBox messageBox;
+        messageBox.information(0,"","Soubor "+folder+" byl načten");
+        messageBox.setFixedSize(500,200);
+
     }
 
     return;
 }
 
-/**
- * Zobrazí dialog nastavení analýzy.
+
+
+/** **********************************************************************************
+ * Smaže adresu ukládaného souboru... Půjde tedy uložit znovu
+ * @brief MainWindow::loadXmlConvolution
+ */
+void MainWindow::newXmlConvolution(){
+
+    // todo kontrola, zda nebezi analyza
+    convolution_descriptor->reset();
+
+    description_dialog->mainTab->updateContent();
+    description_dialog->show();
+
+    return;
+}
+
+
+/** **********************************************************************************
+ * Zobrazí dialog pro nastavení parametrů analýzy.
  * @brief MainWindow::showSetUp
  */
 void MainWindow::showSetUp(){
-    if(description_dialog == NULL){
-        description_dialog = new DescriptionDialog(convolution_descriptor);
-    }
     description_dialog->show();
 }
 
-/**
+/** **********************************************************************************
  * Destruktor hlavního okna
  * @brief MainWindow::~MainWindow
  */

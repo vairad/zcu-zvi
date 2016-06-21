@@ -67,6 +67,7 @@ private slots:
     void startAnalyze();
     void saveXmlConvolution();
     void loadXmlConvolution();
+    void newXmlConvolution();
     void showSetUp();
 };
 

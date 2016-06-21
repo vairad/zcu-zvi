@@ -8,26 +8,24 @@
 
 class ConvolutionDescriptor
 {
-    double reqAspectRatio = 1.0; //podlouhlost
-    double epsilonRatio = 0.2;
+    double reqAspectRatio; //podlouhlost
+    double epsilonRatio;
 
-    int reqMinVerticies = 1; // minimum vrcholů aproximace
-    int reqMaxVerticies = INT_MAX; // maximum vrcholů aproximace
+    int reqMinVerticies; // minimum vrcholů aproximace
+    int reqMaxVerticies; // maximum vrcholů aproximace
 
-    double reqExtent = 0.2; // pravoúhlost
-    double epsilonExtent = 0.2;
+    double reqExtent; // pravoúhlost
+    double epsilonExtent;
 
     QString note;
 
     QString FILE_NAME;
-    bool prepared;
 
 public:
     ConvolutionDescriptor();
     ConvolutionDescriptor(QString path);
 
     void save(QString path);
-    bool isOk();
 
     double getReqAspectRatio() const;
     double getEpsilonRatio() const;
@@ -45,6 +43,8 @@ public:
     void setEpsilonExtent(double value);
     void setNote(const QString &value);
     void setFILE_NAME(const QString &value);
+    bool open(QString path);
+    void reset();
 };
 
 #endif // CONVOLUTIONDESCRIPTOR_H

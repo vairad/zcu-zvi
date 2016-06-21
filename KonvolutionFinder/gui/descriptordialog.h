@@ -46,6 +46,7 @@ public:
     QLabel *pathL = NULL;
 
     void updatePath();
+    void updateContent();
 };
 
 

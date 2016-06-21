@@ -3,14 +3,14 @@
 #include "gui/descriptordialog.h"
 
 
-/**
- * Vytvori dialog umoznujici nastaveni meta dat
- * @brief MetaDialog::MetaDialog
- * @param sensors widgety senzoru
- * @param numberOfSensors pocet senzoru
+/** ************************************************************************************************
+ * Konstruktor připraví dialog pro nastavení dat k analýze.
+ * @brief DescriptionDialog::DescriptionDialog
+ * @param convolution_descriptor
  * @param parent
  */
-DescriptionDialog::DescriptionDialog(ConvolutionDescriptor *convolution_descriptor, QWidget *parent) : QDialog(parent), convolution_descriptor(convolution_descriptor) {
+DescriptionDialog::DescriptionDialog(ConvolutionDescriptor *convolution_descriptor, QWidget *parent) :
+                                                    QDialog(parent), convolution_descriptor(convolution_descriptor) {
     tabWidget = new QTabWidget;
     mainTab = new ConvolutionTab(this->convolution_descriptor);
     tabWidget->addTab(mainTab, tr("Popis konvoluce"));
@@ -31,9 +31,8 @@ DescriptionDialog::DescriptionDialog(ConvolutionDescriptor *convolution_descript
     setWindowTitle(tr("Nastavení"));
 }
 
-/**
- * Aktualizace dat v data manageru
- * @brief MetaDialog::updateMetadata
+/** ************************************************************************************************
+ * @brief DescriptionDialog::updateData
  */
 void DescriptionDialog::updateData() {
     convolution_descriptor->setEpsilonExtent(mainTab->epsilonExtent->value());
@@ -47,6 +46,10 @@ void DescriptionDialog::updateData() {
 
 //===========================================================================================
 
+/** ************************************************************************************************
+ * @brief ConvolutionTab::createAspectRatioBox
+ * @return
+ */
 QGroupBox *ConvolutionTab::createAspectRatioBox(){
     QLabel *ratioL = new QLabel(tr("Poměr stran:"));
     aspectRatio = new QDoubleSpinBox();
@@ -83,7 +86,10 @@ QGroupBox *ConvolutionTab::createAspectRatioBox(){
     return box;
 }
 
-
+/** ************************************************************************************************
+ * @brief ConvolutionTab::createVerticiesBox
+ * @return
+ */
 QGroupBox *ConvolutionTab::createVerticiesBox(){
     QLabel *minimumL = new QLabel(tr("Minimum:"));
     minVerticies = new QSpinBox();
@@ -119,6 +125,10 @@ QGroupBox *ConvolutionTab::createVerticiesBox(){
     return box;
 }
 
+/** ************************************************************************************************
+ * @brief ConvolutionTab::createExtentBox
+ * @return
+ */
 QGroupBox *ConvolutionTab::createExtentBox(){
     QLabel *extentL = new QLabel(tr("Poměr délek hranic:"));
     extent = new QDoubleSpinBox();
@@ -156,6 +166,9 @@ QGroupBox *ConvolutionTab::createExtentBox(){
     return box;
 }
 
+/** ************************************************************************************************
+ * @brief ConvolutionTab::updatePath
+ */
 void ConvolutionTab::updatePath(){
     QFileInfo fileInfo(convolution_descriptor->getFILE_NAME());
 
@@ -179,7 +192,18 @@ void ConvolutionTab::updatePath(){
     }
 }
 
-/**
+void ConvolutionTab::updateContent(){
+    updatePath();
+    epsilonExtent->setValue(convolution_descriptor->getEpsilonExtent());
+    extent->setValue(convolution_descriptor->getReqExtent());
+    maxVerticies->setValue(convolution_descriptor->getReqMaxVerticies());
+    minVerticies->setValue(convolution_descriptor->getReqMinVerticies());
+    epsilonRatio->setValue(convolution_descriptor->getEpsilonRatio());
+    aspectRatio->setValue(convolution_descriptor->getReqAspectRatio());
+    noteTE->setText(convolution_descriptor->getNote());
+}
+
+/** ************************************************************************************************
  * Vytvori list hlavni - nastaveni udaju uzivatele
  * @brief MainTab::MainTab
  * @param fileInfo

@@ -92,10 +92,17 @@ void ConvolutionDescriptor::setFILE_NAME(const QString &value)
 
 ConvolutionDescriptor::ConvolutionDescriptor(){
     FILE_NAME = "";
-    prepared = false;
+    reqAspectRatio = 1.0; //podlouhlost
+    epsilonRatio = 0.2;
+
+    reqMinVerticies = 1; // minimum vrcholů aproximace
+    reqMaxVerticies = INT_MAX; // maximum vrcholů aproximace
+
+    reqExtent = 0.2; // pravoúhlost
+    epsilonExtent = 0.2;
 }
 
-ConvolutionDescriptor::ConvolutionDescriptor(QString path)
+bool ConvolutionDescriptor::open(QString path)
 {
     QDomDocument xml("mydocument");
 
@@ -103,14 +110,11 @@ ConvolutionDescriptor::ConvolutionDescriptor(QString path)
     fileToRead.open(QIODevice::ReadOnly | QIODevice::Text);
 
     if(!fileToRead.isReadable()){
-        prepared = false;
-        return;
+        return false;
     }
 
     if (!xml.setContent(&fileToRead)) {
-        fileToRead.close();
-        prepared = false;
-        return;
+        return false;
     }
 
     fileToRead.close();
@@ -118,6 +122,8 @@ ConvolutionDescriptor::ConvolutionDescriptor(QString path)
     QDomElement docElem = xml.documentElement(); // root element
 
     QDomNode n = docElem.firstChild();
+ //   QDomNodeList list = docElem.elementsByTagName("ConvolutionDescription");
+//    QDomNode n = list.at(0);
     while(!n.isNull()) {
         QDomElement e = n.toElement(); // try to convert the node to an element.
         if(!e.isNull()) {
@@ -140,8 +146,18 @@ ConvolutionDescriptor::ConvolutionDescriptor(QString path)
         n = n.nextSibling();
     }
 
+    //todo kontrola zda byly načteny hodnoty korektně
+
     FILE_NAME = path;
-    prepared = true;
+    return true;
+}
+
+/** **********************************************************************************
+ * Smaže adresu ukládaného souboru... Půjde tedy uložit znovu
+ * @brief MainWindow::loadXmlConvolution
+ */
+void ConvolutionDescriptor::reset(){
+    FILE_NAME = "";
 }
 
 void ConvolutionDescriptor::save(QString path)
@@ -177,8 +193,4 @@ void ConvolutionDescriptor::save(QString path)
 
      fileToSave.close();
 
-}
-
-bool ConvolutionDescriptor::isOk(){
-    return prepared;
 }
