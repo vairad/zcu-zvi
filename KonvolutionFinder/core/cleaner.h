@@ -11,10 +11,13 @@
 #include <QThread>
 
 #include "core/filename_factory.h"
+#include "core/convolutiondescriptor.h"
+
 
 class Cleaner : public QThread {
     Q_OBJECT
     FilenameFactory *names;
+    ConvolutionDescriptor *descriptor;
 
     int counter;
 
@@ -40,7 +43,7 @@ class Cleaner : public QThread {
 public:
     static int defaultThreshold;
 
-    Cleaner(FilenameFactory *names);
+    Cleaner(FilenameFactory *names, ConvolutionDescriptor *descriptor);
 signals:
     void showImage(QImage *image, int destination);
 public slots:

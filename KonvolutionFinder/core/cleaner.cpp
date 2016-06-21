@@ -5,10 +5,10 @@
 #include "core/exception.h"
 #include "core/histogrammodifier.h"
 
+
 int Cleaner::defaultThreshold = 160;
 
-Cleaner::Cleaner(FilenameFactory *names){
-    this->names = names;
+Cleaner::Cleaner(FilenameFactory *names, ConvolutionDescriptor *descriptor):  names(names), descriptor(descriptor){
     this->counter = 0;
     this->lowThreshold = 100;
     this->threshold = defaultThreshold;
@@ -110,13 +110,19 @@ bool Cleaner::checkContour(std::vector<cv::Point> contour){
     double  aspectRatio = double(boundingRect.width)/boundingRect.height;
     double contourLength = cv::arcLength(contourPoly, true);
 
-    double reqAspectRatio = 1.0;
-    double epsilon = 0.3;
+    double reqAspectRatio = descriptor->getReqAspectRatio();
+    double epsilonRatio = descriptor->getEpsilonRatio();
 
-    if( contourPoly.size() < 5 ){
+    int reqMaxVerticies = descriptor->getReqMaxVerticies();
+    int reqMinVerticies = descriptor->getReqMinVerticies();
+
+    if( contourPoly.size() < reqMinVerticies ){
         return false;
     }
-    if(aspectRatio > (reqAspectRatio + epsilon) || aspectRatio  < (reqAspectRatio - epsilon) ){
+    if( contourPoly.size() > reqMaxVerticies ){
+        return false;
+    }
+    if(aspectRatio > (reqAspectRatio + epsilonRatio) || aspectRatio  < (reqAspectRatio - epsilonRatio) ){
         return false;
     }
 

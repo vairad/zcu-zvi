@@ -217,7 +217,7 @@ void MainWindow::startAnalyze(){
     }
     //    TestConsole::testFilenameFactory(filename_factory);
         try{
-            Cleaner *cleaner = new Cleaner(filename_factory);
+            Cleaner *cleaner = new Cleaner(filename_factory, convolution_descriptor);
 
             connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
             connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
@@ -357,6 +357,10 @@ void MainWindow::saveXmlConvolution(){
 
     try{
         convolution_descriptor->save(path);
+
+        QMessageBox messageBox;
+        messageBox.information(0,path,"Soubor: "+path+" byl uložen.");
+        messageBox.setFixedSize(500,200);
     }catch(FileNotWriteableException &e){
         QMessageBox messageBox;
         messageBox.critical(0,path,"Do souboru: "+path+" nelze zapisovat");
