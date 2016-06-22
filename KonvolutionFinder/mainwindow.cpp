@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QDir>
 #include <QFileDialog>
+#include <QString>
 #include <QMenuBar>
 #include <QMessageBox>
 
@@ -18,8 +19,9 @@
  * @param parent
  */
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+    APP_NAME = new QString("IclusionFinder");
     ui->setupUi(this);
-    this->setWindowTitle(tr("Konvolution Finder"));
+    this->setWindowTitle(*APP_NAME);
     this->showMaximized();
 
     createMenuBar();
@@ -277,6 +279,7 @@ void MainWindow::openFileChooser() {
     }
 
     filename_factory = new FilenameFactory(folder);
+    this->setWindowTitle(*APP_NAME+" - ("+folder+")");
 }
 
 /** **********************************************************************************

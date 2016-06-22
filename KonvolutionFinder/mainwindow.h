@@ -21,6 +21,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    const QString *APP_NAME;
+
     QImage *lastImageOriginal = NULL;
     QImage *lastImageProcessed = NULL;
 
