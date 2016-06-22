@@ -49,6 +49,7 @@ private:
     QString threshName = "Hodnota prahu: ";
 
     void createMenuBar();
+    void createToolBar();
     void createSliderBar();
     void createSliders();
 

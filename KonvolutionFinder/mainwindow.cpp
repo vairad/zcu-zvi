@@ -5,6 +5,7 @@
 #include <QString>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QAction>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->showMaximized();
 
     createMenuBar();
+    createToolBar();
 
     convolution_descriptor = new ConvolutionDescriptor();
     description_dialog = new DescriptionDialog(convolution_descriptor);
@@ -36,6 +38,43 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   /*  this->setCentralWidget(centralWidget);*/
 
     createSliderBar();
+}
+
+/**
+ * Vytvori listu nastroju
+ * @brief MainWindow::createToolBar
+ */
+void MainWindow::createToolBar() {
+    QToolBar *toolbar = addToolBar("main toolbar");
+
+    QWidget* spacer = new QWidget();
+    spacer->setFixedWidth(5);
+    toolbar->addWidget(spacer);
+
+    // akce pro zahajeni snimani
+    QAction *startA = new QAction(this);
+    startA->setObjectName(QStringLiteral("action"));
+    startA->setText("Spustit analýzu");
+    QPixmap start("images/start.png");
+    startA->setIcon(QIcon(start));
+  //  connect(startA, SIGNAL(triggered()), this, SLOT(portChoosed()));
+    toolbar->addAction(startA);
+
+
+    // akce pro ukonceni snimani
+    QAction *stopA = new QAction(this);
+    stopA->setObjectName(QStringLiteral("action"));
+    stopA->setText("Zastavit analýzu");
+    QPixmap stop("images/stop.png");
+    stopA->setIcon(QIcon(stop));
+  //  connect(stopA, SIGNAL(triggered()), this, SLOT(stopScanning()));
+    toolbar->addAction(stopA);
+
+    QWidget* spacer2 = new QWidget();
+    spacer2->setFixedWidth(10);
+    toolbar->addWidget(spacer2);
+
+    toolbar->addSeparator();
 }
 
 /** **********************************************************************************
