@@ -61,7 +61,9 @@ private:
     QMenu *createMenuFile(QMenuBar *menuBar);
     QMenu *createMenuAnalyze(QMenuBar *menuBar);
     QMenu *createMenuHelp(QMenuBar *menuBar);
+
 private slots:
+    void aboutApplication();
     void openFileChooser();
     void writeImage(QImage *image, int destination);
     void setThresholdLabelValue(int value);

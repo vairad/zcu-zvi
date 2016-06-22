@@ -57,7 +57,7 @@ void MainWindow::createToolBar() {
     startA->setText("Spustit analýzu");
     QPixmap start("images/start.png");
     startA->setIcon(QIcon(start));
-  //  connect(startA, SIGNAL(triggered()), this, SLOT(portChoosed()));
+    connect(startA, SIGNAL(triggered()), this, SLOT(startAnalyze())); //TODO
     toolbar->addAction(startA);
 
 
@@ -67,7 +67,7 @@ void MainWindow::createToolBar() {
     stopA->setText("Zastavit analýzu");
     QPixmap stop("images/stop.png");
     stopA->setIcon(QIcon(stop));
-  //  connect(stopA, SIGNAL(triggered()), this, SLOT(stopScanning()));
+  //TODO  connect(stopA, SIGNAL(triggered()), this, SLOT(stopScanning()));
     toolbar->addAction(stopA);
 
     QWidget* spacer2 = new QWidget();
@@ -180,18 +180,18 @@ QMenu *MainWindow::createMenuHelp(QMenuBar *menuBar){
     menuHelp->setTitle("Nápověda");
 
 //todo připravit nápovědu
-    /*   QAction *actionHelp;
-       actionHelp = new QAction(this);
-       actionHelp->setText("Nápověda k aplikaci");
-       actionHelp->setShortcut(Qt::Key_F1);
-       connect(actionHelp, SIGNAL(triggered()), this, SLOT(openHelp()));
-       menuHelp->addAction(actionHelp);
+    QAction *actionHelp;
+    actionHelp = new QAction(this);
+    actionHelp->setText("Nápověda k aplikaci");
+    actionHelp->setShortcut(Qt::Key_F1);
+    //TODO connect(actionHelp, SIGNAL(triggered()), this, SLOT(openHelp()));
+    menuHelp->addAction(actionHelp);
 
-       QAction *actionAboutApp;
-       actionAboutApp = new QAction(this);
-       actionAboutApp->setText("O aplikaci");
-       connect(actionAboutApp, SIGNAL(triggered()), this, SLOT(aboutApplication()));
-       menuHelp->addAction(actionAboutApp);*/
+    QAction *actionAboutApp;
+    actionAboutApp = new QAction(this);
+    actionAboutApp->setText("O aplikaci");
+    connect(actionAboutApp, SIGNAL(triggered()), this, SLOT(aboutApplication()));
+    menuHelp->addAction(actionAboutApp);
 
     return menuHelp;
 }
@@ -319,6 +319,17 @@ void MainWindow::openFileChooser() {
 
     filename_factory = new FilenameFactory(folder);
     this->setWindowTitle(*APP_NAME+" - ("+folder+")");
+}
+
+/** *******************************************************
+ * Zobrazi informace o aplikaci
+ * @brief MainWindow::aboutApplication
+ */
+void MainWindow::aboutApplication() {
+    QMessageBox::about(this, tr("O aplikaci"),
+             tr("<b>Aplikace pro detekci inkluzí</b> <br><br> Verze 1.0 "
+                "<br> Autoři: Denisa Tarantíková, Radek Vais <br> "
+                "Vytvořeno v rámci předmětu KIV/ZVI na ZČU v akademickém roce 2015/2016"));
 }
 
 /** **********************************************************************************
