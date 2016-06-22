@@ -20,7 +20,7 @@
  * @param parent
  */
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
-    APP_NAME = new QString("IclusionFinder");
+    APP_NAME = new QString("InclusionFinder");
     ui->setupUi(this);
     this->setWindowTitle(*APP_NAME);
     this->showMaximized();
