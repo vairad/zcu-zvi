@@ -1,18 +1,26 @@
 #include "haarfinder.h"
 
+/**
+ * Konstruktor připraví cascade clasifier
+ * @brief HaarFinder::HaarFinder
+ * @param names
+ * @param inclusionCascadeName
+ */
 HaarFinder::HaarFinder(FilenameFactory *names, std::string inclusionCascadeName): names(names) {
     cascade_name = inclusionCascadeName;
- }
+    if( !cascade.load(cascade_name) ){
+        throw FileNotAcceptableException(cascade_name.c_str());
+    }
+}
 
-
+/**
+ * Pracovní smyčka tohoto vlákna.
+ * @brief HaarFinder::run
+ */
 void HaarFinder::run(){
     int counter = 0;
     cv::Mat image;
     cv::Mat originalImage;
-
-    if( !cascade.load(cascade_name) ){
-        throw FileNotAcceptableException(cascade_name.c_str());
-    }
 
     QString name = names->getNextImageRelativePath(); // nacti path prvniho obrazku
 
@@ -20,7 +28,7 @@ void HaarFinder::run(){
         //todo semaphore lock
 
         if(counter % 50 == 0 ){
-            emit imagesProcessed(counter);
+            emit imagesProcessed(counter); // odešli průběžný počet zpracovaných obrázků do gui
         }
 
         originalImage = cv::imread(name.toStdString(), CV_LOAD_IMAGE_UNCHANGED); // nacti obrazek
@@ -34,12 +42,12 @@ void HaarFinder::run(){
         modifier.stretchHistogram(&image, &image, 0, 150);      // roztažení a přebarvení obrázku
 
         std::vector< cv::Rect > inclusions;
-        inclusions = detectInclusions(image);
+        inclusions = detectInclusions(image);               //hledani inkluzi
 
-        drawInclusions( &inclusions, &image);
+        drawInclusions( &inclusions, &image);               //vykresleni inkluzi
 
 
-        /// send image to GUI
+        // send images to GUI
         cv::Mat imageToShowOld, imageToShowNew;
 
         imageToShowOld = originalImage; // is BGR
@@ -57,7 +65,7 @@ void HaarFinder::run(){
         originalImage.release();
     }
 
-    emit imagesProcessed(counter);
+    emit imagesProcessed(counter); // odešli závěrečný počet zpracovaných obrázků do gui
 }
 
 /**
