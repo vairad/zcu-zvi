@@ -278,7 +278,7 @@ void MainWindow::setKernelLabelValue(int value) {
 }
 
 /** **********************************************************************************
- * Metoda spustí analýzu s požaovaným počtem vláken
+ * Metoda spustí analýzu s požadovaným počtem vláken
  * @brief MainWindow::startAnalyze
  */
 void MainWindow::startAnalyze(){
@@ -336,8 +336,8 @@ void MainWindow::aboutApplication() {
  * Dotaz pred zavrenim aplikace
  * @brief MainWindow::closeEvent
  * @param event
- */ //todo odkomentovat
-/*void MainWindow::closeEvent(QCloseEvent *event) {
+ */
+void MainWindow::closeEvent(QCloseEvent *event) {
     int reply = QMessageBox::question(this, "Ukončit aplikaci", "Opravdu chcete ukončit aplikaci?", "Ano", "Ne");
     if (reply == 0) {
         QApplication::closeAllWindows();
@@ -345,7 +345,7 @@ void MainWindow::aboutApplication() {
     } else {
         event->ignore();
     }
-}*/
+}
 
 /** **********************************************************************************
  * Zpracuj signál přinášející obrázek k vykreslení

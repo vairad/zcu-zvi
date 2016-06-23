@@ -130,7 +130,8 @@ V další fázi se budou detekovat inkluze. Metody detekce.
 
 \chapter{Popis implementace}
 Aplikace je psána v jazyce C++ s~použitím knihovny pro zpracování obrazu OpenCV verze 2.4, která je snadno dostupná na všech platformách, a knihovny Qt pro vytvoření grafického uživatelského rozhraní.
-	Program je rozdělen do několika modulů, moduly implementující grafické uživatelské rozhraní jsou ve složce \texttt{gui} a moduly pro zpracování snímků ve složce \texttt{core}. Cleaner - vtvoří šedotón, 
+	
+	Program je rozdělen do několika modulů, moduly implementující grafické uživatelské rozhraní jsou ve složce \texttt{gui} a moduly pro zpracování snímků ve složce \texttt{core}. V~hlavním modulu (\texttt{main.cpp}) se vytvoří hlavní okno aplikace třídy \texttt{MainWindow}, ve které jsou implementovány veškeré prvky uživatelského rozhraní nacházející se v~hlavním okně. Po spuštění analýzy sekvence snímků se provede následující sled operací: Cleaner - vtvoří šedotón, 
 
 \chapter{Uživatelská dokumentace}
 	\section{SW požadavky}
