@@ -14,7 +14,7 @@ TEMPLATE = app
 CONFIG += c++11
 
 unix {
-LIBS += -lopencv_core -lopencv_flann -lopencv_highgui -lopencv_imgproc
+LIBS += -lopencv_core -lopencv_flann -lopencv_highgui -lopencv_imgproc -lopencv_objdetect
 }
 
 win32{
@@ -32,7 +32,8 @@ SOURCES += main.cpp\
         test/testclass.cpp \
         core/histogrammodifier.cpp \
     core/convolutiondescriptor.cpp \
-    gui/descriptordialog.cpp
+    gui/descriptordialog.cpp \
+    core/haarfinder.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -42,6 +43,7 @@ HEADERS  += mainwindow.h \
             test/testclass.h \
             core/histogrammodifier.h \
     core/convolutiondescriptor.h \
-    gui/descriptordialog.h
+    gui/descriptordialog.h \
+    core/haarfinder.h
 
 FORMS    += mainwindow.ui

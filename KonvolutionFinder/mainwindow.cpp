@@ -12,6 +12,7 @@
 #include "core/cleaner.h"
 #include "test/testclass.h"
 #include "core/exception.h"
+#include "core/haarfinder.h"
 
 #include <iostream>
 
@@ -281,7 +282,7 @@ void MainWindow::setKernelLabelValue(int value) {
  * Metoda spustí analýzu s požadovaným počtem vláken
  * @brief MainWindow::startAnalyze
  */
-void MainWindow::startAnalyze(){
+/*void MainWindow::startAnalyze(){
     if(filename_factory == NULL){
           filename_factory = new FilenameFactory("../data/test"); //todo delete
     }
@@ -292,6 +293,32 @@ void MainWindow::startAnalyze(){
         connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
         connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
         connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
+
+        cleaner->start();
+
+    }catch(EmptyImageException &e){
+        std::cout << e.what() << std::endl;
+    }catch(std::exception &e){
+        std::cout << "unnamed exception" << "\n";
+        std::cout << e.what() << "\n";
+    }
+}*/
+
+/** **********************************************************************************
+ * Metoda spustí analýzu s požaovaným počtem vláken
+ * @brief MainWindow::startAnalyze
+ */
+void MainWindow::startAnalyze(){
+    if(filename_factory == NULL){
+          filename_factory = new FilenameFactory("../data/test"); //todo delete
+    }
+    try{
+        HaarFinder *cleaner = new HaarFinder(filename_factory, "../data/cascade5.xml");
+
+        connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
+       // connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
+       // connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
+       // connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
 
         cleaner->start();
 
