@@ -18,7 +18,7 @@ HaarFinder::HaarFinder(FilenameFactory *names, std::string inclusionCascadeName)
  * @brief HaarFinder::run
  */
 void HaarFinder::run(){
-    int counter = 0;
+    unsigned int counter = 0;
     cv::Mat image;
     cv::Mat originalImage;
 
