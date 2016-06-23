@@ -74,6 +74,7 @@ private slots:
     void loadXmlConvolution();
     void newXmlConvolution();
     void showSetUp();
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H
