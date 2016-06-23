@@ -86,7 +86,7 @@ void HaarFinder::drawInclusions(std::vector< cv::Rect > *inclusions, cv::Mat *im
 }
 
 /**
- * Funkce snastavenými parametry pro vyhledávání konvolucí s využítím CascadeClasificator
+ * Funkce snastavenými parametry pro vyhledávání inkluzí s využítím CascadeClasificator
  * @brief HaarFinder::detectInclusions
  * @param frame - BW image
  * @return vector of boundingRects

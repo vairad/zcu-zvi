@@ -13,7 +13,7 @@ DescriptionDialog::DescriptionDialog(ConvolutionDescriptor *convolution_descript
                                                     QDialog(parent), convolution_descriptor(convolution_descriptor) {
     tabWidget = new QTabWidget;
     mainTab = new ConvolutionTab(this->convolution_descriptor);
-    tabWidget->addTab(mainTab, tr("Popis konvoluce"));
+    tabWidget->addTab(mainTab, tr("Popis inkluze"));
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 

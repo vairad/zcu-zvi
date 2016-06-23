@@ -146,7 +146,7 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     // akce nacti popis konvoluce
     QAction *actionLoadDescriprion;
     actionLoadDescriprion = new QAction(this);
-    actionLoadDescriprion->setText(tr("Načti popis konvoluce"));
+    actionLoadDescriprion->setText(tr("Načti popis inkluze"));
     actionLoadDescriprion->setShortcut(Qt::Key_O | Qt::CTRL);
     connect(actionLoadDescriprion, SIGNAL(triggered()), this, SLOT(loadXmlConvolution()));
     menuAnalyze->addAction(actionLoadDescriprion);
@@ -154,7 +154,7 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     // akce uloz popis konvoluce
     QAction *actionSaveDescriprion;
     actionSaveDescriprion = new QAction(this);
-    actionSaveDescriprion->setText(tr("Ulož popis konvoluce"));
+    actionSaveDescriprion->setText(tr("Ulož popis inkluze"));
     actionSaveDescriprion->setShortcut(Qt::Key_S | Qt::CTRL);
     connect(actionSaveDescriprion, SIGNAL(triggered()), this, SLOT(saveXmlConvolution()));
     menuAnalyze->addAction(actionSaveDescriprion);
@@ -162,7 +162,7 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     // akce novy popis konvoluce
     QAction *actionNewDescriprion;
     actionNewDescriprion = new QAction(this);
-    actionNewDescriprion->setText(tr("Nový popis konvoluce"));
+    actionNewDescriprion->setText(tr("Nový popis inkluze"));
     actionNewDescriprion->setShortcut(Qt::Key_N | Qt::CTRL);
     connect(actionNewDescriprion, SIGNAL(triggered()), this, SLOT(newXmlConvolution()));
     menuAnalyze->addAction(actionNewDescriprion);
@@ -451,7 +451,7 @@ void MainWindow::writeNewImage(QImage *image){
 }
 
 /** **********************************************************************************
- * Zprostředkuje uložení xml popisu vlastností konvoluce
+ * Zprostředkuje uložení xml popisu vlastností inkluze
  * @brief MainWindow::saveXmlConvolution
  */
 void MainWindow::saveXmlConvolution(){
@@ -464,7 +464,7 @@ void MainWindow::saveXmlConvolution(){
     QString path;
 
     if(!QString::compare(convolution_descriptor->getFILE_NAME(), "")){
-        path = QFileDialog::getSaveFileName(this, tr("Uložení popisu koncoluce"),
+        path = QFileDialog::getSaveFileName(this, tr("Uložení popisu inkluze"),
                          QDir::currentPath(), tr("XML Files (*.xml)"));
         convolution_descriptor->setFILE_NAME(path);
         description_dialog->mainTab->updatePath();
@@ -487,7 +487,7 @@ void MainWindow::saveXmlConvolution(){
 
 
 /** **********************************************************************************
- * Zprostředkuje načtení xml popisu vlastností konvoluce
+ * Zprostředkuje načtení xml popisu vlastností inkluze
  * @brief MainWindow::loadXmlConvolution
  */
 void MainWindow::loadXmlConvolution(){
