@@ -65,6 +65,7 @@ private:
 private slots:
     void aboutApplication();
     void openFileChooser();
+    void openHelp();
     void writeImage(QImage *image, int destination);
     void setThresholdLabelValue(int value);
     void setKernelLabelValue(int value);

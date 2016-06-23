@@ -21,7 +21,7 @@ win32{
 # replace with your paths to opencv
 INCLUDEPATH += D:\Programy\OpenCV\opencv\build\include
 LIBS += -LD:\Programy\OpenCV\opencv\build\x64\vc12\lib
-LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d -lopencv_imgproc2412d
+LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d -lopencv_imgproc2412d -lopencv_objdetect2412d
 }
 
 SOURCES += main.cpp\
@@ -33,7 +33,8 @@ SOURCES += main.cpp\
         core/histogrammodifier.cpp \
     core/convolutiondescriptor.cpp \
     gui/descriptordialog.cpp \
-    core/haarfinder.cpp
+    core/haarfinder.cpp \
+    gui/helpwindow.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -44,6 +45,7 @@ HEADERS  += mainwindow.h \
             core/histogrammodifier.h \
     core/convolutiondescriptor.h \
     gui/descriptordialog.h \
-    core/haarfinder.h
+    core/haarfinder.h \
+    gui/helpwindow.h
 
 FORMS    += mainwindow.ui

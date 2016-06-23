@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QAction>
 
+#include "gui/helpwindow.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "core/cleaner.h"
@@ -185,7 +186,7 @@ QMenu *MainWindow::createMenuHelp(QMenuBar *menuBar){
     actionHelp = new QAction(this);
     actionHelp->setText("Nápověda k aplikaci");
     actionHelp->setShortcut(Qt::Key_F1);
-    //TODO connect(actionHelp, SIGNAL(triggered()), this, SLOT(openHelp()));
+    connect(actionHelp, SIGNAL(triggered()), this, SLOT(openHelp()));
     menuHelp->addAction(actionHelp);
 
     QAction *actionAboutApp;
@@ -262,8 +263,8 @@ void MainWindow::createSliderBar() {
     kernelLayout->addWidget(sliderKernel);
 
     layout->addWidget(threshWidget);
-    layout->addWidget(ratioWidget);
-    layout->addWidget(kernelWidget);
+   // layout->addWidget(ratioWidget);
+   // layout->addWidget(kernelWidget);
 
     this->ui->verticalLayout->addWidget(sliderBar);
 }
@@ -357,6 +358,14 @@ void MainWindow::aboutApplication() {
              tr("<b>Aplikace pro detekci inkluzí</b> <br><br> Verze 1.0 "
                 "<br> Autoři: Denisa Tarantíková, Radek Vais <br> "
                 "Vytvořeno v rámci předmětu KIV/ZVI na ZČU v akademickém roce 2015/2016"));
+}
+
+/**
+ * Zobrazi okno s napovedou k aplikaci
+ * @brief MainWindow::openHelp
+ */
+void MainWindow::openHelp() {
+    new HelpWindow();
 }
 
 /** **********************************************************************************
