@@ -25,12 +25,14 @@
 	\end{titlepage}
 
 \tableofcontents
+
 \chapter{Úvod}
-	Cílem této semestrální práce bude analyzovat sekvenci mikroskopických snímků a detekovat v~nich jevy zvané inkluze. Data, která budou použita pro vývoj aplikace, byla snímána infračerveným mikroskopem se zvětšením 5$\times$ (1.09 $\mu$m/px) a krokem mezi řezy (snímky) 0.2 $\mu$m, snímaným materiálem byla směs kadmia a teluru. 
+	Cílem této semestrální práce bude analyzovat sekvenci mikroskopických snímků a detekovat v~nich jevy zvané inkluze. Data, která budou použita pro vývoj aplikace, byla snímána infračerveným mikroskopem se zvětšením 5$\times$ (1.09 $\mu$m/px) a krokem mezi řezy (snímky) 0.2 $\mu$m. Snímaným materiálem byla směs kadmia a teluru. 
 	
-	Inkluze jsou defekty vznikající při tuhnutí taveniny na místech, kde je více atomů teluru/kadmia, než by bylo v~pevné fázi za dané teploty. Z~hlediska energie je výhodnější na těchto místech vytvořit kapalné shluky obohacené o jednu z~komponent. Během tuhnutí povrch defektu zmenšuje svůj objem a přebytečná komponenta vytvoří ve středu defektu koncentrované \uv{kapky}.\footnote{	Zdroj: ŠEDIVÝ, L.: \emph{Difúze přirozených defektů a příměsí v CdTe/CdZnTe.} Praha: Univerzita Karlova v Praze, Matematicko-fyzikální fakulta, 2012. 84 s. Vedoucí diplomové práce Doc. Ing. Eduard Belas, CSc.} Tento jev se může vyskytovat i v~jiných materiálech. 
+	Inkluze jsou defekty vznikající při tuhnutí taveniny na místech, kde je více atomů teluru/kadmia, než by bylo v~pevné fázi za dané teploty. Z~hlediska energie je výhodnější na těchto místech vytvořit kapalné shluky obohacené o jednu z~komponent. Během tuhnutí povrch defektu zmenšuje svůj objem a přebytečná komponenta vytvoří ve středu defektu koncentrované \uv{kapky}.\footnote{	Zdroj: ŠEDIVÝ, L.: \emph{Difúze přirozených defektů a příměsí v CdTe/CdZnTe.} Praha: Univerzita Karlova v~Praze, Matematicko-fyzikální fakulta, 2012. 84 s. Vedoucí diplomové práce doc. Ing. Eduard Belas, CSc.} Tento jev se může vyskytovat i v~jiných materiálech. 
 
 Výstupem práce bude kromě aplikace pro detekci inkluzí napsané v~jazyce C++ i soubor ve formátu *.xml, ve kterém budou uvedeny souřadnice inkluzí ve snímku a názvy snímků, na kterých se vyskytují.
+
 \chapter{Zadání}
 Obecné pokyny a pravidla pro vypracování semestrální práce:
 \begin{enumerate}
@@ -56,9 +58,10 @@ aplikovaných metod, popis jejich pozitivních a negativních vlastností, porov
 vlastností použitých snímků, srovnání funkce jednotlivých algoritmů, resp. výsledků
 a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 \end{enumerate}
+
 \chapter{Analýza úlohy}
 	\section{Předzpracování}
-	Původní snímek (na obrázku 3.1) bude nutné nejdříve převést na šedotónový kvůli barevnému měřítku v~pravé dolní části. Tmavé objekty hvězdicovitého až kulatého tvaru jsou potenciálními inkluzemi (na obrázku 3.2 lze vidět snímek inkluze ve 20násobném zvětšení). Dále lze na snímku pozorovat různé typy šumu: vlny způsobené strukturou materiálu, prach, škrábance, otisky prstů apod. Tyto šumy bude třeba co nejvíce potlačit, aby bylo možné inkluze lépe detekovat.
+	Původní snímek (na obrázku 3.1) bude nutné nejdříve převést na šedotónový kvůli barevnému měřítku v~pravé dolní části. Tmavé objekty hvězdicovitého až kulatého tvaru jsou potenciálními inkluzemi (viz obrázek 3.2). Dále lze na snímku pozorovat různé typy šumu: vlny způsobené strukturou materiálu, prach, škrábance, otisky prstů apod. Tyto šumy bude třeba co nejvíce potlačit, aby bylo možné inkluze lépe detekovat.
 		
 	\begin{figure}[!htb]
 	\centering
@@ -71,10 +74,10 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\centering
 	\includegraphics[scale=0.12]{obrazky/konvoluce.png}
 	\label{fig:inkluze}
-	\caption{Inkluze}
+	\caption{Inkluze (20násobné zvětšení)}
 	\end{figure}	
 
-	Dle histogramu původního snímku na obrázku 3.3 si lze povšimnout, že většina obrazových bodů na stupnici jasu od 0 do 255 nabývá hodnot v~intervalu přibližně od 100 do 200. Budeme uvažovat, že v~ostatních snímcích v~zadané sekvenci je přibližně stejné rozložení hodnot jasu. Vzhledem k~tomu, že inkluze se jeví tmavé v~porovnání s~ostatními obrazovými body snímku, zvýrazněním tmavých odstínů oproti světlým bychom docílili \uv{vystoupení} inkluzí. Pro dosažení tohoto výsledku přebarvíme hodnoty vysokých jasů tak, že jasy vyšší než zvolená mezní hodnota $M$ (včetně) nabudou nejvyššího jasu (255). Tím potlačíme šum, jehož jas nabývá vysokých hodnot (např. vlny). Zbylé hodnoty \uv{roztáhneme} po celém intervalu 0 až 255 vynásobením koeficientem $\frac{256}{M}$, kde v~čitateli je počet hodnot v~celém intervalu a ve jmenovateli počet zbylých (\uv{nesjednocovaných}) hodnot. Touto operací zvýšíme kontrast, a tak usnadníme kontrolu výskytu inkluzí lidským okem. 
+	Dle histogramu původního snímku na obrázku 3.3 si lze povšimnout, že většina obrazových bodů na stupnici jasu od 0 do 255 nabývá hodnot v~intervalu přibližně od 100 do 200. Budeme uvažovat, že v~ostatních snímcích v~zadané sekvenci je přibližně stejné rozložení hodnot jasu. Vzhledem k~tomu, že inkluze se jeví tmavé v~porovnání s~ostatními obrazovými body snímku, zvýrazněním tmavých odstínů oproti světlým bychom docílili \uv{vystoupení} inkluzí. Pro dosažení tohoto výsledku přebarvíme hodnoty vysokých jasů tak, že jasy vyšší než zvolená mezní hodnota $M$ (včetně) nabudou nejvyššího jasu (255). Tím potlačíme šum, jehož jas nabývá vysokých hodnot (např. vlny). Zbylé hodnoty \uv{roztáhneme} po celém intervalu 0 až 255 vynásobením koeficientem $\frac{256}{M}$, kde v~čitateli je počet hodnot v~celém intervalu a ve jmenovateli počet zbylých (nepřebarvených) hodnot. Touto operací zvýšíme kontrast, a tak usnadníme kontrolu výskytu inkluzí lidským okem. 
 	
 	\begin{figure}[!htb]
 	\centering
@@ -83,27 +86,27 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\caption{Histogram původního snímku}
 	\end{figure}	
 	
-	Hodnotu, kterou zvolíme jako mezní, určíme na intervalu od 100 do 150 (150 je vrchol histogramu na obrázku 3.3) tak, aby ve snímku zůstaly objekty \uv{podezřelé} z~inkluzí a zároveň bylo potlačeno co nejvíce šumu. Na obrázcích 3.4 až 3.6 vidíme výsledné snímky s~mezními hodnotami 100, 150 a 125. Při mezní hodnotě 100 je na snímku stále mnoho viditelných vln, při hodnotě 150 je naopak možné, že některé inkluze \uv{zmizely}. Mezní hodnota 125 se jeví jako dobrý kompromis. Pokud by však byl zvolen jiný materiál, hodnoty jasů by se mohly výrazně lišit. Proto bude vhodné umožnit také ruční nastavení mezní hodnoty.
+	Hodnotu, kterou zvolíme jako mezní, určíme na intervalu od 100 do 150 (150 je vrchol histogramu na obrázku 3.3) tak, aby ve snímku zůstaly objekty \uv{podezřelé} z~inkluzí a zároveň bylo potlačeno co nejvíce šumu. Na obrázcích 3.4 až 3.6 jsou výsledné snímky s~mezními hodnotami 100, 150 a 125. Při mezní hodnotě 100 je na snímku stále mnoho viditelných vln, při hodnotě 150 je naopak možné, že některé inkluze \uv{zmizely}. Mezní hodnota 125 se jeví jako dobrý kompromis. Pokud by však byl zvolen jiný materiál, hodnoty jasů by se mohly výrazně lišit. Proto bude vhodné umožnit také ruční nastavení mezní hodnoty.
 	
 	\begin{figure}[!htb]
 	\centering
 	\fbox{\includegraphics[scale=0.1]{obrazky/roztazeni_jasu_0_100.png}}
 	\label{fig:jas_0_100}
-	\caption{Přebarvení vysokých jasů s~mezní hodnotou 100 a roztažení}
+	\caption{Přebarvení vysokých jasů s~mezní hodnotou 100}
 	\end{figure}	
 	
 	\begin{figure}[!htb]
 	\centering
 	\fbox{\includegraphics[scale=0.1]{obrazky/roztazeni_jasu_0_150.png}}
 	\label{fig:jas_0_150}
-	\caption{Přebarvení vysokých jasů s~mezní hodnotou 150 a roztažení}
+	\caption{Přebarvení vysokých jasů s~mezní hodnotou 150}
 	\end{figure}
 	
 	\begin{figure}[!htb]
 	\centering
 	\fbox{\includegraphics[scale=0.1]{obrazky/roztazeni_jasu_0_125.png}}
 	\label{fig:jas_0_125}
-	\caption{Přebarvení vysokých jasů s~mezní hodnotou 125 a roztažení}
+	\caption{Přebarvení vysokých jasů s~mezní hodnotou 125}
 	\end{figure}				
 		
 	Segmentace snímku bude vzhledem k~množství dat řešena prahováním, které je výpočetně nejméně náročné. Metoda rozplavu je sice výpočetně srovnatelná, ale pro náš případ, kdy potřebujeme zvýraznit krajní hodnoty (0 až mez), \uv{degraduje} na metodu prahování. Hodnota prahu bude nastavena ručně uživatelem z~důvodu možného rozdílného rozložení hodnot jasu v~různých snímcích. V~testovací sekvenci snímků se jako vhodný práh jeví hodnota jasu mezi 160 a 190 (viz obrázky 3.7 a 3.8).
@@ -126,8 +129,8 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 V další fázi se budou detekovat inkluze.
 
 \chapter{Popis implementace}
-Volba programových prostředků: OpenCV verze 2.4 (hlavní verze, snadno dostupná na všech platformách, doporučení???)
-	Cleaner - vtvoří šedotón, 
+Aplikace je psána v jazyce C++ s~použitím knihovny pro zpracování obrazu OpenCV verze 2.4, která je snadno dostupná na všech platformách, a knihovny Qt pro vytvoření grafického uživatelského rozhraní.
+	Program je rozdělen do několika modulů, moduly implementující grafické uživatelské rozhraní jsou ve složce \texttt{gui} a moduly pro zpracování snímků ve složce \texttt{core}. Cleaner - vtvoří šedotón, 
 
 \chapter{Uživatelská dokumentace}
 	\section{SW požadavky}
@@ -137,6 +140,6 @@ Volba programových prostředků: OpenCV verze 2.4 (hlavní verze, snadno dostup
 	\section{Spuštění a ovládání aplikace}	
 
 \chapter{Závěr}
-Cílem této semestrální práce bylo vytvořit aplikaci pro detekci inkluzí.
+Cílem této semestrální práce bylo vytvořit aplikaci pro analýzu, segmentaci a detekci objektů v~mikroskopických snímcích. Byla zadána testovací sekvence snímků, ve které jsme hledali jevy zvané inkluze. Výstupem práce je aplikace, která načte danou sekvenci, analyzuje a předzpracuje každý snímek, detekuje inkluze a umožní jejich pozice uložit do souboru ve formátu *.xml. Práce tak splňuje zadání.
 
 \end{document} 
