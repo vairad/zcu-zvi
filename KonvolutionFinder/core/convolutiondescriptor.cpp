@@ -169,7 +169,7 @@ bool ConvolutionDescriptor::open(QString path)
     QDomElement docElem = xml.documentElement(); // root element
 
     QDomNode n = docElem.firstChild();
- //   QDomNodeList list = docElem.elementsByTagName("ConvolutionDescription");
+ //   QDomNodeList list = docElem.elementsByTagName("InclusionDescription");
 //    QDomNode n = list.at(0);
     while(!n.isNull()) {
         QDomElement e = n.toElement(); // try to convert the node to an element.
@@ -230,7 +230,7 @@ void ConvolutionDescriptor::save(QString path)
 
      outXml.writeStartDocument();
 
-     outXml.writeStartElement("ConvolutionDescription");
+     outXml.writeStartElement("InclusionDescription");
 
          QString number = QString::number(reqAspectRatio);
 

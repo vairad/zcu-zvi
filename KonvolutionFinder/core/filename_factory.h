@@ -5,9 +5,12 @@
 #include <QString>
 #include <QStringList>
 #include <QStringListIterator>
+#include <QSemaphore>
 
 class FilenameFactory
 {
+    QSemaphore *runLock = new QSemaphore(1);
+
     /** prohledavana složka */
     QString folder_path;
     /** seznam jmen ve složce */
@@ -34,6 +37,8 @@ public:
     QString getNextImageRelativePath();
     QString getNextImagePath();
     bool atEnd();
+    void pause();
+    void resume();
 };
 
 #endif // FILENAME_FACTORY_H

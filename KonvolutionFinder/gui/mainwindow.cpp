@@ -57,23 +57,22 @@ void MainWindow::createToolBar() {
     toolbar->addWidget(spacer);
 
     // akce pro zahajeni snimani
-    QAction *startA = new QAction(this);
+    startA = new QAction(this);
     startA->setObjectName(QStringLiteral("action"));
     startA->setText("Spustit analýzu");
-    QPixmap start("images/start.png");
-    startA->setIcon(QIcon(start));
     connect(startA, SIGNAL(triggered()), this, SLOT(startAnalyze())); //TODO
     toolbar->addAction(startA);
 
 
     // akce pro ukonceni snimani
-    QAction *stopA = new QAction(this);
-    stopA->setObjectName(QStringLiteral("action"));
-    stopA->setText("Zastavit analýzu");
-    QPixmap stop("images/stop.png");
-    stopA->setIcon(QIcon(stop));
-  //TODO  connect(stopA, SIGNAL(triggered()), this, SLOT(stopScanning()));
-    toolbar->addAction(stopA);
+    pauseA = new QAction(this);
+    pauseA->setObjectName(QStringLiteral("action"));
+    pauseA->setText("Pozastavit analýzu");
+    QPixmap start("images/start.png");
+    pauseA->setIcon(QIcon(start));
+    pauseA->setEnabled(false);
+    connect(pauseA, SIGNAL(triggered()), this, SLOT(pauseScanning()));
+    toolbar->addAction(pauseA);
 
     QWidget* spacer2 = new QWidget();
     spacer2->setFixedWidth(10);
@@ -357,6 +356,15 @@ void MainWindow::startAnalyze(){
             return;
         }
     }
+
+    QPixmap icon("images/pause.png");
+    pauseA->setIcon(QIcon(icon));
+    pauseA->setEnabled(true);
+    startA->setEnabled(false);
+    runScanning = true;
+    this->ui->imageOriginal->show();
+    this->ui->imageProcessed->show();
+
    if( clasificator == 0){
        startAnalyzeContour();
    }else if(clasificator == 1){
@@ -433,10 +441,18 @@ bool MainWindow::openFileChooser() {
         return false;
     }
 
-    if(filename_factory == NULL || filename_factory->atEnd()){
+    if(filename_factory == NULL){
+        filename_factory = new FilenameFactory(folder);
+        this->setWindowTitle(*APP_NAME+" - ("+folder+")");
+    }else{
+        delete filename_factory;
         filename_factory = new FilenameFactory(folder);
         this->setWindowTitle(*APP_NAME+" - ("+folder+")");
     }
+    startA->setEnabled(true);
+    pauseA->setEnabled(false);
+    this->ui->imageOriginal->hide();
+    this->ui->imageProcessed->hide();
     return true;
 }
 
@@ -493,6 +509,20 @@ void MainWindow::changeClasificator(int clasificator){
     this->clasificator = clasificator;
 }
 
+void MainWindow::pauseScanning(){
+    if(runScanning){
+        filename_factory->pause();
+        runScanning = false;
+        QPixmap start("images/start.png");
+        pauseA->setIcon(QIcon(start));
+    }else{
+        filename_factory->resume();
+        runScanning = true;
+        QPixmap icon("images/pause.png");
+        pauseA->setIcon(QIcon(icon));
+    }
+}
+
 /** **********************************************************************************
  * Zpracuj signál přinášející obrázek k vykreslení
  * @brief MainWindow::writeImage
@@ -532,6 +562,7 @@ void MainWindow::writeOriginalImage(QImage *image){
     //priprav obrazek spravnych rozmeru a barevne skladby (BGR -> RGB)
     QImage tmp = lastImageOriginal->rgbSwapped().scaled(width, height, Qt::KeepAspectRatio);
     //vykresli obrazek do labelu
+    this->ui->imageOriginal->show();
     this->ui->imageOriginal->setPixmap(QPixmap::fromImage(tmp));
 }
 
@@ -557,6 +588,7 @@ void MainWindow::writeNewImage(QImage *image){
     //priprav obrazek spravnych rozmeru a barevne skladby (BGR -> RGB)
     QImage tmp = lastImageProcessed->rgbSwapped().scaled(width, height, Qt::KeepAspectRatio);
     //vykresli obrazek do labelu
+    this->ui->imageProcessed->show();
     this->ui->imageProcessed->setPixmap(QPixmap::fromImage(tmp));
 }
 

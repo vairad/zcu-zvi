@@ -28,7 +28,11 @@ class MainWindow : public QMainWindow
 
     DescriptionDialog *description_dialog = NULL;
 
+    QAction *pauseA;
+    QAction *startA;
+
     int clasificator = 0;
+    bool runScanning = false;
 
     void startAnalyzeHaar();
     void startAnalyzeContour();
@@ -90,6 +94,7 @@ private slots:
     void showSetUp();
     void closeEvent(QCloseEvent *event);
     void changeClasificator(int clasificator);
+    void pauseScanning();
 };
 
 #endif // MAINWINDOW_H

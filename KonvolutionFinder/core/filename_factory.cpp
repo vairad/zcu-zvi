@@ -87,6 +87,8 @@ QString FilenameFactory::getNextImagePath() {
  * @return nextName of NULL
  */
 QString FilenameFactory::getNextImageRelativePath() {
+    runLock->acquire(); // v případě, že je zastaveno vykreslování dojde k zablokování procesu
+    runLock->release(); // nejde o ochranu zdrojů, proto hned semaforuvolníme
     if (name_iterator->hasNext()) {
         QDir exeFolder(QDir::currentPath());
         return (exeFolder.relativeFilePath(folder->absolutePath())+"/"+name_iterator->next());
@@ -104,7 +106,13 @@ bool FilenameFactory::atEnd() {
     return !name_iterator->hasNext();
 }
 
+void FilenameFactory::pause(){
+    runLock->acquire();
+}
 
+void FilenameFactory::resume(){
+    runLock->release();
+}
 
 /**
  * Factroy destructor
