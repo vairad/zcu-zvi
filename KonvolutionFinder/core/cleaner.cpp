@@ -8,47 +8,48 @@
 
 int Cleaner::defaultThreshold = 160;
 
-Cleaner::Cleaner(FilenameFactory *names, ConvolutionDescriptor *descriptor):  names(names), descriptor(descriptor){
-    this->counter = 0;
-    this->lowThreshold = 100;
-    this->threshold = defaultThreshold;
-    this->ratio = 2;
-    this->kernelSize = 3;
+Cleaner::Cleaner(FilenameFactory *names, ConvolutionDescriptor *descriptor, int threshold):  names(names), descriptor(descriptor){
+    this->threshold = threshold;
+
+    this->boolAspectRatio = true;
+    this->boolExtent = true;
+    this->boolMaxVerticies = true;
+    this->boolMinVerticies = true;
 }
 
 void Cleaner::setThresh(int value){
     this->threshold = value;
 }
 
-void Cleaner::setLowThresh(int value){
-    this->lowThreshold = value;
-}
-
-void Cleaner::setRatio(int value){
-    this->ratio = value;
-}
-
-void Cleaner::setKernelSize(int value){
-    this->kernelSize = value;
-}
-
+/**
+ * Pracovní smyčka vlákna
+ * @brief Cleaner::run
+ */
 void Cleaner::run(){
+    unsigned int counter;
+    cv::Mat image;
+    cv::Mat originalImage;
+    cv::Mat preprocessedImage;
+    std::vector< std::vector<cv::Point> > hulls; // kontury nalezenych objektů.
+    std::vector< std::vector<cv::Point> > potentialConvolutions; //kontury objektů splňující podmínky.
+    std::vector<cv::Vec4i> hierarchy; // hierarchie nalezenych kontur
+
+
     QString name = names->getNextImageRelativePath();
     while(name != NULL){
-        counter++;
-        if(counter % 100 == 0 ){
-            std::cout << counter << std::endl;
+
+        if(counter % 50 == 0 ){
+            emit imagesProcessed(counter);
         }
 
-        cv::Mat originalImage = cv::imread(name.toStdString(), CV_LOAD_IMAGE_UNCHANGED);
-        cv::Mat image;
-        cv::cvtColor(originalImage, image, CV_BGR2GRAY);
+        originalImage = cv::imread(name.toStdString(), CV_LOAD_IMAGE_UNCHANGED); //nacti obrazek
+        cv::cvtColor(originalImage, image, CV_BGR2GRAY); // vytvor pracovni kopii (BW)
 
         if(!image.data){  // kontrola dat
             throw EmptyImageException(name.toStdString().c_str());
         }
 
-        cv::Mat preprocessedImage = cv::Mat::zeros(image.rows, image.cols, image.type());
+        preprocessedImage = cv::Mat::zeros(image.rows, image.cols, image.type());
 
         HistogramModifier modifier(255, 0);
         modifier.stretchHistogram(&image, &image, 0, 150);
@@ -57,19 +58,16 @@ void Cleaner::run(){
 
         cannyEdges(image, preprocessedImage);
 
-        std::vector< std::vector<cv::Point> > hulls; //obálky objektů.
-        std::vector< std::vector<cv::Point> > potentialConvolutions; //obálky objektů splňující podmínky.
-        std::vector<cv::Vec4i> hierarchy;
-
         cv::findContours( preprocessedImage, hulls, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE,
                             cv::Point(0, 0) );
 
-        /// Draw contours
+        // vykresli nalezene kontury
         for( size_t i = 0; i< hulls.size(); i++ ) {
             cv::Scalar color = CONTOUR_COLOR_II;
             cv::drawContours( originalImage, hulls, i, color, 2, 8, hierarchy, 0, cv::Point() );
         }
-        /// filter contours
+
+        //porčisti kontury podle kritérií
         for(std::vector< std::vector<cv::Point> >::iterator it = hulls.begin(); it != hulls.end(); ++it) {
             if(checkContour(*it)){
                 potentialConvolutions.push_back(*it);
@@ -78,54 +76,126 @@ void Cleaner::run(){
             }
         }
 
-        /// Draw contours
+        // vykresli pročištěné kontury
         for( size_t i = 0; i< potentialConvolutions.size(); i++ ) {
             cv::Scalar color = CONTOUR_COLOR;
             cv::drawContours( originalImage, potentialConvolutions, i, color, 2, 8, hierarchy, 0, cv::Point() );
         }
 
-   //    imwrite( name.replace(".tif", "modified.tif").toStdString(), originalImage);
-
-
-        /// show image
+        // odešli obrázky do GUI
         cv::Mat imageToShowOld, imageToShowNew;
-        //cv::cvtColor(image, imageToShowOld, CV_GRAY2BGR);
-        imageToShowOld = originalImage;
-        cv::cvtColor(image, imageToShowNew, CV_GRAY2BGR);
+
+        imageToShowOld = originalImage;                 //is BGR
+        cv::cvtColor(image, imageToShowNew, CV_GRAY2BGR); //not BGR
+
         cvMatToQImage(&imageToShowOld, 1);
         cvMatToQImage(&imageToShowNew, 2);
+
         name = names->getNextImageRelativePath();
+        counter++;
 
         image.release();
         preprocessedImage.release();
         originalImage.release();
     }
+    emit imagesProcessed(counter);
 }
 
+/**
+ * Metoda provede kontrolu zadaných kritérií.
+ * Pokud kontura nevyhovuje toleranci je vráceno false a bude vyřazena.
+ * @brief Cleaner::checkContour
+ * @param contour
+ * @return
+ */
 bool Cleaner::checkContour(std::vector<cv::Point> contour){
     std::vector<cv::Point> contourPoly;
 
     cv::approxPolyDP( cv::Mat(contour), contourPoly, 3, true );
     cv::Rect boundingRect = cv::boundingRect(cv::Mat(contourPoly));
-    double  aspectRatio = double(boundingRect.width)/boundingRect.height;
-    double contourLength = cv::arcLength(contourPoly, true);
 
-    double reqAspectRatio = descriptor->getReqAspectRatio();
+    double area = cv::contourArea(contourPoly);
+    double rectArea = boundingRect.width * boundingRect.height;
+
+    bool result = true;
+    if( boolMinVerticies ){
+        result &= checkMinVerticies(contourPoly.size());
+    }
+    if( boolMaxVerticies ){
+        result &= checkMaxVerticies(contourPoly.size());
+    }
+    if( boolAspectRatio){
+        result &= checkAspectRatio(boundingRect.width, boundingRect.height);
+    }
+    if( boolExtent){
+        result &= checkExtent(area, rectArea);
+    }
+    return result;
+}
+
+/**
+ * Zkontroluje konturu na pravoúhlost kontury proti osanému rovnoběžníku
+ * @brief Cleaner::checkExtent
+ * @param contourArea
+ * @param rectArea
+ * @return
+ */
+bool Cleaner::checkExtent(double contourArea, double rectArea){
+    double extent = double(contourArea)/rectArea;
+
+    double epsilonExtent = descriptor->getEpsilonRatio();
+    double reqExtent = descriptor->getReqAspectRatio();
+
+    if(extent > (reqExtent + epsilonExtent) || extent  < (reqExtent - epsilonExtent)){
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Zkontrolu je konturu na poměr stran opsaného rovnoběžníku
+ * @brief Cleaner::checkAspectRatio
+ * @param width
+ * @param height
+ * @return
+ */
+bool Cleaner::checkAspectRatio(int width, int height){
+    double  aspectRatio = double(width)/height;
+
     double epsilonRatio = descriptor->getEpsilonRatio();
+    double reqAspectRatio = descriptor->getReqAspectRatio();
 
-    int reqMaxVerticies = descriptor->getReqMaxVerticies();
-    int reqMinVerticies = descriptor->getReqMinVerticies();
-
-    if( contourPoly.size() < reqMinVerticies ){
+    if(aspectRatio > (reqAspectRatio + epsilonRatio) || aspectRatio  < (reqAspectRatio - epsilonRatio)){
         return false;
     }
-    if( contourPoly.size() > reqMaxVerticies ){
-        return false;
-    }
-    if(aspectRatio > (reqAspectRatio + epsilonRatio) || aspectRatio  < (reqAspectRatio - epsilonRatio) ){
-        return false;
-    }
+    return true;
+}
 
+/**
+ * Zkontroluje konturu na maximální počet vrcholů
+ * @brief Cleaner::checkMaxVerticies
+ * @param verticies
+ * @return
+ */
+bool Cleaner::checkMaxVerticies(unsigned int verticies){
+    unsigned int reqMaxVerticies = descriptor->getReqMaxVerticies();
+    if ( verticies > reqMaxVerticies ){
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Zkontroluje konturu dle na minimální počet vrcholů
+ * @brief Cleaner::checkMinVerticies
+ * @param verticies
+ * @return
+ */
+bool Cleaner::checkMinVerticies(unsigned int verticies){
+    unsigned int reqMinVerticies = descriptor->getReqMinVerticies();
+    if ( verticies < reqMinVerticies ){
+        return false;
+    }
     return true;
 }
 
@@ -134,59 +204,13 @@ bool Cleaner::checkContour(std::vector<cv::Point> contour){
  * @brief Trackbar callback - Canny thresholds input with a ratio 1:3
  */
 void Cleaner::cannyEdges(cv::Mat src, cv::Mat out){
+    int lowThreshold = 100;
+    int ratio = 2;
+    int kernelSize = 3;
+
     GaussianBlur(src, out, cv::Size(5,5), 0 );
     Canny( src, out, lowThreshold, lowThreshold*ratio, kernelSize);
 }
-
-
-/**
- * Funkce použije pro opezaci uzavření objektů funkcionalitu dostupnou v knihovně openCV
- * @brief Cleaner::morphologyClose
- * @param src zdrojový cv::Mat
- * @param out výsledný cv::Mat
- */
-void Cleaner::morphologyClose(cv::Mat src, cv::Mat out){
-    int size = 3;
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_ELLIPSE,
-                                                  cv::Size(2*size+1, 2*size+1),
-                                                  cv::Point(size, size) );
-
-    cv::morphologyEx( src, out, CV_MOP_CLOSE, element);
-}
-
-
-/// This method finds convex hulls of all objects in the picture
-///
-/// @param input frame to find objects
-/// @param out reference to vector of convex hulls
-///
-void Cleaner::convexHull(cv::Mat input, std::vector< std::vector<cv::Point> > &out)
-{
-  std::vector< std::vector<cv::Point> > contours;
-  std::vector<cv::Vec4i> hierarchy;
-
-  // find contours
-  cv::findContours( input, contours, hierarchy,
-                      CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE,
-                      cv::Point(0, 0) );
-
-  // create convex hull
-  std::vector< std::vector<cv::Point> > hull ( contours.size() );
-
-  for(unsigned int i = 0; i < contours.size(); i++ )
-  {
-    cv::convexHull( cv::Mat(contours[i]), hull[i], false );
-  }
-
-  out = hull;
-}
-
-void Cleaner::fillAllContours(cv::Mat img, const std::vector< std::vector<cv::Point> > &contours){
-   for(size_t i = 0; i < contours.size(); i++){
-        cv::drawContours(img, contours, i, cv::Scalar(0, 255, 255), CV_FILLED); // fill GREEN
-   }
-}
-
 
 /**
  * Převod cv:Mat image to QImage pro zobrazení v aplikaci

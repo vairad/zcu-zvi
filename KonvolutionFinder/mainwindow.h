@@ -28,6 +28,11 @@ class MainWindow : public QMainWindow
 
     DescriptionDialog *description_dialog = NULL;
 
+    int clasificator = 0;
+
+    void startAnalyzeHaar();
+    void startAnalyzeContour();
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -45,6 +50,7 @@ private:
     QSlider *sliderThreshold;
     QSlider *sliderKernel;
     QSlider *sliderRatio;
+    QSlider *sliderSwitch;
 
     QString threshName = "Hodnota prahu: ";
 
@@ -62,6 +68,7 @@ private:
     QMenu *createMenuAnalyze(QMenuBar *menuBar);
     QMenu *createMenuHelp(QMenuBar *menuBar);
 
+    void createToolBar2();
 private slots:
     void aboutApplication();
     void openFileChooser();
@@ -76,6 +83,7 @@ private slots:
     void newXmlConvolution();
     void showSetUp();
     void closeEvent(QCloseEvent *event);
+    void changeClasificator(int clasificator);
 };
 
 #endif // MAINWINDOW_H

@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     createMenuBar();
     createToolBar();
+    createToolBar2();
 
     convolution_descriptor = new ConvolutionDescriptor();
     description_dialog = new DescriptionDialog(convolution_descriptor);
@@ -75,6 +76,35 @@ void MainWindow::createToolBar() {
     QWidget* spacer2 = new QWidget();
     spacer2->setFixedWidth(10);
     toolbar->addWidget(spacer2);
+
+    toolbar->addSeparator();
+}
+
+/**
+ * Vytvori listu nastroju
+ * @brief MainWindow::createToolBar
+ */
+void MainWindow::createToolBar2() {
+    QToolBar *toolbar = addToolBar("switch bar");
+
+    QWidget* spacer = new QWidget();
+    spacer->setFixedWidth(5);
+    toolbar->addWidget(spacer);
+
+    sliderSwitch = new QSlider();
+    sliderSwitch->setOrientation(Qt::Horizontal);
+    sliderSwitch->setRange(0, 1);
+    sliderSwitch->setValue(this->clasificator);
+    sliderSwitch->setFixedWidth(50);
+    QLabel *contourLabel = new QLabel(tr("vlastonsti kontur"));
+    QLabel *classificatorLabel = new QLabel(tr("kaskádový klasifikátor"));
+    connect(sliderSwitch, SIGNAL(valueChanged(int)), this, SLOT(changeClasificator(int)));
+
+    toolbar->addWidget(contourLabel);
+    toolbar->addWidget(spacer);
+    toolbar->addWidget(sliderSwitch);
+    toolbar->addWidget(spacer);
+    toolbar->addWidget(classificatorLabel);
 
     toolbar->addSeparator();
 }
@@ -279,21 +309,31 @@ void MainWindow::setKernelLabelValue(int value) {
     kernelSliderLabel->setText("Kernel Size: " + QString::number(value));
 }
 
+void MainWindow::startAnalyze(){
+   if( clasificator == 0){
+       startAnalyzeContour();
+   }else if(clasificator == 1){
+       startAnalyzeHaar();
+   }else{
+       QMessageBox messageBox;
+       messageBox.warning(0,tr("Chyba"),tr("Špatně nastavená volba klasifikátoru."));
+       messageBox.setFixedSize(500,200);
+   }
+}
+
 /** **********************************************************************************
  * Metoda spustí analýzu s požadovaným počtem vláken
  * @brief MainWindow::startAnalyze
  */
-/*void MainWindow::startAnalyze(){
+void MainWindow::startAnalyzeContour(){
     if(filename_factory == NULL){
           filename_factory = new FilenameFactory("../data/test"); //todo delete
     }
     try{
-        Cleaner *cleaner = new Cleaner(filename_factory, convolution_descriptor);
+        Cleaner *cleaner = new Cleaner(filename_factory, convolution_descriptor, sliderThreshold->value());
 
         connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
         connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
-        connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
-        connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
 
         cleaner->start();
 
@@ -303,25 +343,22 @@ void MainWindow::setKernelLabelValue(int value) {
         std::cout << "unnamed exception" << "\n";
         std::cout << e.what() << "\n";
     }
-}*/
+}
 
 /** **********************************************************************************
  * Metoda spustí analýzu s požaovaným počtem vláken
  * @brief MainWindow::startAnalyze
  */
-void MainWindow::startAnalyze(){
+void MainWindow::startAnalyzeHaar(){
     if(filename_factory == NULL){
           filename_factory = new FilenameFactory("../data/test"); //todo delete
     }
     try{
-        HaarFinder *cleaner = new HaarFinder(filename_factory, "../data/cascade5.xml");
+        HaarFinder *clasifier = new HaarFinder(filename_factory, "../data/cascade5.xml");
 
-        connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
-       // connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
-       // connect(sliderRatio, SIGNAL(valueChanged(int)), cleaner, SLOT(setKernelSize(int)));
-       // connect(sliderKernel, SIGNAL(valueChanged(int)), cleaner, SLOT(setRatio(int)));
+        connect(clasifier, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
 
-        cleaner->start();
+        clasifier->start();
 
     }catch(EmptyImageException &e){
         std::cout << e.what() << std::endl;
@@ -381,6 +418,15 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     } else {
         event->ignore();
     }
+}
+
+void MainWindow::changeClasificator(int clasificator){
+    if(clasificator == 0){
+        sliderThreshold->setEnabled(true);
+    }else{
+        sliderThreshold->setEnabled(false);
+    }
+    this->clasificator = clasificator;
 }
 
 /** **********************************************************************************
