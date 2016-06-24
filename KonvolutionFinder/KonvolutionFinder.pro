@@ -25,7 +25,7 @@ LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d -lopencv_im
 }
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+        gui/mainwindow.cpp \
         core/cleaner.cpp \
         core/filename_factory.cpp \
         core/exception.cpp \
@@ -37,15 +37,15 @@ SOURCES += main.cpp\
     gui/helpwindow.cpp
 
 
-HEADERS  += mainwindow.h \
+HEADERS  += gui/mainwindow.h \
             core/cleaner.h \
             core/filename_factory.h \
             core/exception.h \
             test/testclass.h \
             core/histogrammodifier.h \
-    core/convolutiondescriptor.h \
-    gui/descriptordialog.h \
-    core/haarfinder.h \
-    gui/helpwindow.h
+            core/convolutiondescriptor.h \
+            gui/descriptordialog.h \
+            core/haarfinder.h \
+            gui/helpwindow.h
 
-FORMS    += mainwindow.ui
+FORMS    += gui/mainwindow.ui
