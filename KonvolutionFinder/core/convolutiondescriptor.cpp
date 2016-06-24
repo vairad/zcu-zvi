@@ -90,16 +90,63 @@ void ConvolutionDescriptor::setFILE_NAME(const QString &value)
 //=======================================================================================
 
 
+bool ConvolutionDescriptor::getBoolMinVerticies() const
+{
+    return boolMinVerticies;
+}
+
+void ConvolutionDescriptor::setBoolMinVerticies(bool value)
+{
+    boolMinVerticies = value;
+}
+
+bool ConvolutionDescriptor::getBoolMaxVerticies() const
+{
+    return boolMaxVerticies;
+}
+
+void ConvolutionDescriptor::setBoolMaxVerticies(bool value)
+{
+    boolMaxVerticies = value;
+}
+
+bool ConvolutionDescriptor::getBoolAspectRatio() const
+{
+    return boolAspectRatio;
+}
+
+void ConvolutionDescriptor::setBoolAspectRatio(bool value)
+{
+    boolAspectRatio = value;
+}
+
+bool ConvolutionDescriptor::getBoolExtent() const
+{
+    return boolExtent;
+}
+
+void ConvolutionDescriptor::setBoolExtent(bool value)
+{
+    boolExtent = value;
+}
+
+//=====================================================================================
+
 ConvolutionDescriptor::ConvolutionDescriptor(){
     FILE_NAME = "";
+    boolAspectRatio = true;
     reqAspectRatio = 1.0; //podlouhlost
     epsilonRatio = 0.2;
 
+    boolMinVerticies = false;
     reqMinVerticies = 1; // minimum vrcholů aproximace
+
+    boolMaxVerticies = false;
     reqMaxVerticies = INT_MAX; // maximum vrcholů aproximace
 
-    reqExtent = 0.2; // pravoúhlost
-    epsilonExtent = 0.2;
+    boolExtent = false;
+    reqExtent = 1.0; // pravoúhlost
+    epsilonExtent = 2.0;
 }
 
 bool ConvolutionDescriptor::open(QString path)
@@ -141,7 +188,16 @@ bool ConvolutionDescriptor::open(QString path)
                 epsilonExtent = e.text().toDouble();
             }else if(e.tagName() == "Note"){
                 note = e.text();
+            }else if(e.tagName() == "BoolAspectRatio"){
+                boolAspectRatio = (bool)e.text().toInt();
+            }else if(e.tagName() == "BoolMinVerticies"){
+                boolMinVerticies= (bool)e.text().toInt();
+            }else if(e.tagName() == "BoolMaxVerticies"){
+                boolMaxVerticies = (bool)e.text().toInt();
+            }else if(e.tagName() == "BoolExtent"){
+                boolExtent = (bool)e.text().toInt();
             }
+
         }
         n = n.nextSibling();
     }
@@ -177,15 +233,20 @@ void ConvolutionDescriptor::save(QString path)
      outXml.writeStartElement("ConvolutionDescription");
 
          QString number = QString::number(reqAspectRatio);
-         outXml.writeTextElement("AspectRatio", number);
 
+         outXml.writeTextElement("AspectRatio", number);
          outXml.writeTextElement("EpsilonRatio", QString::number(epsilonRatio) );
+         outXml.writeTextElement("BoolAspectRatio", QString::number(boolAspectRatio));
 
          outXml.writeTextElement("MinVerticies", QString::number(reqMinVerticies) );
+         outXml.writeTextElement("BoolMinVerticies", QString::number(boolMinVerticies));
+
          outXml.writeTextElement("MaxVerticies",  QString::number(reqMaxVerticies) );
+         outXml.writeTextElement("BoolMaxVerticies", QString::number(boolMaxVerticies));
 
          outXml.writeTextElement("Extent", QString::number(reqExtent ));
          outXml.writeTextElement("EpsilonExtent",  QString::number(epsilonExtent) );
+         outXml.writeTextElement("BoolExtent", QString::number(boolExtent));
 
          outXml.writeTextElement("Note",  note );
 

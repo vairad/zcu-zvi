@@ -77,7 +77,7 @@ private:
     void createToolBarCount();
 private slots:
     void aboutApplication();
-    void openFileChooser();
+    bool openFileChooser();
     void openHelp();
     void writeImage(QImage *image, int destination);
     void setThresholdLabelValue(int value);

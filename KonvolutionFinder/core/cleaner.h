@@ -10,6 +10,8 @@
 #include <QImage>
 #include <QThread>
 
+#include "core/exception.h"
+#include "core/histogrammodifier.h"
 #include "core/filename_factory.h"
 #include "core/convolutiondescriptor.h"
 
@@ -23,12 +25,6 @@ class Cleaner : public QThread {
     const cv::Scalar CONTOUR_COLOR_II = cv::Scalar(255, 0, 0);
 
     int threshold;
-
-    bool boolMinVerticies;
-    bool boolMaxVerticies;
-    bool boolAspectRatio;
-    bool boolExtent;
-
 
     virtual void run();
 

@@ -1,20 +1,9 @@
 #include "core/cleaner.h"
 
-#include <iostream>
-
-#include "core/exception.h"
-#include "core/histogrammodifier.h"
-
-
 int Cleaner::defaultThreshold = 160;
 
 Cleaner::Cleaner(FilenameFactory *names, ConvolutionDescriptor *descriptor, int threshold):  names(names), descriptor(descriptor){
     this->threshold = threshold;
-
-    this->boolAspectRatio = true;
-    this->boolExtent = true;
-    this->boolMaxVerticies = true;
-    this->boolMinVerticies = true;
 }
 
 void Cleaner::setThresh(int value){
@@ -30,13 +19,13 @@ void Cleaner::run(){
     cv::Mat image;
     cv::Mat originalImage;
     cv::Mat preprocessedImage;
-    std::vector< std::vector<cv::Point> > hulls; // kontury nalezenych objektů.
-    std::vector< std::vector<cv::Point> > potentialConvolutions; //kontury objektů splňující podmínky.
-    std::vector<cv::Vec4i> hierarchy; // hierarchie nalezenych kontur
-
 
     QString name = names->getNextImageRelativePath();
     while(name != NULL){
+
+        std::vector< std::vector<cv::Point> > hulls; // kontury nalezenych objektů.
+        std::vector< std::vector<cv::Point> > potentialConvolutions; //kontury objektů splňující podmínky.
+        std::vector<cv::Vec4i> hierarchy; // hierarchie nalezenych kontur
 
         if(counter % 50 == 0 ){
             emit imagesProcessed(counter);
@@ -118,16 +107,16 @@ bool Cleaner::checkContour(std::vector<cv::Point> contour){
     double rectArea = boundingRect.width * boundingRect.height;
 
     bool result = true;
-    if( boolMinVerticies ){
+    if( descriptor->getBoolMinVerticies() ){
         result &= checkMinVerticies(contourPoly.size());
     }
-    if( boolMaxVerticies ){
+    if( descriptor->getBoolMaxVerticies() ){
         result &= checkMaxVerticies(contourPoly.size());
     }
-    if( boolAspectRatio){
+    if( descriptor->getBoolAspectRatio()){
         result &= checkAspectRatio(boundingRect.width, boundingRect.height);
     }
-    if( boolExtent){
+    if( descriptor->getBoolExtent() ){
         result &= checkExtent(area, rectArea);
     }
     return result;

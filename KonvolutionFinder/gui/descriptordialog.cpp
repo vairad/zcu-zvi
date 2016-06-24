@@ -31,6 +31,11 @@ DescriptionDialog::DescriptionDialog(ConvolutionDescriptor *convolution_descript
     setWindowTitle(tr("Nastavení"));
 }
 
+void DescriptionDialog::reject(){
+    mainTab->updateContent();
+    QDialog::reject();
+}
+
 /** ************************************************************************************************
  * @brief DescriptionDialog::updateData
  */
@@ -42,7 +47,12 @@ void DescriptionDialog::updateData() {
     convolution_descriptor->setReqExtent(mainTab->extent->value());
     convolution_descriptor->setReqMaxVerticies(mainTab->maxVerticies->value());
     convolution_descriptor->setReqMinVerticies(mainTab->minVerticies->value());
+    convolution_descriptor->setBoolAspectRatio(mainTab->boxAspect->isChecked());
+    convolution_descriptor->setBoolExtent(mainTab->boxExtent->isChecked());
+    convolution_descriptor->setBoolMaxVerticies(mainTab->boxVerticies->isChecked());
+    convolution_descriptor->setBoolMinVerticies(mainTab->boxVerticies->isChecked());
 }
+
 
 //===========================================================================================
 
@@ -80,7 +90,9 @@ QGroupBox *ConvolutionTab::createAspectRatioBox(){
     ratioBoxLayout->addItem(ratioLayout);
     ratioBoxLayout->addItem(epsLayout);
 
-    QGroupBox *box = new QGroupBox();
+    QGroupBox *box = new QGroupBox(tr("Poměr stran opsaného rovnoběžníku"));
+    box->setCheckable(true);
+    box->setChecked(convolution_descriptor->getBoolAspectRatio());
     box->setLayout(ratioBoxLayout);
 
     return box;
@@ -101,9 +113,6 @@ QGroupBox *ConvolutionTab::createVerticiesBox(){
     maxVerticies = new QSpinBox();
     maxVerticies->setRange(1, INT_MAX);
     maxVerticies->setValue(convolution_descriptor->getReqMaxVerticies());
-   // maxVerticies->setMinimum(1);
-  //  maxVerticies->setMaximum(INT_MAX);
-
 
     QHBoxLayout *minLayout = new QHBoxLayout();
 
@@ -120,8 +129,11 @@ QGroupBox *ConvolutionTab::createVerticiesBox(){
     verticiesBoxLayout->addItem(minLayout);
     verticiesBoxLayout->addItem(maxLayout);
 
-    QGroupBox *box = new QGroupBox();
+    QGroupBox *box = new QGroupBox("Počet vrcholů");
     box->setLayout(verticiesBoxLayout);
+    box->setCheckable(true);
+    box->setChecked(convolution_descriptor->getBoolMinVerticies());
+
     return box;
 }
 
@@ -160,8 +172,10 @@ QGroupBox *ConvolutionTab::createExtentBox(){
     ratioBoxLayout->addItem(extentLayout);
     ratioBoxLayout->addItem(epsLayout);
 
-    QGroupBox *box = new QGroupBox();
+    QGroupBox *box = new QGroupBox(tr("Poměr plochy nalezeného objektu a jemu opsaného rovnoběžníku"));
     box->setLayout(ratioBoxLayout);
+    box->setCheckable(true);
+    box->setChecked(convolution_descriptor->getBoolExtent());
 
     return box;
 }
@@ -201,6 +215,9 @@ void ConvolutionTab::updateContent(){
     epsilonRatio->setValue(convolution_descriptor->getEpsilonRatio());
     aspectRatio->setValue(convolution_descriptor->getReqAspectRatio());
     noteTE->setText(convolution_descriptor->getNote());
+    boxAspect->setChecked(convolution_descriptor->getBoolAspectRatio());
+    boxExtent->setChecked(convolution_descriptor->getBoolExtent());
+    boxVerticies->setChecked(convolution_descriptor->getBoolMaxVerticies());
 }
 
 /** ************************************************************************************************
@@ -218,9 +235,12 @@ ConvolutionTab::ConvolutionTab(ConvolutionDescriptor *convolution_descriptor, QW
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
 
-    mainLayout->addWidget(createAspectRatioBox());
-    mainLayout->addWidget(createVerticiesBox());
-    mainLayout->addWidget(createExtentBox());
+    boxAspect = createAspectRatioBox();
+    boxExtent = createExtentBox();
+    boxVerticies = createVerticiesBox();
+    mainLayout->addWidget(boxAspect);
+    mainLayout->addWidget(boxVerticies);
+    mainLayout->addWidget(boxExtent);
 
     mainLayout->addWidget(noteL);
     mainLayout->addWidget(noteTE);

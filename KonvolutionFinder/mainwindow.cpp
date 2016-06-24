@@ -6,6 +6,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QAction>
+#include <QToolTip>
 
 #include "gui/helpwindow.h"
 #include "mainwindow.h"
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
  * @brief MainWindow::createToolBar
  */
 void MainWindow::createToolBar() {
-    QToolBar *toolbar = addToolBar("main toolbar");
+    QToolBar *toolbar = addToolBar("Analýza");
 
     QWidget* spacer = new QWidget();
     spacer->setFixedWidth(5);
@@ -86,7 +87,7 @@ void MainWindow::createToolBar() {
  * @brief MainWindow::createToolBar
  */
 void MainWindow::createToolBarSwitch() {
-    QToolBar *toolbar = addToolBar("switch bar");
+    QToolBar *toolbar = addToolBar(tr("Výběr klasifikátoru"));
 
     QWidget* spacer = new QWidget();
     spacer->setFixedWidth(5);
@@ -97,8 +98,12 @@ void MainWindow::createToolBarSwitch() {
     sliderSwitch->setValue(this->clasificator);
     sliderSwitch->setFixedWidth(50);
 
-    QLabel *contourLabel = new QLabel(tr("Vlastonsti kontur"));
+    QLabel *toolLabel = new QLabel(tr("Klasifikátor:"));
+    toolLabel->setToolTip(tr("Vyberte klasifikační metodu."));
+    QLabel *contourLabel = new QLabel(tr("Vlastnosti kontur"));
+    contourLabel->setToolTip(tr("Vyhledávání inkluzí pomocí vlastností obrysů objektů."));
     QLabel *classificatorLabel = new QLabel(tr("Kaskádový klasifikátor"));
+    classificatorLabel->setToolTip(tr("Vyhledávání inkluzí pomocí kaskádového klasifikátoru."));
 
     connect(sliderSwitch, SIGNAL(valueChanged(int)), this, SLOT(changeClasificator(int)));
 
@@ -108,11 +113,16 @@ void MainWindow::createToolBarSwitch() {
     QWidget* spacer3 = new QWidget();
     spacer3->setFixedWidth(10);
 
+    QWidget* spacer4 = new QWidget();
+    spacer4->setFixedWidth(10);
+
     toolbar->addWidget(spacer);
-    toolbar->addWidget(contourLabel);
+    toolbar->addWidget(toolLabel);
     toolbar->addWidget(spacer2);
-    toolbar->addWidget(sliderSwitch);
+    toolbar->addWidget(contourLabel);
     toolbar->addWidget(spacer3);
+    toolbar->addWidget(sliderSwitch);
+    toolbar->addWidget(spacer4);
     toolbar->addWidget(classificatorLabel);
 
     toolbar->addSeparator();
@@ -123,7 +133,7 @@ void MainWindow::createToolBarSwitch() {
  * @brief MainWindow::createToolBar
  */
 void MainWindow::createToolBarCount() {
-    QToolBar *toolbar = addToolBar("count bar");
+    QToolBar *toolbar = addToolBar("Počet zpacovaných snímků");
 
     QWidget* spacer = new QWidget();
     spacer->setFixedWidth(5);
@@ -343,7 +353,9 @@ void MainWindow::setKernelLabelValue(int value) {
 
 void MainWindow::startAnalyze(){
     if(filename_factory == NULL || filename_factory->atEnd()){
-        openFileChooser();
+        if(!openFileChooser()){
+            return;
+        }
     }
    if( clasificator == 0){
        startAnalyzeContour();
@@ -410,7 +422,7 @@ void MainWindow::changeLabelCount(unsigned int count){
  * @brief MainWindow::openFileChooser
  * @return jmeno vybrane slozky
  */
-void MainWindow::openFileChooser() {
+bool MainWindow::openFileChooser() {
     QString folder = QFileDialog::getExistingDirectory(this, tr("Vybrat složku s daty"),
                      QDir::currentPath(), QFileDialog::DontResolveSymlinks);
 
@@ -418,13 +430,14 @@ void MainWindow::openFileChooser() {
         QMessageBox messageBox;
         messageBox.warning(0,tr("Data"),tr("Je třeba vybrat složku s daty!"));
         messageBox.setFixedSize(500,200);
-        openFileChooser();
+        return false;
     }
 
     if(filename_factory == NULL || filename_factory->atEnd()){
         filename_factory = new FilenameFactory(folder);
         this->setWindowTitle(*APP_NAME+" - ("+folder+")");
     }
+    return true;
 }
 
 std::string MainWindow::loadClassifierFile(){
@@ -610,7 +623,7 @@ void MainWindow::loadXmlConvolution(){
         }
     }else{
         description_dialog->mainTab->updateContent();
-        description_dialog->show();
+        showSetUp();
         QMessageBox messageBox;
         messageBox.information(0,"","Soubor "+folder+" byl načten");
         messageBox.setFixedSize(500,200);
@@ -632,7 +645,7 @@ void MainWindow::newXmlConvolution(){
     convolution_descriptor->reset();
 
     description_dialog->mainTab->updateContent();
-    description_dialog->show();
+    showSetUp();
 
     return;
 }
@@ -644,6 +657,8 @@ void MainWindow::newXmlConvolution(){
  */
 void MainWindow::showSetUp(){
     description_dialog->show();
+    description_dialog->raise();  // for MacOS
+    description_dialog->activateWindow(); // for Windows
 }
 
 /** **********************************************************************************

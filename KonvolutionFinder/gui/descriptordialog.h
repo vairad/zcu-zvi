@@ -20,10 +20,11 @@ class ConvolutionTab : public QWidget {
 
     QGroupBox *createAspectRatioBox();
     QGroupBox *createVerticiesBox();
+    QGroupBox *createExtentBox();
 
     ConvolutionDescriptor *convolution_descriptor;
 
-    QGroupBox *createExtentBox();
+
 public:
     explicit ConvolutionTab(ConvolutionDescriptor *convolution_descriptor, QWidget *parent = 0);
     /** textove pole pro jmeno */
@@ -44,6 +45,10 @@ public:
     QLineEdit *pathE = NULL;
     /** label pro pole pro informaci o umisteni metadat */
     QLabel *pathL = NULL;
+
+    QGroupBox *boxAspect;
+    QGroupBox *boxExtent;
+    QGroupBox *boxVerticies;
 
     void updatePath();
     void updateContent();
@@ -68,6 +73,7 @@ public:
 public slots:
     void updateData();
 
+    virtual void reject();
 private:
     /** widget s listy */
     QTabWidget *tabWidget;

@@ -17,6 +17,11 @@ class ConvolutionDescriptor
     double reqExtent; // pravoúhlost
     double epsilonExtent;
 
+    bool boolMinVerticies;
+    bool boolMaxVerticies;
+    bool boolAspectRatio;
+    bool boolExtent;
+
     QString note;
 
     QString FILE_NAME;
@@ -45,6 +50,14 @@ public:
     void setFILE_NAME(const QString &value);
     bool open(QString path);
     void reset();
+    bool getBoolMinVerticies() const;
+    void setBoolMinVerticies(bool value);
+    bool getBoolMaxVerticies() const;
+    void setBoolMaxVerticies(bool value);
+    bool getBoolAspectRatio() const;
+    void setBoolAspectRatio(bool value);
+    bool getBoolExtent() const;
+    void setBoolExtent(bool value);
 };
 
 #endif // CONVOLUTIONDESCRIPTOR_H
