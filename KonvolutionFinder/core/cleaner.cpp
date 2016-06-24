@@ -26,7 +26,7 @@ void Cleaner::setThresh(int value){
  * @brief Cleaner::run
  */
 void Cleaner::run(){
-    unsigned int counter;
+    unsigned int counter = 0;
     cv::Mat image;
     cv::Mat originalImage;
     cv::Mat preprocessedImage;

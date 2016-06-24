@@ -29,7 +29,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     createMenuBar();
     createToolBar();
-    createToolBar2();
+    createToolBarSwitch();
+    createToolBarCount();
 
     convolution_descriptor = new ConvolutionDescriptor();
     description_dialog = new DescriptionDialog(convolution_descriptor);
@@ -84,28 +85,59 @@ void MainWindow::createToolBar() {
  * Vytvori listu nastroju
  * @brief MainWindow::createToolBar
  */
-void MainWindow::createToolBar2() {
+void MainWindow::createToolBarSwitch() {
     QToolBar *toolbar = addToolBar("switch bar");
 
     QWidget* spacer = new QWidget();
     spacer->setFixedWidth(5);
-    toolbar->addWidget(spacer);
 
     sliderSwitch = new QSlider();
     sliderSwitch->setOrientation(Qt::Horizontal);
     sliderSwitch->setRange(0, 1);
     sliderSwitch->setValue(this->clasificator);
     sliderSwitch->setFixedWidth(50);
-    QLabel *contourLabel = new QLabel(tr("vlastonsti kontur"));
-    QLabel *classificatorLabel = new QLabel(tr("kaskádový klasifikátor"));
+
+    QLabel *contourLabel = new QLabel(tr("Vlastonsti kontur"));
+    QLabel *classificatorLabel = new QLabel(tr("Kaskádový klasifikátor"));
+
     connect(sliderSwitch, SIGNAL(valueChanged(int)), this, SLOT(changeClasificator(int)));
 
+    QWidget* spacer2 = new QWidget();
+    spacer2->setFixedWidth(10);
+
+    QWidget* spacer3 = new QWidget();
+    spacer3->setFixedWidth(10);
+
+    toolbar->addWidget(spacer);
     toolbar->addWidget(contourLabel);
-    toolbar->addWidget(spacer);
+    toolbar->addWidget(spacer2);
     toolbar->addWidget(sliderSwitch);
-    toolbar->addWidget(spacer);
+    toolbar->addWidget(spacer3);
     toolbar->addWidget(classificatorLabel);
 
+    toolbar->addSeparator();
+}
+
+/**
+ * Vytvori listu nastroju
+ * @brief MainWindow::createToolBar
+ */
+void MainWindow::createToolBarCount() {
+    QToolBar *toolbar = addToolBar("count bar");
+
+    QWidget* spacer = new QWidget();
+    spacer->setFixedWidth(5);
+    QWidget* spacer2 = new QWidget();
+    spacer2->setFixedWidth(10);
+
+    QLabel *countLabel = new QLabel(tr("Počet zpracovaných snímků:"));
+    countL = new QLabel(tr("0"));
+
+
+    toolbar->addWidget(spacer);
+    toolbar->addWidget(countLabel);
+    toolbar->addWidget(spacer2);
+    toolbar->addWidget(countL);
     toolbar->addSeparator();
 }
 
@@ -310,6 +342,9 @@ void MainWindow::setKernelLabelValue(int value) {
 }
 
 void MainWindow::startAnalyze(){
+    if(filename_factory == NULL || filename_factory->atEnd()){
+        openFileChooser();
+    }
    if( clasificator == 0){
        startAnalyzeContour();
    }else if(clasificator == 1){
@@ -326,13 +361,11 @@ void MainWindow::startAnalyze(){
  * @brief MainWindow::startAnalyze
  */
 void MainWindow::startAnalyzeContour(){
-    if(filename_factory == NULL){
-          filename_factory = new FilenameFactory("../data/test"); //todo delete
-    }
     try{
         Cleaner *cleaner = new Cleaner(filename_factory, convolution_descriptor, sliderThreshold->value());
 
         connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
+        connect(cleaner, SIGNAL(imagesProcessed(unsigned int)), this, SLOT(changeLabelCount(unsigned int)));
         connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
 
         cleaner->start();
@@ -350,17 +383,16 @@ void MainWindow::startAnalyzeContour(){
  * @brief MainWindow::startAnalyze
  */
 void MainWindow::startAnalyzeHaar(){
-    if(filename_factory == NULL){
-          filename_factory = new FilenameFactory("../data/test"); //todo delete
-    }
     try{
-        HaarFinder *clasifier = new HaarFinder(filename_factory, "../data/cascade5.xml");
+        std::string classifierFile = loadClassifierFile();
+        HaarFinder *clasifier = new HaarFinder(filename_factory, classifierFile);
 
         connect(clasifier, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
+        connect(clasifier, SIGNAL(imagesProcessed(unsigned int)), this, SLOT(changeLabelCount(unsigned int)));
 
         clasifier->start();
 
-    }catch(EmptyImageException &e){
+    }catch(FileNotAcceptableException &e){
         std::cout << e.what() << std::endl;
     }catch(std::exception &e){
         std::cout << "unnamed exception" << "\n";
@@ -368,6 +400,10 @@ void MainWindow::startAnalyzeHaar(){
     }
 }
 
+void MainWindow::changeLabelCount(unsigned int count){
+    this->countL->setText(QString::number(count));
+    this->countL->update();
+}
 
 /** **********************************************************************************
  * Otevre dialog pro vyber souboru
@@ -375,15 +411,30 @@ void MainWindow::startAnalyzeHaar(){
  * @return jmeno vybrane slozky
  */
 void MainWindow::openFileChooser() {
-    QString folder = QFileDialog::getExistingDirectory(this, tr("Vybrat složku"),
+    QString folder = QFileDialog::getExistingDirectory(this, tr("Vybrat složku s daty"),
                      QDir::currentPath(), QFileDialog::DontResolveSymlinks);
 
     if (!QString::compare(folder, "")) {
-        return;
+        QMessageBox messageBox;
+        messageBox.warning(0,tr("Data"),tr("Je třeba vybrat složku s daty!"));
+        messageBox.setFixedSize(500,200);
+        openFileChooser();
     }
 
-    filename_factory = new FilenameFactory(folder);
-    this->setWindowTitle(*APP_NAME+" - ("+folder+")");
+    if(filename_factory == NULL || filename_factory->atEnd()){
+        filename_factory = new FilenameFactory(folder);
+        this->setWindowTitle(*APP_NAME+" - ("+folder+")");
+    }
+}
+
+std::string MainWindow::loadClassifierFile(){
+    QString folder = QFileDialog::getOpenFileName(this, tr("Otevři popis klasifikátoru"),
+                                                  QDir::currentPath(), tr("XML Files (*.xml)"));
+
+    if (!QString::compare(folder, "")) {
+        return "";
+    }
+    return folder.toStdString();
 }
 
 /** *******************************************************
@@ -537,7 +588,7 @@ void MainWindow::saveXmlConvolution(){
  * @brief MainWindow::loadXmlConvolution
  */
 void MainWindow::loadXmlConvolution(){
-    QString folder = QFileDialog::getOpenFileName(this, tr("Open Convolution description"),
+    QString folder = QFileDialog::getOpenFileName(this, tr("Otevři popis konvolucí"),
                                                   QDir::currentPath(), tr("XML Files (*.xml)"));
 
     if (!QString::compare(folder, "")) {

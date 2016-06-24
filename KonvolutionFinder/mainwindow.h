@@ -40,6 +40,8 @@ public:
     FilenameFactory *filename_factory = NULL;
     ConvolutionDescriptor *convolution_descriptor = NULL;
 
+public slots:
+    void changeLabelCount(unsigned int countL);
 private:
     Ui::MainWindow *ui;
     QWidget *centralWidget;
@@ -51,6 +53,8 @@ private:
     QSlider *sliderKernel;
     QSlider *sliderRatio;
     QSlider *sliderSwitch;
+
+    QLabel *countL;
 
     QString threshName = "Hodnota prahu: ";
 
@@ -68,7 +72,9 @@ private:
     QMenu *createMenuAnalyze(QMenuBar *menuBar);
     QMenu *createMenuHelp(QMenuBar *menuBar);
 
-    void createToolBar2();
+    void createToolBarSwitch();
+    std::string loadClassifierFile();
+    void createToolBarCount();
 private slots:
     void aboutApplication();
     void openFileChooser();
