@@ -171,24 +171,26 @@ Složka se snímky se načte kliknutím na "Načíst složku..." v~menu "Soubor"
 	\section{Formát souboru *.xml}
 	Součástí aplikace je i možnost nahrát popis vlastností inkluzí ze souboru *.xml. Jeho struktura je následující:
 	
-	\texttt{<?xml version="1.0" encoding="UTF-8"?>
-<InclusionDescription>
-    <AspectRatio>0.99</AspectRatio>
-    <EpsilonRatio>0.19</EpsilonRatio>
-    <BoolAspectRatio>1</BoolAspectRatio>
-    <MinVertices>2</MinVertices>
-    <BoolMinVertices>1</BoolMinVertices>
-    <MaxVertices>2147483644</MaxVertices>
-    <BoolMaxVertices>1</BoolMaxVertices>
-    <Extent>0.99</Extent>
-    <EpsilonExtent>1.99</EpsilonExtent>
-    <BoolExtent>1</BoolExtent>
-    <Note>Poznámka</Note>
-</InclusionDescription>}
+\texttt{<?xml version="1.0" encoding="UTF-8"?>}\\
+\texttt{<InclusionDescription>}\\
+	\texttt{	<AspectRatio>0.99</AspectRatio>}\\
+    \texttt{	<EpsilonRatio>0.19</EpsilonRatio>}\\
+    \texttt{	<BoolAspectRatio>1</BoolAspectRatio>}\\
+    \texttt{	<MinVertices>2</MinVertices>}\\
+    \texttt{	<BoolMinVertices>1</BoolMinVertices>}\\
+    \texttt{	<MaxVertices>2147483644</MaxVertices>}\\
+    \texttt{	<BoolMaxVertices>1</BoolMaxVertices>}\\
+    \texttt{	<Extent>0.99</Extent>}\\
+    \texttt{	<EpsilonExtent>1.99</EpsilonExtent>}\\
+    \texttt{	<BoolExtent>1</BoolExtent>}\\
+    \texttt{	<Note>Poznámka</Note>}\\
+\texttt{</InclusionDescription>}
 
 	Hodnota \texttt{AspectRatio} znamená poměr stran opsaného obdélníku, který má strany rovnoběžné s~okraji obrázku. \texttt{EpsilonRatio} je přípustná odchylka od požadovaného poměru. \texttt{BoolAspectRatio} je nastaveno na 1, pokud chceme použít popis inkluze pomocí hodnot popsaných výše, v~opačném případě se vepíše 0. Hodnota \texttt{MinVertices} znamená minimální počet vrcholů polygonu aproximujícího hledané inkluze, \texttt{MaxVertices} naopak maximální počet vrcholů. \texttt{BoolMaxVertices} a \texttt{BoolMinVertices} zapínají (1), či vypínají (0) použití příslušných parametrů v detekci. \texttt{Extent} se rovná poměru plochy nalezeného objektu ku ploše obdélníku opsaného tomuto objektu, \texttt{EpsilonExtent} je opět přípustnou odchylkou od této hodnoty a \texttt{BoolExtent} zapíná, nebo vypíná použití těchto parametrů. Do \texttt{Note} lze napsat jakoukoli poznámku k~tomuto nastavení.
 
 \chapter{Závěr}
-Cílem této semestrální práce bylo vytvořit aplikaci pro analýzu, segmentaci a detekci objektů v~mikroskopických snímcích. Byla zadána testovací sekvence snímků, ve které jsme hledali jevy zvané inkluze. Výstupem práce je aplikace, která načte danou sekvenci, analyzuje a předzpracuje každý snímek a detekuje inkluze pomocí dvou metod. Nalezené inkluze označí v~grafickém uživatelském rozhraní aplikace.
+Cílem této semestrální práce bylo vytvořit aplikaci pro analýzu, segmentaci a detekci objektů v~mikroskopických snímcích. Byla zadána testovací sekvence snímků, ve které jsme hledali jevy zvané inkluze. Výstupem práce je aplikace, která načte danou sekvenci, analyzuje a předzpracuje každý snímek a detekuje inkluze pomocí dvou metod, první z~nich se zakládá na tvarových příznacích, druhou metodou je detekce pomocí naučeného kaskádového klasifikátoru. Nalezené inkluze jsou označeny v~grafickém uživatelském rozhraní aplikace.
+
+Z~hlediska úspěšnosti detekce jsou obě metody v~naší aplikaci srovnatelné, avšak pokud by byl kaskádový klasifikátor naučený na větším množství dat, jeho výsledky by byly mnohem lepší. Kaskádový klasifikátor pracuje v~odstínech šedi, a tak detekuje inkluze již v~\uv{zárodku} (tj. ještě nejsou příliš rozeznatelné), na druhou stranu někdy se vyskytnou detekce falešně pozitivní. Metoda založená na tvarových příznacích je téměř dvakrát rychlejší než klasifikátor a snadno ji lze modifikovat, a tak je možno ji použít pro detekci konvolucí v~jiných materiálech, kde mají jiný tvar.
 
 \end{document} 
