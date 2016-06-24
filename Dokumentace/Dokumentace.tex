@@ -149,12 +149,27 @@ Druhou možností je použít kaskádový klasifikátor (běžně používaný p
 \chapter{Popis implementace}
 Aplikace je psána v jazyce C++ s~použitím knihovny pro zpracování obrazu OpenCV verze 2.4, která je snadno dostupná na všech platformách, a knihovny Qt pro vytvoření grafického uživatelského rozhraní.
 	
-	Program je rozdělen do několika modulů, moduly implementující grafické uživatelské rozhraní jsou ve složce \texttt{gui} a moduly pro zpracování snímků ve složce \texttt{core}. V~hlavním modulu (\texttt{main.cpp}) se vytvoří hlavní okno aplikace třídy \texttt{MainWindow}, ve které jsou implementovány veškeré prvky uživatelského rozhraní nacházející se v~hlavním okně. Po spuštění analýzy sekvence snímků se provede následující sled operací: Cleaner - vtvoří šedotón, 
+	Program je rozdělen do několika modulů, třídy implementující modul grafického uživatelského rozhraní jsou ve složce \texttt{gui} a třídy implementující zpracování snímků jsou ve složce \texttt{core}. V~hlavním modulu (\texttt{main.cpp}) se vytvoří hlavní okno aplikace třídy \texttt{MainWindow}, ve které jsou implementovány veškeré prvky uživatelského rozhraní nacházející se v~hlavním okně. 
+	V modulu \texttt{core} jsou implementovány metody pro detekci inkluzí a jiné pomocné třídy. Jako úložiště obrázků zde slouží struktura matic z~\OpenCV \texttt{cv::Mat}.
+
+\section{Třída FilenameFactory}
+	Tato třída slouží ke snadnému získávání cest k~obrázkům. Inicializačním parametrem třídy je složka (respektive cesta), ve které mají být soubory (obrázky) k~analýze vyhledány. Třída hledá pouze obrázky s~příponu *.tif, protože je to základní formát dat. Nalezené cesty k~souborům jsou seřazeny do fronty a zpracovávány postupem FIFO bez možnosti návratu k~předchozí cestě. Toto řešení bylo zvoleno pro snazší implementaci vícevláknového přístupu. Ovládání běhu analýzy je řízeno pomocí semaforu, který je implementován v~této třídě. Při vstupu do metody \texttt{getRelativePath()} se program pokusí zabrat semafor. V~případě úspěšného získání ho opět uvolní a pokračuje v~provádění kódu. Pokud je ale semafor zabrán, vlákno zde čeká do uvolnění. Tato vedlejší zabrání a uvolnění jsou řízena z~třídy \texttt{MainWindow}.
+	
+\section{Třída HistogramModifier}
+	Tato třída implementuje základní operace nad histogramy obrázků a podporuje posun, roztažení nebo smrštění histogramu snímku. Hodnoty přesahující rozsah jasu (0 - 255) jsou zaokrouhleny na příslušnou hranici.
+	
+\section{Soubor exception.h}
+	Tento hlavičkový soubor a s~ním spojený zdrojový soubor (\texttt{exception.cpp}) obsahují deklarace a implementace výjimek, které jsou způsobeny nestandardními situacemi za běhu programu.  	
+	
+\section{Třída InclusionDefinition}
+	Tato třída představuje popis parametrů hledaných inkluzí pomocí vlastností objektů (například plocha). Součástí implementace této třídy je načítání a generování *.xml souboru s~popisem těchto vlastností. Třída slouží jako přepravka pro parametry vyhledávání a za běhu analýzy existuje v~programu pouze jedna instance. 	
+	
+\section{Třída StructuralFinder}	
+	Tato třída implementuje proces vyhledávání a klasifikaci objektů pomocí jejich vlastností. Třída je potomkem třídy \texttt{QThread}, to umožňuje spustit proces analýzy \uv{na pozadí} nebo rozdělit průběh analýzy mezi více vláken. Vícevláknovou architekturu podporuje i implementace třídy \texttt{FilenameFactory}. Rozvláknění výpočtu nebylo implementováno z~důvodu složité interpretace výsledků velkých dat.
 
 \chapter{Uživatelská dokumentace}
 	\section{SW požadavky}
 	Pro správnou funkčnost aplikace doporučujeme zařízení s~operačním systémem Microsoft Windows verze 7 a vyšší.
-	\section{Adresářová struktura odevzdávaného souboru}	
 	
 	\section{Spuštění a ovládání aplikace}	
 Po spuštění aplikace dvojklikem na přiložený spustitelný soubor InclusionFinder.exe se objeví hlavní okno (viz obrázek 5.1) s~horním menu, nástrojovou lištou a prostorem, kde lze po načtení složky se sekvencí snímků a spuštění analýzy sledovat jednotlivé snímky, které se právě zpracovávají. Vlevo je zobrazen původní snímek a napravo zpracovaný s~detekovanými inkluzemi. Dále je dole v~hlavním okně posuvník pro nastavení mezní hodnoty prahu.
