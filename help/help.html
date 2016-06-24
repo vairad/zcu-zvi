@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="cs" lang="cs">
+
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  
+  <title>Nápověda k InclusionFinder</title>
+ 
+ </head>
+ <body>
+
+<h1>Spuštění a ovládání aplikace</h1>	
+<p>Po spuštění aplikace dvojklikem na přiložený spustitelný soubor InclusionFinder.exe se objeví hlavní okno s horním menu, nástrojovou lištou a prostorem, kde lze po načtení složky se sekvencí snímků a spuštění analýzy sledovat jednotlivé snímky, které se právě zpracovávají. Vlevo je zobrazen původní snímek a napravo zpracovaný s detekovanými inkluzemi. Dále je dole v hlavním okně posuvník pro nastavení mezní hodnoty prahu.</p>
+
+<h2>Načtení složky se snímky</h2>
+<p>Složka se snímky se načte kliknutím na "Načíst složku..." v menu "Soubor".</p>
+
+<h2>Nastavení klasifikátoru</h2>
+<p>Pro nastavení parametrů hledaných konvolucí slouží okno, které se zobrazí kliknutím na položku "Nastavení" v menu "Analýza". Samotná analýza se spustí kliknutím na "Spusť analýzu" ve stejném menu. V menu "Analýza" se také nachází položky pro načtení či uložení popisu inkluze ze/do souboru ve formátu *.xml. Tento popis se aplikuje na objekty (inkluze), které se budou detekovat. Pod lištou menu se nachází panel nástrojů s tlačítky pro spuštění či pozastavení analýzy sekvence snímků. Vedle tlačítek je přepínač, jímž lze nastavit metodu pro detekci inkluzí. Pokud je jednou analýza obrázků ve složce spuštěna, nelze změnit způsob hledání. Je nutné znovu načíst složku.</p>
+
+<h3>Formát souboru *.xml</h3>
+	Součástí aplikace je i možnost nahrát popis vlastností inkluzí ze souboru *.xml. Jeho struktura je následující:
+
+<pre>	
+&#60;?xml version="1.0" encoding="UTF-8"?&#62;
+&#60;InclusionDescription&#62;
+    &#60;AspectRatio&#62;0.99&#60;/AspectRatio&#62;
+    &#60;EpsilonRatio&#62;0.19&#60;/EpsilonRatio&#62;
+    &#60;BoolAspectRatio&#62;1&#60;/BoolAspectRatio&#62;
+    &#60;MinVertices&#62;2&#60;/MinVertices&#62;
+    &#60;BoolMinVertices&#62;1&#60;/BoolMinVertices&#62;
+    &#60;MaxVertices&#62;2147483644&#60;/MaxVertices&#62;
+    &#60;BoolMaxVertices&#62;1&#60;/BoolMaxVertices&#62;
+    &#60;Extent&#62;0.99&#60;/Extent&#62;
+    &#60;EpsilonExtent&#62;1.99&#60;/EpsilonExtent&#62;
+    &#60;BoolExtent&#62;1&#60;/BoolExtent&#62;
+    &#60;Note&#62;Poznámka&#60;/Note&#62;
+&#60;/InclusionDescription&#62;
+</pre>
+<p>Hodnota <strong>AspectRatio</strong> znamená poměr stran opsaného obdélníku, který má strany rovnoběžné s okraji obrázku. <strong>EpsilonRatio </strong> je přípustná odchylka od požadovaného poměru. <strong>BoolAspectRatio </strong> je nastaveno na 1, pokud chceme použít popis inkluze pomocí hodnot popsaných výše, v opačném případě se vepíše 0. Hodnota <strong>MinVertices </strong> znamená minimální počet vrcholů polygonu aproximujícího hledané inkluze, <strong>MaxVertices </strong> naopak maximální počet vrcholů. <strong>BoolMaxVertices </strong> a <strong>BoolMinVertices </strong> zapínají (1), či vypínají (0) použití příslušných parametrů v detekci. <strong>Extent </strong> se rovná poměru plochy nalezeného objektu ku ploše obdélníku opsaného tomuto objektu, <strong>EpsilonExtent </strong> je opět přípustnou odchylkou od této hodnoty a <strong>BoolExtent </strong> zapíná, nebo vypíná použití těchto parametrů. Do <strong>Note </strong> lze napsat jakoukoli poznámku k tomuto nastavení.
+
+
+</body>
+</html>
