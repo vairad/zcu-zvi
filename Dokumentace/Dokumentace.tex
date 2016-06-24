@@ -128,11 +128,11 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\section{Detekce inkluzí}
 V~jednotlivých předzpracovaných snímcích budou následně detekovány inkluze. Inkluze se na snímcích jeví jako hvězdicovité, téměř kulaté objekty. V~jiných materiálech však mohou mít až trojúhelníkový tvar. Proto bude umožněno nastavení počtu hran inkluzí, které se budou detekovat v~dané sekvenci.
 
-Samotnou detekci je možno provádět několika metodami. Jednou z~nich je vyhledání objektu podle tvarových příznaků, tj. vlastností obrysu a plochy. Výsledek detekce pomocí této metody je na obrázku 3.9
+Samotnou detekci je možno provádět několika metodami. Jednou z~nich je vyhledání objektu podle tvarových příznaků, tj. vlastností obrysu a plochy. Výsledek detekce pomocí této metody je na obrázku 3.9. Modře označené oblasti jsou kontury všech nalezených objektů, červeně jsou zvýrazněny objekty, které mají tvarové vlastnosti inkluze.
 
 \begin{figure}[!htb]
 	\centering
-	\fbox{\includegraphics[scale=0.25]{obrazky/lepe_nauceny_kalsifikator.png}}
+	\fbox{\includegraphics[scale=0.25]{obrazky/struktura_min3V_pomer1.png}}
 	\label{fig:tvarove_priznaky}
 	\caption{Inkluze detekované podle tvarových příznaků}
 	\end{figure}
@@ -153,11 +153,11 @@ Aplikace je psána v jazyce C++ s~použitím knihovny pro zpracování obrazu Op
 
 \chapter{Uživatelská dokumentace}
 	\section{SW požadavky}
-	
+	Pro správnou funkčnost aplikace doporučujeme zařízení s~operačním systémem Microsoft Windows verze 7 a vyšší.
 	\section{Adresářová struktura odevzdávaného souboru}	
 	
 	\section{Spuštění a ovládání aplikace}	
-Po spuštění aplikace dvojklikem na přiložený spustitelný soubor InclusionFinder.exe se objeví hlavní okno (viz obrázek 5.1) s~horním menu, nástrojovou lištou pro spuštění a pozastavení analýzy a prostorem, kde lze po načtení složky se sekvencí snímků a spuštění analýzy sledovat jednotlivé snímky, které se právě zpracovávají. Vlevo je zobrazen původní snímek a napravo zpracovaný s~detekovanými inkluzemi. Dále je dole v~hlavním okně posuvník pro nastavení mezní hodnoty prahu.
+Po spuštění aplikace dvojklikem na přiložený spustitelný soubor InclusionFinder.exe se objeví hlavní okno (viz obrázek 5.1) s~horním menu, nástrojovou lištou a prostorem, kde lze po načtení složky se sekvencí snímků a spuštění analýzy sledovat jednotlivé snímky, které se právě zpracovávají. Vlevo je zobrazen původní snímek a napravo zpracovaný s~detekovanými inkluzemi. Dále je dole v~hlavním okně posuvník pro nastavení mezní hodnoty prahu.
 
 	\begin{figure}[!htb]
 	\centering
@@ -166,12 +166,29 @@ Po spuštění aplikace dvojklikem na přiložený spustitelný soubor Inclusion
 	\caption{Hlavní okno aplikace se spuštěnou analýzou}
 	\end{figure}
 
-Složka se snímky se načte kliknutím na "Načíst složku..." v~menu "Soubor". Pro nastavení parametrů hledaných konvolucí slouží okno, které se zobrazí kliknutím na položku "Nastavení" v~menu "Analýza". Samotná analýza se spustí kliknutím na "Spusť analýzu" ve stejném menu. V~menu "Analýza" se také nachází položky pro načtení či uložení popisu inkluze ze/do souboru ve formátu *.xml. Tento popis se aplikuje na objekty (inkluze), které se budou detekovat.
+Složka se snímky se načte kliknutím na "Načíst složku..." v~menu "Soubor". Pro nastavení parametrů hledaných konvolucí slouží okno, které se zobrazí kliknutím na položku "Nastavení" v~menu "Analýza". Samotná analýza se spustí kliknutím na "Spusť analýzu" ve stejném menu. V~menu "Analýza" se také nachází položky pro načtení či uložení popisu inkluze ze/do souboru ve formátu *.xml. Tento popis se aplikuje na objekty (inkluze), které se budou detekovat. Pod lištou menu se nachází panel nástrojů s tlačítky pro spuštění či pozastavení analýzy sekvence snímků. Vedle tlačítek je přepínač, jímž lze nastavit metodu pro detekci inkluzí.
 
 	\section{Formát souboru *.xml}
-	popis vstupního/výstupního souboru
+	Součástí aplikace je i možnost nahrát popis vlastností inkluzí ze souboru *.xml. Jeho struktura je následující:
+	
+	\texttt{<?xml version="1.0" encoding="UTF-8"?>
+<InclusionDescription>
+    <AspectRatio>0.99</AspectRatio>
+    <EpsilonRatio>0.19</EpsilonRatio>
+    <BoolAspectRatio>1</BoolAspectRatio>
+    <MinVertices>2</MinVertices>
+    <BoolMinVertices>1</BoolMinVertices>
+    <MaxVertices>2147483644</MaxVertices>
+    <BoolMaxVertices>1</BoolMaxVertices>
+    <Extent>0.99</Extent>
+    <EpsilonExtent>1.99</EpsilonExtent>
+    <BoolExtent>1</BoolExtent>
+    <Note>Poznámka</Note>
+</InclusionDescription>}
+
+	Hodnota \texttt{AspectRatio} znamená poměr stran opsaného obdélníku, který má strany rovnoběžné s~okraji obrázku. \texttt{EpsilonRatio} je přípustná odchylka od požadovaného poměru. \texttt{BoolAspectRatio} je nastaveno na 1, pokud chceme použít popis inkluze pomocí hodnot popsaných výše, v~opačném případě se vepíše 0. Hodnota \texttt{MinVertices} znamená minimální počet vrcholů polygonu aproximujícího hledané inkluze, \texttt{MaxVertices} naopak maximální počet vrcholů. \texttt{BoolMaxVertices} a \texttt{BoolMinVertices} zapínají (1), či vypínají (0) použití příslušných parametrů v detekci. \texttt{Extent} se rovná poměru plochy nalezeného objektu ku ploše obdélníku opsaného tomuto objektu, \texttt{EpsilonExtent} je opět přípustnou odchylkou od této hodnoty a \texttt{BoolExtent} zapíná, nebo vypíná použití těchto parametrů. Do \texttt{Note} lze napsat jakoukoli poznámku k~tomuto nastavení.
 
 \chapter{Závěr}
-Cílem této semestrální práce bylo vytvořit aplikaci pro analýzu, segmentaci a detekci objektů v~mikroskopických snímcích. Byla zadána testovací sekvence snímků, ve které jsme hledali jevy zvané inkluze. Výstupem práce je aplikace, která načte danou sekvenci, analyzuje a předzpracuje každý snímek a detekuje inkluze. Nalezené inkluze označí v~grafickém uživatelském rozhraní aplikace. Práce tak splňuje zadání.
+Cílem této semestrální práce bylo vytvořit aplikaci pro analýzu, segmentaci a detekci objektů v~mikroskopických snímcích. Byla zadána testovací sekvence snímků, ve které jsme hledali jevy zvané inkluze. Výstupem práce je aplikace, která načte danou sekvenci, analyzuje a předzpracuje každý snímek a detekuje inkluze pomocí dvou metod. Nalezené inkluze označí v~grafickém uživatelském rozhraní aplikace.
 
 \end{document} 
