@@ -26,7 +26,7 @@ LIBS += -lopencv_core2412d -lopencv_flann2412d -lopencv_highgui2412d -lopencv_im
 
 SOURCES += main.cpp\
         gui/mainwindow.cpp \
-        core/cleaner.cpp \
+        core/structuralfinder.cpp \
         core/filename_factory.cpp \
         core/exception.cpp \
         test/testclass.cpp \
@@ -38,7 +38,7 @@ SOURCES += main.cpp\
 
 
 HEADERS  += gui/mainwindow.h \
-            core/cleaner.h \
+            core/structuralfinder.h \
             core/filename_factory.h \
             core/exception.h \
             test/testclass.h \

@@ -1,20 +1,20 @@
-#include "core/cleaner.h"
+#include "core/structuralfinder.h"
 
-int Cleaner::defaultThreshold = 160;
+int StructuralFinder::defaultThreshold = 160;
 
-Cleaner::Cleaner(FilenameFactory *names, ConvolutionDescriptor *descriptor, int threshold):  names(names), descriptor(descriptor){
+StructuralFinder::StructuralFinder(FilenameFactory *names, ConvolutionDescriptor *descriptor, int threshold):  names(names), descriptor(descriptor){
     this->threshold = threshold;
 }
 
-void Cleaner::setThresh(int value){
+void StructuralFinder::setThresh(int value){
     this->threshold = value;
 }
 
 /**
  * Pracovní smyčka vlákna
- * @brief Cleaner::run
+ * @brief StructuralFinder::run
  */
-void Cleaner::run(){
+void StructuralFinder::run(){
     unsigned int counter = 0;
     cv::Mat image;
     cv::Mat originalImage;
@@ -93,11 +93,11 @@ void Cleaner::run(){
 /**
  * Metoda provede kontrolu zadaných kritérií.
  * Pokud kontura nevyhovuje toleranci je vráceno false a bude vyřazena.
- * @brief Cleaner::checkContour
+ * @brief StructuralFinder::checkContour
  * @param contour
  * @return
  */
-bool Cleaner::checkContour(std::vector<cv::Point> contour){
+bool StructuralFinder::checkContour(std::vector<cv::Point> contour){
     std::vector<cv::Point> contourPoly;
 
     cv::approxPolyDP( cv::Mat(contour), contourPoly, 3, true );
@@ -124,12 +124,12 @@ bool Cleaner::checkContour(std::vector<cv::Point> contour){
 
 /**
  * Zkontroluje konturu na pravoúhlost kontury proti osanému rovnoběžníku
- * @brief Cleaner::checkExtent
+ * @brief StructuralFinder::checkExtent
  * @param contourArea
  * @param rectArea
  * @return
  */
-bool Cleaner::checkExtent(double contourArea, double rectArea){
+bool StructuralFinder::checkExtent(double contourArea, double rectArea){
     double extent = double(contourArea)/rectArea;
 
     double epsilonExtent = descriptor->getEpsilonRatio();
@@ -143,12 +143,12 @@ bool Cleaner::checkExtent(double contourArea, double rectArea){
 
 /**
  * Zkontrolu je konturu na poměr stran opsaného rovnoběžníku
- * @brief Cleaner::checkAspectRatio
+ * @brief StructuralFinder::checkAspectRatio
  * @param width
  * @param height
  * @return
  */
-bool Cleaner::checkAspectRatio(int width, int height){
+bool StructuralFinder::checkAspectRatio(int width, int height){
     double  aspectRatio = double(width)/height;
 
     double epsilonRatio = descriptor->getEpsilonRatio();
@@ -162,11 +162,11 @@ bool Cleaner::checkAspectRatio(int width, int height){
 
 /**
  * Zkontroluje konturu na maximální počet vrcholů
- * @brief Cleaner::checkMaxVerticies
+ * @brief StructuralFinder::checkMaxVerticies
  * @param verticies
  * @return
  */
-bool Cleaner::checkMaxVerticies(unsigned int verticies){
+bool StructuralFinder::checkMaxVerticies(unsigned int verticies){
     unsigned int reqMaxVerticies = descriptor->getReqMaxVerticies();
     if ( verticies > reqMaxVerticies ){
         return false;
@@ -176,11 +176,11 @@ bool Cleaner::checkMaxVerticies(unsigned int verticies){
 
 /**
  * Zkontroluje konturu dle na minimální počet vrcholů
- * @brief Cleaner::checkMinVerticies
+ * @brief StructuralFinder::checkMinVerticies
  * @param verticies
  * @return
  */
-bool Cleaner::checkMinVerticies(unsigned int verticies){
+bool StructuralFinder::checkMinVerticies(unsigned int verticies){
     unsigned int reqMinVerticies = descriptor->getReqMinVerticies();
     if ( verticies < reqMinVerticies ){
         return false;
@@ -192,7 +192,7 @@ bool Cleaner::checkMinVerticies(unsigned int verticies){
  * @function CannyThreshold
  * @brief Trackbar callback - Canny thresholds input with a ratio 1:3
  */
-void Cleaner::cannyEdges(cv::Mat src, cv::Mat out){
+void StructuralFinder::cannyEdges(cv::Mat src, cv::Mat out){
     int lowThreshold = 100;
     int ratio = 2;
     int kernelSize = 3;
@@ -203,11 +203,11 @@ void Cleaner::cannyEdges(cv::Mat src, cv::Mat out){
 
 /**
  * Převod cv:Mat image to QImage pro zobrazení v aplikaci
- * @brief Cleaner::cvMatToQImage
+ * @brief StructuralFinder::cvMatToQImage
  * @param input
  * @param destination
  */
-void Cleaner::cvMatToQImage(cv::Mat *input, int destination) {
+void StructuralFinder::cvMatToQImage(cv::Mat *input, int destination) {
 
     QImage *dest = new QImage((const uchar *) input->data, input->cols, input->rows, QImage::Format_RGB888);
     dest->bits(); // enforce deep copy, see documentation

@@ -1,5 +1,5 @@
-#ifndef CLEANER_H
-#define CLEANER_H
+#ifndef StructuralFinder_H
+#define StructuralFinder_H
 
 #include <vector>
 
@@ -16,7 +16,7 @@
 #include "core/convolutiondescriptor.h"
 
 
-class Cleaner : public QThread {
+class StructuralFinder : public QThread {
     Q_OBJECT
     FilenameFactory *names;
     ConvolutionDescriptor *descriptor;
@@ -41,7 +41,7 @@ class Cleaner : public QThread {
 public:
     static int defaultThreshold;
 
-    Cleaner(FilenameFactory *names, ConvolutionDescriptor *descriptor, int threshold);
+    StructuralFinder(FilenameFactory *names, ConvolutionDescriptor *descriptor, int threshold);
 signals:
     void showImage(QImage *image, int destination);
     void imagesProcessed(unsigned int count);
@@ -49,4 +49,4 @@ public slots:
     void setThresh(int value);
 };
 
-#endif // CLEANER_H
+#endif // StructuralFinder_H

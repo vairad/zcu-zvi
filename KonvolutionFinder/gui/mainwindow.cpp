@@ -11,7 +11,7 @@
 #include "gui/helpwindow.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "core/cleaner.h"
+#include "core/structuralfinder.h"
 #include "test/testclass.h"
 #include "core/exception.h"
 #include "core/haarfinder.h"
@@ -299,8 +299,8 @@ void MainWindow::createSliderBar() {
     sliderThreshold = new QSlider();
     sliderThreshold->setOrientation(Qt::Horizontal);
     sliderThreshold->setRange(0, 255);
-    sliderThreshold->setValue(Cleaner::defaultThreshold);
-    thresholdSliderLabel = new QLabel(threshName + QString::number(Cleaner::defaultThreshold));
+    sliderThreshold->setValue(StructuralFinder::defaultThreshold);
+    thresholdSliderLabel = new QLabel(threshName + QString::number(StructuralFinder::defaultThreshold));
     connect(sliderThreshold, SIGNAL(valueChanged(int)), this, SLOT(setThresholdLabelValue(int)));
 
     sliderRatio = new QSlider();
@@ -374,13 +374,13 @@ void MainWindow::startAnalyze(){
  */
 void MainWindow::startAnalyzeContour(){
     try{
-        Cleaner *cleaner = new Cleaner(filename_factory, convolution_descriptor, sliderThreshold->value());
+        StructuralFinder *finder = new StructuralFinder(filename_factory, convolution_descriptor, sliderThreshold->value());
 
-        connect(cleaner, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
-        connect(cleaner, SIGNAL(imagesProcessed(unsigned int)), this, SLOT(changeLabelCount(unsigned int)));
-        connect(sliderThreshold, SIGNAL(valueChanged(int)), cleaner, SLOT(setThresh(int)));
+        connect(finder, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
+        connect(finder, SIGNAL(imagesProcessed(unsigned int)), this, SLOT(changeLabelCount(unsigned int)));
+        connect(sliderThreshold, SIGNAL(valueChanged(int)), finder, SLOT(setThresh(int)));
 
-        cleaner->start();
+        finder->start();
 
     }catch(EmptyImageException &e){
         std::cout << e.what() << std::endl;

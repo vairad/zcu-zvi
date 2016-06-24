@@ -109,7 +109,7 @@ std::vector< cv::Rect > HaarFinder::detectInclusions( cv::Mat frame ){
  //todo Vytvořit třídu QConverter
 /**
  * Převod cv:Mat image to QImage pro zobrazení v aplikaci
- * @brief Cleaner::cvMatToQImage
+ * @brief HaarFinder::cvMatToQImage
  * @param input
  * @param destination
  */
