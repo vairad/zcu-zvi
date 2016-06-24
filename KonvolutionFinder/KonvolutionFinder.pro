@@ -31,7 +31,7 @@ SOURCES += main.cpp\
         core/exception.cpp \
         test/testclass.cpp \
         core/histogrammodifier.cpp \
-    core/convolutiondescriptor.cpp \
+    core/inclusiondescriptor.cpp \
     gui/descriptordialog.cpp \
     core/haarfinder.cpp \
     gui/helpwindow.cpp
@@ -43,7 +43,7 @@ HEADERS  += gui/mainwindow.h \
             core/exception.h \
             test/testclass.h \
             core/histogrammodifier.h \
-            core/convolutiondescriptor.h \
+            core/inclusiondescriptor.h \
             gui/descriptordialog.h \
             core/haarfinder.h \
             gui/helpwindow.h

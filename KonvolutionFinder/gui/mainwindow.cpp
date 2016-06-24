@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     createToolBarSwitch();
     createToolBarCount();
 
-    convolution_descriptor = new ConvolutionDescriptor();
-    description_dialog = new DescriptionDialog(convolution_descriptor);
+    inclusion_descriptor = new InclusionDescriptor();
+    description_dialog = new DescriptionDialog(inclusion_descriptor);
     centralWidget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
     createSliderBar();
@@ -219,7 +219,7 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     actionLoadDescriprion = new QAction(this);
     actionLoadDescriprion->setText(tr("Načti popis inkluze"));
     actionLoadDescriprion->setShortcut(Qt::Key_O | Qt::CTRL);
-    connect(actionLoadDescriprion, SIGNAL(triggered()), this, SLOT(loadXmlConvolution()));
+    connect(actionLoadDescriprion, SIGNAL(triggered()), this, SLOT(loadXmlinclusion()));
     menuAnalyze->addAction(actionLoadDescriprion);
 
     // akce uloz popis konvoluce
@@ -227,7 +227,7 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     actionSaveDescriprion = new QAction(this);
     actionSaveDescriprion->setText(tr("Ulož popis inkluze"));
     actionSaveDescriprion->setShortcut(Qt::Key_S | Qt::CTRL);
-    connect(actionSaveDescriprion, SIGNAL(triggered()), this, SLOT(saveXmlConvolution()));
+    connect(actionSaveDescriprion, SIGNAL(triggered()), this, SLOT(saveXmlinclusion()));
     menuAnalyze->addAction(actionSaveDescriprion);
 
     // akce novy popis konvoluce
@@ -235,7 +235,7 @@ QMenu *MainWindow::createMenuAnalyze(QMenuBar *menuBar){
     actionNewDescriprion = new QAction(this);
     actionNewDescriprion->setText(tr("Nový popis inkluze"));
     actionNewDescriprion->setShortcut(Qt::Key_N | Qt::CTRL);
-    connect(actionNewDescriprion, SIGNAL(triggered()), this, SLOT(newXmlConvolution()));
+    connect(actionNewDescriprion, SIGNAL(triggered()), this, SLOT(newXmlinclusion()));
     menuAnalyze->addAction(actionNewDescriprion);
 
     return menuAnalyze;
@@ -382,7 +382,7 @@ void MainWindow::startAnalyze(){
  */
 void MainWindow::startAnalyzeContour(){
     try{
-        StructuralFinder *finder = new StructuralFinder(filename_factory, convolution_descriptor, sliderThreshold->value());
+        StructuralFinder *finder = new StructuralFinder(filename_factory, inclusion_descriptor, sliderThreshold->value());
 
         connect(finder, SIGNAL(showImage(QImage *, int)), this, SLOT(writeImage(QImage *, int)));
         connect(finder, SIGNAL(imagesProcessed(unsigned int)), this, SLOT(changeLabelCount(unsigned int)));
@@ -594,10 +594,10 @@ void MainWindow::writeNewImage(QImage *image){
 
 /** **********************************************************************************
  * Zprostředkuje uložení xml popisu vlastností inkluze
- * @brief MainWindow::saveXmlConvolution
+ * @brief MainWindow::saveXmlinclusion
  */
-void MainWindow::saveXmlConvolution(){
-    if(convolution_descriptor == NULL){
+void MainWindow::saveXmlinclusion(){
+    if(inclusion_descriptor == NULL){
         QMessageBox messageBox;
         messageBox.information(0,"",tr("Není připravený popis k uložení."));
         messageBox.setFixedSize(500,200);
@@ -605,17 +605,17 @@ void MainWindow::saveXmlConvolution(){
     }
     QString path;
 
-    if(!QString::compare(convolution_descriptor->getFILE_NAME(), "")){
+    if(!QString::compare(inclusion_descriptor->getFILE_NAME(), "")){
         path = QFileDialog::getSaveFileName(this, tr("Uložení popisu inkluze"),
                          QDir::currentPath(), tr("XML Files (*.xml)"));
-        convolution_descriptor->setFILE_NAME(path);
+        inclusion_descriptor->setFILE_NAME(path);
         description_dialog->mainTab->updatePath();
     }else{
-        path = convolution_descriptor->getFILE_NAME();
+        path = inclusion_descriptor->getFILE_NAME();
     }
 
     try{
-        convolution_descriptor->save(path);
+        inclusion_descriptor->save(path);
 
         QMessageBox messageBox;
         messageBox.information(0,path,"Soubor: "+path+" byl uložen.");
@@ -630,9 +630,9 @@ void MainWindow::saveXmlConvolution(){
 
 /** **********************************************************************************
  * Zprostředkuje načtení xml popisu vlastností inkluze
- * @brief MainWindow::loadXmlConvolution
+ * @brief MainWindow::loadXmlinclusion
  */
-void MainWindow::loadXmlConvolution(){
+void MainWindow::loadXmlinclusion(){
     QString folder = QFileDialog::getOpenFileName(this, tr("Otevři popis konvolucí"),
                                                   QDir::currentPath(), tr("XML Files (*.xml)"));
 
@@ -644,7 +644,7 @@ void MainWindow::loadXmlConvolution(){
     }
 
     // todo kontrola, zda nebezi analyza
-    bool opened = convolution_descriptor->open(folder);
+    bool opened = inclusion_descriptor->open(folder);
 
 
     if(!opened){
@@ -669,12 +669,12 @@ void MainWindow::loadXmlConvolution(){
 
 /** **********************************************************************************
  * Smaže adresu ukládaného souboru... Půjde tedy uložit znovu
- * @brief MainWindow::loadXmlConvolution
+ * @brief MainWindow::loadXmlinclusion
  */
-void MainWindow::newXmlConvolution(){
+void MainWindow::newXmlinclusion(){
 
     // todo kontrola, zda nebezi analyza
-    convolution_descriptor->reset();
+    inclusion_descriptor->reset();
 
     description_dialog->mainTab->updateContent();
     showSetUp();

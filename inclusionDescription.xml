@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InclusionDescription>
+    <AspectRatio>1</AspectRatio>
+    <EpsilonRatio>0.2</EpsilonRatio>
+    <BoolAspectRatio>1</BoolAspectRatio>
+    <MinVertices>3</MinVertices>
+    <BoolMinVertices>1</BoolMinVertices>
+    <MaxVertices>5000</MaxVertices>
+    <BoolMaxVertices>1</BoolMaxVertices>
+    <Extent>0.99</Extent>
+    <EpsilonExtent>1.99</EpsilonExtent>
+    <BoolExtent>0</BoolExtent>
+    <Note>Osvědčené parametry</Note>
+</InclusionDescription>

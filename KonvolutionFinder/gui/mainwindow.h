@@ -9,7 +9,7 @@
 
 
 #include "core/filename_factory.h"
-#include "core/convolutiondescriptor.h"
+#include "core/inclusiondescriptor.h"
 
 #include "gui/descriptordialog.h"
 
@@ -42,7 +42,7 @@ public:
     ~MainWindow();
 
     FilenameFactory *filename_factory = NULL;
-    ConvolutionDescriptor *convolution_descriptor = NULL;
+    InclusionDescriptor *inclusion_descriptor = NULL;
 
 public slots:
     void changeLabelCount(unsigned int countL);
@@ -88,9 +88,9 @@ private slots:
     void setKernelLabelValue(int value);
     void setRatioLabelValue(int value);
     void startAnalyze();
-    void saveXmlConvolution();
-    void loadXmlConvolution();
-    void newXmlConvolution();
+    void saveXmlinclusion();
+    void loadXmlinclusion();
+    void newXmlinclusion();
     void showSetUp();
     void closeEvent(QCloseEvent *event);
     void changeClasificator(int clasificator);

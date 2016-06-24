@@ -1,5 +1,5 @@
-#include "convolutiondescriptor.h"
-#include "exception.h"
+#include "core/inclusiondescriptor.h"
+#include "core/exception.h"
 
 #include <iostream>
 
@@ -11,77 +11,76 @@
 
 //=======================================================================================
 
-double ConvolutionDescriptor::getReqAspectRatio() const{
+double InclusionDescriptor::getReqAspectRatio() const{
     return reqAspectRatio;
 }
 
-double ConvolutionDescriptor::getEpsilonRatio() const{
+double InclusionDescriptor::getEpsilonRatio() const{
     return epsilonRatio;
 }
 
-int ConvolutionDescriptor::getReqMinVerticies() const{
-    return reqMinVerticies;
+int InclusionDescriptor::getReqMinVertices() const{
+    return reqMinVertices;
 }
 
-int ConvolutionDescriptor::getReqMaxVerticies() const{
-    return reqMaxVerticies;
+int InclusionDescriptor::getReqMaxVertices() const{
+    return reqMaxVertices;
 }
 
-double ConvolutionDescriptor::getReqExtent() const{
+double InclusionDescriptor::getReqExtent() const{
     return reqExtent;
 }
 
-double ConvolutionDescriptor::getEpsilonExtent() const{
+double InclusionDescriptor::getEpsilonExtent() const{
     return epsilonExtent;
 }
 
-QString ConvolutionDescriptor::getFILE_NAME() const{
+QString InclusionDescriptor::getFILE_NAME() const{
     return FILE_NAME;
 }
 
-QString ConvolutionDescriptor::getNote() const{
+QString InclusionDescriptor::getNote() const{
     return note;
 }
 
 
 //=======================================================================================
 
-void ConvolutionDescriptor::setReqAspectRatio(double value)
+void InclusionDescriptor::setReqAspectRatio(double value)
 {
     reqAspectRatio = value;
 }
 
-void ConvolutionDescriptor::setEpsilonRatio(double value)
+void InclusionDescriptor::setEpsilonRatio(double value)
 {
     epsilonRatio = value;
 }
 
-void ConvolutionDescriptor::setReqMinVerticies(int value)
-{
-    reqMinVerticies = value;
+void InclusionDescriptor::setReqMinVertices(int value){
+    reqMinVertices = value;
 }
 
-void ConvolutionDescriptor::setReqMaxVerticies(int value)
+void InclusionDescriptor::setReqMaxVertices(int value)
 {
-    reqMaxVerticies = value;
+    reqMaxVertices = value;
 }
 
-void ConvolutionDescriptor::setReqExtent(double value)
+void InclusionDescriptor::setReqExtent(double value)
 {
     reqExtent = value;
 }
 
-void ConvolutionDescriptor::setEpsilonExtent(double value)
+void InclusionDescriptor::setEpsilonExtent(double value)
 {
     epsilonExtent = value;
 }
 
-void ConvolutionDescriptor::setNote(const QString &value)
+void InclusionDescriptor::setNote(const QString &value)
 {
     note = value;
 }
 
-void ConvolutionDescriptor::setFILE_NAME(const QString &value)
+void InclusionDescriptor::setFILE_NAME(const QString &value)
 {
     FILE_NAME = value;
 }
@@ -90,66 +89,66 @@ void ConvolutionDescriptor::setFILE_NAME(const QString &value)
 //=======================================================================================
 
 
-bool ConvolutionDescriptor::getBoolMinVerticies() const
+bool InclusionDescriptor::getBoolMinVertices() const
 {
-    return boolMinVerticies;
+    return boolMinVertices;
 }
 
-void ConvolutionDescriptor::setBoolMinVerticies(bool value)
+void InclusionDescriptor::setBoolMinVertices(bool value)
 {
-    boolMinVerticies = value;
+    boolMinVertices = value;
 }
 
-bool ConvolutionDescriptor::getBoolMaxVerticies() const
+bool InclusionDescriptor::getBoolMaxVertices() const
 {
-    return boolMaxVerticies;
+    return boolMaxVertices;
 }
 
-void ConvolutionDescriptor::setBoolMaxVerticies(bool value)
+void InclusionDescriptor::setBoolMaxVertices(bool value)
 {
-    boolMaxVerticies = value;
+    boolMaxVertices = value;
 }
 
-bool ConvolutionDescriptor::getBoolAspectRatio() const
+bool InclusionDescriptor::getBoolAspectRatio() const
 {
     return boolAspectRatio;
 }
 
-void ConvolutionDescriptor::setBoolAspectRatio(bool value)
+void InclusionDescriptor::setBoolAspectRatio(bool value)
 {
     boolAspectRatio = value;
 }
 
-bool ConvolutionDescriptor::getBoolExtent() const
+bool InclusionDescriptor::getBoolExtent() const
 {
     return boolExtent;
 }
 
-void ConvolutionDescriptor::setBoolExtent(bool value)
+void InclusionDescriptor::setBoolExtent(bool value)
 {
     boolExtent = value;
 }
 
 //=====================================================================================
 
-ConvolutionDescriptor::ConvolutionDescriptor(){
+InclusionDescriptor::InclusionDescriptor(){
     FILE_NAME = "";
     boolAspectRatio = true;
     reqAspectRatio = 1.0; //podlouhlost
     epsilonRatio = 0.2;
 
-    boolMinVerticies = false;
-    reqMinVerticies = 1; // minimum vrcholů aproximace
+    boolMinVertices = false;
+    reqMinVertices = 1; // minimum vrcholů aproximace
 
-    boolMaxVerticies = false;
-    reqMaxVerticies = INT_MAX; // maximum vrcholů aproximace
+    boolMaxVertices = false;
+    reqMaxVertices = INT_MAX; // maximum vrcholů aproximace
 
     boolExtent = false;
     reqExtent = 1.0; // pravoúhlost
     epsilonExtent = 2.0;
 }
 
-bool ConvolutionDescriptor::open(QString path)
+bool InclusionDescriptor::open(QString path)
 {
     QDomDocument xml("mydocument");
 
@@ -179,9 +178,9 @@ bool ConvolutionDescriptor::open(QString path)
             }else if(e.tagName() == "EpsilonRatio"){
                 epsilonRatio = e.text().toDouble();
             }else if(e.tagName() == "MinVerticies"){
-                reqMinVerticies = e.text().toInt();
+                reqMinVertices = e.text().toInt();
             }else if(e.tagName() == "MaxVerticies"){
-                reqMaxVerticies = e.text().toInt();
+                reqMaxVertices = e.text().toInt();
             }else if(e.tagName() == "Extent"){
                  reqExtent = e.text().toDouble();
             }else if(e.tagName() == "EpsilonExtent"){
@@ -191,9 +190,9 @@ bool ConvolutionDescriptor::open(QString path)
             }else if(e.tagName() == "BoolAspectRatio"){
                 boolAspectRatio = (bool)e.text().toInt();
             }else if(e.tagName() == "BoolMinVerticies"){
-                boolMinVerticies= (bool)e.text().toInt();
+                boolMinVertices= (bool)e.text().toInt();
             }else if(e.tagName() == "BoolMaxVerticies"){
-                boolMaxVerticies = (bool)e.text().toInt();
+                boolMaxVertices = (bool)e.text().toInt();
             }else if(e.tagName() == "BoolExtent"){
                 boolExtent = (bool)e.text().toInt();
             }
@@ -210,13 +209,13 @@ bool ConvolutionDescriptor::open(QString path)
 
 /** **********************************************************************************
  * Smaže adresu ukládaného souboru... Půjde tedy uložit znovu
- * @brief MainWindow::loadXmlConvolution
+ * @brief MainWindow::loadXmlinclusion
  */
-void ConvolutionDescriptor::reset(){
+void InclusionDescriptor::reset(){
     FILE_NAME = "";
 }
 
-void ConvolutionDescriptor::save(QString path)
+void InclusionDescriptor::save(QString path)
 {
     QFile fileToSave(path);
     fileToSave.open(QIODevice::WriteOnly);
@@ -238,11 +237,11 @@ void ConvolutionDescriptor::save(QString path)
          outXml.writeTextElement("EpsilonRatio", QString::number(epsilonRatio) );
          outXml.writeTextElement("BoolAspectRatio", QString::number(boolAspectRatio));
 
-         outXml.writeTextElement("MinVerticies", QString::number(reqMinVerticies) );
-         outXml.writeTextElement("BoolMinVerticies", QString::number(boolMinVerticies));
+         outXml.writeTextElement("MinVertices", QString::number(reqMinVertices) );
+         outXml.writeTextElement("BoolMinVertices", QString::number(boolMinVertices));
 
-         outXml.writeTextElement("MaxVerticies",  QString::number(reqMaxVerticies) );
-         outXml.writeTextElement("BoolMaxVerticies", QString::number(boolMaxVerticies));
+         outXml.writeTextElement("MaxVertices",  QString::number(reqMaxVertices) );
+         outXml.writeTextElement("BoolMaxVertices", QString::number(boolMaxVertices));
 
          outXml.writeTextElement("Extent", QString::number(reqExtent ));
          outXml.writeTextElement("EpsilonExtent",  QString::number(epsilonExtent) );

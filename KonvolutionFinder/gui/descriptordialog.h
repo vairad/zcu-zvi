@@ -5,7 +5,7 @@
 #include <QtWidgets>
 #include <QDialog>
 
-#include "core/convolutiondescriptor.h"
+#include "core/inclusiondescriptor.h"
 
 class QDialogButtonBox;
 class QFileInfo;
@@ -15,26 +15,26 @@ class QTabWidget;
  * List hlavni - nastaveni udaju uzivatele
  * @brief The MainTab class
  */
-class ConvolutionTab : public QWidget {
+class inclusionTab : public QWidget {
     Q_OBJECT
 
     QGroupBox *createAspectRatioBox();
-    QGroupBox *createVerticiesBox();
+    QGroupBox *createVerticesBox();
     QGroupBox *createExtentBox();
 
-    ConvolutionDescriptor *convolution_descriptor;
+    InclusionDescriptor *inclusion_descriptor;
 
 
 public:
-    explicit ConvolutionTab(ConvolutionDescriptor *convolution_descriptor, QWidget *parent = 0);
+    explicit inclusionTab(InclusionDescriptor *inclusion_descriptor, QWidget *parent = 0);
     /** textove pole pro jmeno */
     QDoubleSpinBox *aspectRatio = NULL;
     /** textove pole pro prijmeni */
     QDoubleSpinBox *epsilonRatio = NULL;
     /** textove pole pro uzivatelske jmeno */
-    QSpinBox *minVerticies = NULL;
+    QSpinBox *minVertices = NULL;
     /** textove pole pro vek */
-    QSpinBox *maxVerticies = NULL;
+    QSpinBox *maxVertices = NULL;
     /** textove pole pro hmotnost */
     QDoubleSpinBox *extent = NULL;
     /** textove pole pro vysku */
@@ -48,7 +48,7 @@ public:
 
     QGroupBox *boxAspect;
     QGroupBox *boxExtent;
-    QGroupBox *boxVerticies;
+    QGroupBox *boxVertices;
 
     void updatePath();
     void updateContent();
@@ -63,12 +63,12 @@ class DescriptionDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit DescriptionDialog(ConvolutionDescriptor *convolution_descriptor, QWidget *parent = 0);
+    explicit DescriptionDialog(InclusionDescriptor *inclusion_descriptor, QWidget *parent = 0);
     /** hlavni list */
-    ConvolutionTab *mainTab;
+    inclusionTab *mainTab;
 
     /** spravce dat */
-    ConvolutionDescriptor *convolution_descriptor;
+    InclusionDescriptor *inclusion_descriptor;
 
 public slots:
     void updateData();

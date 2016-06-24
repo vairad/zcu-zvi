@@ -1,24 +1,24 @@
-#ifndef CONVOLUTIONDESCRIPTOR_H
-#define CONVOLUTIONDESCRIPTOR_H
+#ifndef inclusionDESCRIPTOR_H
+#define inclusionDESCRIPTOR_H
 
 #include <climits>
 
 #include <QtXml>
 #include <QString>
 
-class ConvolutionDescriptor
+class InclusionDescriptor
 {
     double reqAspectRatio; //podlouhlost
     double epsilonRatio;
 
-    int reqMinVerticies; // minimum vrcholů aproximace
-    int reqMaxVerticies; // maximum vrcholů aproximace
+    int reqMinVertices; // minimum vrcholů aproximace
+    int reqMaxVertices; // maximum vrcholů aproximace
 
     double reqExtent; // pravoúhlost
     double epsilonExtent;
 
-    bool boolMinVerticies;
-    bool boolMaxVerticies;
+    bool boolMinVertices;
+    bool boolMaxVertices;
     bool boolAspectRatio;
     bool boolExtent;
 
@@ -27,37 +27,37 @@ class ConvolutionDescriptor
     QString FILE_NAME;
 
 public:
-    ConvolutionDescriptor();
-    ConvolutionDescriptor(QString path);
+    InclusionDescriptor();
+    InclusionDescriptor(QString path);
 
     void save(QString path);
 
     double getReqAspectRatio() const;
     double getEpsilonRatio() const;
-    int getReqMinVerticies() const;
-    int getReqMaxVerticies() const;
+    int getReqMinVertices() const;
+    int getReqMaxVertices() const;
     double getReqExtent() const;
     double getEpsilonExtent() const;
     QString getFILE_NAME() const;
     QString getNote() const;
     void setReqAspectRatio(double value);
     void setEpsilonRatio(double value);
-    void setReqMinVerticies(int value);
-    void setReqMaxVerticies(int value);
+    void setReqMinVertices(int value);
+    void setReqMaxVertices(int value);
     void setReqExtent(double value);
     void setEpsilonExtent(double value);
     void setNote(const QString &value);
     void setFILE_NAME(const QString &value);
     bool open(QString path);
     void reset();
-    bool getBoolMinVerticies() const;
-    void setBoolMinVerticies(bool value);
-    bool getBoolMaxVerticies() const;
-    void setBoolMaxVerticies(bool value);
+    bool getBoolMinVertices() const;
+    void setBoolMinVertices(bool value);
+    bool getBoolMaxVertices() const;
+    void setBoolMaxVertices(bool value);
     bool getBoolAspectRatio() const;
     void setBoolAspectRatio(bool value);
     bool getBoolExtent() const;
     void setBoolExtent(bool value);
 };
 
-#endif // CONVOLUTIONDESCRIPTOR_H
+#endif // inclusionDESCRIPTOR_H

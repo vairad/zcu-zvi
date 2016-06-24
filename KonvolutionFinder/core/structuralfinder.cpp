@@ -2,7 +2,7 @@
 
 int StructuralFinder::defaultThreshold = 160;
 
-StructuralFinder::StructuralFinder(FilenameFactory *names, ConvolutionDescriptor *descriptor, int threshold):  names(names), descriptor(descriptor){
+StructuralFinder::StructuralFinder(FilenameFactory *names, InclusionDescriptor *descriptor, int threshold):  names(names), descriptor(descriptor){
     this->threshold = threshold;
 }
 
@@ -24,7 +24,7 @@ void StructuralFinder::run(){
     while(name != NULL){
 
         std::vector< std::vector<cv::Point> > hulls; // kontury nalezenych objektů.
-        std::vector< std::vector<cv::Point> > potentialConvolutions; //kontury objektů splňující podmínky.
+        std::vector< std::vector<cv::Point> > potentialinclusions; //kontury objektů splňující podmínky.
         std::vector<cv::Vec4i> hierarchy; // hierarchie nalezenych kontur
 
         if(counter % 50 == 0 ){
@@ -59,16 +59,16 @@ void StructuralFinder::run(){
         //porčisti kontury podle kritérií
         for(std::vector< std::vector<cv::Point> >::iterator it = hulls.begin(); it != hulls.end(); ++it) {
             if(checkContour(*it)){
-                potentialConvolutions.push_back(*it);
+                potentialinclusions.push_back(*it);
             }else{
                 // do nothing
             }
         }
 
         // vykresli pročištěné kontury
-        for( size_t i = 0; i< potentialConvolutions.size(); i++ ) {
+        for( size_t i = 0; i< potentialinclusions.size(); i++ ) {
             cv::Scalar color = CONTOUR_COLOR;
-            cv::drawContours( originalImage, potentialConvolutions, i, color, 2, 8, hierarchy, 0, cv::Point() );
+            cv::drawContours( originalImage, potentialinclusions, i, color, 2, 8, hierarchy, 0, cv::Point() );
         }
 
         // odešli obrázky do GUI
@@ -107,11 +107,11 @@ bool StructuralFinder::checkContour(std::vector<cv::Point> contour){
     double rectArea = boundingRect.width * boundingRect.height;
 
     bool result = true;
-    if( descriptor->getBoolMinVerticies() ){
-        result &= checkMinVerticies(contourPoly.size());
+    if( descriptor->getBoolMinVertices() ){
+        result &= checkMinVertices(contourPoly.size());
     }
-    if( descriptor->getBoolMaxVerticies() ){
-        result &= checkMaxVerticies(contourPoly.size());
+    if( descriptor->getBoolMaxVertices() ){
+        result &= checkMaxVertices(contourPoly.size());
     }
     if( descriptor->getBoolAspectRatio()){
         result &= checkAspectRatio(boundingRect.width, boundingRect.height);
@@ -162,13 +162,13 @@ bool StructuralFinder::checkAspectRatio(int width, int height){
 
 /**
  * Zkontroluje konturu na maximální počet vrcholů
- * @brief StructuralFinder::checkMaxVerticies
- * @param verticies
+ * @brief StructuralFinder::checkMaxVertices
+ * @param vertices
  * @return
  */
-bool StructuralFinder::checkMaxVerticies(unsigned int verticies){
-    unsigned int reqMaxVerticies = descriptor->getReqMaxVerticies();
-    if ( verticies > reqMaxVerticies ){
+bool StructuralFinder::checkMaxVertices(unsigned int vertices){
+    unsigned int reqMaxVertices = descriptor->getReqMaxVertices();
+    if ( vertices > reqMaxVertices ){
         return false;
     }
     return true;
@@ -176,13 +176,13 @@ bool StructuralFinder::checkMaxVerticies(unsigned int verticies){
 
 /**
  * Zkontroluje konturu dle na minimální počet vrcholů
- * @brief StructuralFinder::checkMinVerticies
- * @param verticies
+ * @brief StructuralFinder::checkMinVertices
+ * @param vertices
  * @return
  */
-bool StructuralFinder::checkMinVerticies(unsigned int verticies){
-    unsigned int reqMinVerticies = descriptor->getReqMinVerticies();
-    if ( verticies < reqMinVerticies ){
+bool StructuralFinder::checkMinVertices(unsigned int vertices){
+    unsigned int reqMinVertices = descriptor->getReqMinVertices();
+    if ( vertices < reqMinVertices ){
         return false;
     }
     return true;
