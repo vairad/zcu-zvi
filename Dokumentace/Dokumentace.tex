@@ -31,7 +31,7 @@
 	
 	Inkluze jsou defekty vznikající při tuhnutí taveniny na místech, kde je více atomů teluru/kadmia, než by bylo v~pevné fázi za dané teploty. Z~hlediska energie je výhodnější na těchto místech vytvořit kapalné shluky obohacené o jednu z~komponent. Během tuhnutí povrch defektu zmenšuje svůj objem a přebytečná komponenta vytvoří ve středu defektu koncentrované \uv{kapky}.\footnote{	Zdroj: ŠEDIVÝ, L.: \emph{Difúze přirozených defektů a příměsí v CdTe/CdZnTe.} Praha: Univerzita Karlova v~Praze, Matematicko-fyzikální fakulta, 2012. 84 s. Vedoucí diplomové práce doc. Ing. Eduard Belas, CSc.} Tento jev se může vyskytovat i v~jiných materiálech. 
 
-Výstupem práce bude kromě aplikace pro detekci inkluzí napsané v~jazyce C++ i soubor ve formátu *.xml, ve kterém budou uvedeny souřadnice inkluzí ve snímku a názvy snímků, na kterých se vyskytují.
+Výstupem práce bude aplikace pro detekci inkluzí napsaná v~jazyce C++, v jejímž grafickém rozhraní budou označeny detekované objekty.
 
 \chapter{Zadání}
 Obecné pokyny a pravidla pro vypracování semestrální práce:
@@ -128,9 +128,23 @@ a mezivýsledků, s dostupným programovým produktem, např. CVIP Tools,…}
 	\section{Detekce inkluzí}
 V~jednotlivých předzpracovaných snímcích budou následně detekovány inkluze. Inkluze se na snímcích jeví jako hvězdicovité, téměř kulaté objekty. V~jiných materiálech však mohou mít až trojúhelníkový tvar. Proto bude umožněno nastavení počtu hran inkluzí, které se budou detekovat v~dané sekvenci.
 
-Samotnou detekci je možno provádět několika metodami. Jednou z~nich je...
+Samotnou detekci je možno provádět několika metodami. Jednou z~nich je vyhledání objektu podle tvarových příznaků, tj. vlastností obrysu a plochy. Výsledek detekce pomocí této metody je na obrázku 3.9
 
-Druhou metodou je...
+\begin{figure}[!htb]
+	\centering
+	\fbox{\includegraphics[scale=0.25]{obrazky/lepe_nauceny_kalsifikator.png}}
+	\label{fig:tvarove_priznaky}
+	\caption{Inkluze detekované podle tvarových příznaků}
+	\end{figure}
+
+Druhou možností je použít kaskádový klasifikátor (běžně používaný pro detekci objektů ve videu, zejména obličejů) naučený detekovat inkluze. Učení klasifikátoru spočívá v~přípravě množiny příkladů s~objekty, které budeme chtít detekovat (tj. pozitivních příkladů), a příkladů pozadí, na kterých již dané objekty nejsou (negativních příkladů). Výsledek detekce inkluzí pomocí kaskádového klasifikátoru je na obrázku 3.10.
+
+\begin{figure}[!htb]
+	\centering
+	\fbox{\includegraphics[scale=0.25]{obrazky/lepe_nauceny_kalsifikator.png}}
+	\label{fig:klasifikator}
+	\caption{Inkluze detekované kaskádovým klasifikátorem}
+	\end{figure}
 
 \chapter{Popis implementace}
 Aplikace je psána v jazyce C++ s~použitím knihovny pro zpracování obrazu OpenCV verze 2.4, která je snadno dostupná na všech platformách, a knihovny Qt pro vytvoření grafického uživatelského rozhraní.
@@ -158,6 +172,6 @@ Složka se snímky se načte kliknutím na "Načíst složku..." v~menu "Soubor"
 	popis vstupního/výstupního souboru
 
 \chapter{Závěr}
-Cílem této semestrální práce bylo vytvořit aplikaci pro analýzu, segmentaci a detekci objektů v~mikroskopických snímcích. Byla zadána testovací sekvence snímků, ve které jsme hledali jevy zvané inkluze. Výstupem práce je aplikace, která načte danou sekvenci, analyzuje a předzpracuje každý snímek, detekuje inkluze a umožní jejich pozice uložit do souboru ve formátu *.xml. Práce tak splňuje zadání.
+Cílem této semestrální práce bylo vytvořit aplikaci pro analýzu, segmentaci a detekci objektů v~mikroskopických snímcích. Byla zadána testovací sekvence snímků, ve které jsme hledali jevy zvané inkluze. Výstupem práce je aplikace, která načte danou sekvenci, analyzuje a předzpracuje každý snímek a detekuje inkluze. Nalezené inkluze označí v~grafickém uživatelském rozhraní aplikace. Práce tak splňuje zadání.
 
 \end{document} 
