@@ -169,8 +169,8 @@ Po spuštění aplikace dvojklikem na přiložený spustitelný soubor Inclusion
 Složka se snímky se načte kliknutím na "Načíst složku..." v~menu "Soubor". Pro nastavení parametrů hledaných konvolucí slouží okno, které se zobrazí kliknutím na položku "Nastavení" v~menu "Analýza". Samotná analýza se spustí kliknutím na "Spusť analýzu" ve stejném menu. V~menu "Analýza" se také nachází položky pro načtení či uložení popisu inkluze ze/do souboru ve formátu *.xml. Tento popis se aplikuje na objekty (inkluze), které se budou detekovat. Pod lištou menu se nachází panel nástrojů s tlačítky pro spuštění či pozastavení analýzy sekvence snímků. Vedle tlačítek je přepínač, jímž lze nastavit metodu pro detekci inkluzí.
 
 	\section{Formát souboru *.xml}
-	Součástí aplikace je i možnost nahrát popis vlastností inkluzí ze souboru *.xml. Jeho struktura je následující:
-	
+	Součástí aplikace je i možnost nahrát popis vlastností inkluzí ze souboru *.xml. Jeho struktura je následující:\\
+	\\
 \texttt{<?xml version="1.0" encoding="UTF-8"?>}\\
 \texttt{<InclusionDescription>}\\
 	\texttt{	<AspectRatio>0.99</AspectRatio>}\\
@@ -184,7 +184,7 @@ Složka se snímky se načte kliknutím na "Načíst složku..." v~menu "Soubor"
     \texttt{	<EpsilonExtent>1.99</EpsilonExtent>}\\
     \texttt{	<BoolExtent>1</BoolExtent>}\\
     \texttt{	<Note>Poznámka</Note>}\\
-\texttt{</InclusionDescription>}
+\texttt{</InclusionDescription>}\\
 
 	Hodnota \texttt{AspectRatio} znamená poměr stran opsaného obdélníku, který má strany rovnoběžné s~okraji obrázku. \texttt{EpsilonRatio} je přípustná odchylka od požadovaného poměru. \texttt{BoolAspectRatio} je nastaveno na 1, pokud chceme použít popis inkluze pomocí hodnot popsaných výše, v~opačném případě se vepíše 0. Hodnota \texttt{MinVertices} znamená minimální počet vrcholů polygonu aproximujícího hledané inkluze, \texttt{MaxVertices} naopak maximální počet vrcholů. \texttt{BoolMaxVertices} a \texttt{BoolMinVertices} zapínají (1), či vypínají (0) použití příslušných parametrů v detekci. \texttt{Extent} se rovná poměru plochy nalezeného objektu ku ploše obdélníku opsaného tomuto objektu, \texttt{EpsilonExtent} je opět přípustnou odchylkou od této hodnoty a \texttt{BoolExtent} zapíná, nebo vypíná použití těchto parametrů. Do \texttt{Note} lze napsat jakoukoli poznámku k~tomuto nastavení.
 
