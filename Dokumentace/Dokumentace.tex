@@ -27,7 +27,7 @@
 \tableofcontents
 
 \chapter{Úvod}
-	Cílem této semestrální práce bude analyzovat sekvenci mikroskopických \\snímků a detekovat v~nich jevy zvané inkluze. Data, která budou použita pro vývoj aplikace, byla snímána infračerveným mikroskopem se zvětšením 5$\times$ (1.09 $\mu$m/px) a krokem mezi řezy (snímky) 0.2 $\mu$m. Snímaným materiálem byla směs kadmia a teluru. 
+	Cílem této semestrální práce bude analyzovat sekvenci mikroskopických sním-ků a detekovat v~nich jevy zvané inkluze. Data, která budou použita pro vývoj aplikace, byla snímána infračerveným mikroskopem se zvětšením 5$\times$ (1.09 $\mu$m/px) a krokem mezi řezy (snímky) 0.2 $\mu$m. Snímaným materiálem byla směs kadmia a teluru. 
 	
 	Inkluze jsou defekty vznikající při tuhnutí taveniny na místech, kde je více atomů teluru/kadmia, než by bylo v~pevné fázi za dané teploty. Z~hlediska energie je výhodnější na těchto místech vytvořit kapalné shluky obohacené o jednu z~komponent. Během tuhnutí povrch defektu zmenšuje svůj objem a přebytečná komponenta vytvoří ve středu defektu koncentrované \uv{kapky}.\footnote{	Zdroj: ŠEDIVÝ, L.: \emph{Difúze přirozených defektů a příměsí v CdTe/CdZnTe.} Praha: Univerzita Karlova v~Praze, Matematicko-fyzikální fakulta, 2012. 84 s. Vedoucí diplomové práce doc. Ing. Eduard Belas, CSc.} Tento jev se může vyskytovat i v~jiných materiálech. 
 
@@ -165,8 +165,13 @@ Aplikace je psána v jazyce C++ s~použitím knihovny pro zpracování obrazu Op
 	Tato třída představuje popis parametrů hledaných inkluzí pomocí vlastností objektů (například plocha). Součástí implementace této třídy je načítání a generování *.xml souboru s~popisem těchto vlastností. Třída slouží jako přepravka pro parametry vyhledávání a za běhu analýzy existuje v~programu pouze jedna instance. 	
 	
 \section{Třída StructuralFinder}	
-	Tato třída implementuje proces vyhledávání a klasifikaci objektů pomocí jejich vlastností. Třída je potomkem třídy \texttt{QThread}, to umožňuje spustit proces analýzy \uv{na pozadí} nebo rozdělit průběh analýzy mezi více vláken. Vícevláknovou architekturu podporuje i implementace třídy \texttt{FilenameFactory}. Rozvláknění výpočtu nebylo implementováno z~důvodu složité interpretace výsledků velkých dat.
-
+	Tato třída implementuje proces vyhledávání a klasifikaci objektů pomocí jejich vlastností. Třída je potomkem třídy \texttt{QThread}, to umožňuje spustit proces analýzy \uv{na pozadí} nebo rozdělit průběh analýzy mezi více vláken. Vícevláknovou architekturu podporuje i implementace třídy \texttt{FilenameFactory}. Rozvláknění výpočtu nebylo implementováno z~důvodu složité interpretace výsledků velkých dat (tisíce snímků). Jako výstup byl ponechán pouze obraz v~aplikaci.
+	Ve třídě je postupně aplikováno několik úprav zdrojového snímku k~dosažení dobrého výsledku. Konkrétně jde o přebarvení všech jasů vyšších než hodnota 150 a následné roztažení histogramu. Na snímek se zlepšeným kontrastem je aplikováno prahování s výchozí hodnotou přebarvovaných jasů 160. Uživatel tuto hodnotu může ovlivnit. Nakonec jsou pomocí hranového detektoru Canny nalezeny obrysy objektů. Posledním krokem je hodnocení, zda nalezené kontury objektů vyhovují definovaným pravidlům.
+	Uživatel může definovat všechna výše zmíněná kritéria a jejich kombinace. Objekt bude vyřazen při nesplněni jediného.  
+	
+\section{Třída HaarFinder}
+	Tato třída využívá pro detekci konvolucí naučený HAAR kaskádový klasifikátor implementovaný v knihovně opencv. Opět jde o potomka třídy \texttt{QThread}. Inicializačními parametry jsou odkaz na \texttt{FilenameFactory} a cesta k souboru s naučeným klasifikátorem. Nejlépe naučený klasifikátor je přiložen k programu.
+	
 \chapter{Uživatelská dokumentace}
 	\section{SW požadavky}
 	Pro správnou funkčnost aplikace doporučujeme zařízení s~operačním systémem Microsoft Windows verze 7 a vyšší.
